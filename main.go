@@ -6,20 +6,17 @@ import (
 	"github.com/gocolly/colly"
 )
 type product struct{
-	url,price,tracking string
+	url,price,availabitlity string
 }
 func main(){
-	
-
+    
 	c:=colly.NewCollector()
 	c.OnHTML("li.product",func(h *colly.HTMLElement) {
 		product:=product{}
-		product.url =h.ChildAttr("a","href")
+		product.url=h.ChildAttr("a","href")
 		product.price=h.ChildText(".price")
-
-		
-		fmt.Println(product )
-
+		 fmt.Println(product)
+	
 	})
 	c.OnRequest(func(r *colly.Request) {
 		fmt.Printf(fmt.Sprintf("visiting %s",r.URL))
