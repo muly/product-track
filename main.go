@@ -15,6 +15,8 @@ type product struct {
 func main() {
 
 	rawURL := "https://www.amazon.com/Sphero-RVR-Programmable-Programmers-Customizable/dp/B0BLF8CLQF"
+	
+
 
 	 
 	
@@ -25,15 +27,15 @@ func main() {
 		// TODO:
 	}
 
-	s := product{}
+	p := product{}
 
 	switch u.Hostname() {
-	/*case "scrapeme.live":
-		p, err = scrapeme(rawURL)*/
-	/*case "ediblelandscaping.com":
-		p,err=ediblelandscaping(rawURL)*/
+	case "scrapeme.live":
+		p, err = scrapeme(rawURL)
+	case "ediblelandscaping.com":
+		p,err=ediblelandscaping(rawURL)
 	case "www.amazon.com":
-        s, err=amazon(rawURL)
+        p, err=amazon(rawURL)
 	default:
 		fmt.Printf("%s is not supported\n", u.Hostname())
 		return
@@ -44,10 +46,10 @@ func main() {
 		// TODO:
 	}
 
-	fmt.Printf("%+v", s)
+	fmt.Printf("%+v", p)
 }
 
-/*func scrapeme(url string) (product, error) {
+func scrapeme(url string) (product, error) {
 	var p product
 	var err error
 
@@ -88,7 +90,7 @@ func ediblelandscaping(url string) (product, error) {
 	c.Visit(url)
 
 	return r, err
-}*/
+}
 
 func amazon(url string) (product, error) {
 	var s product
