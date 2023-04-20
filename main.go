@@ -2,14 +2,16 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/url"
-	"github.com/gocolly/colly"
 	"strconv"
+
+	"github.com/gocolly/colly"
 )
 
 type product struct {
-	price string
-	 availability string
+	price int
+	 availability bool
 }
 type input struct{
 	url string
@@ -25,18 +27,12 @@ func main() {
 		fmt.Println("error occurred ", err)
 	}
 	p := product{}
-	price:= p.price 
-	pr,err:= strconv.Atoi(price)
-	if err!=nil{
-		fmt.Println("error")
-	}
-	fmt.Println(pr)
 
 	switch u.Hostname() {
 	case "scrapeme.live":
 		p, err = scrapeme(rawURL)
-	case "ediblelandscaping.com":
-		p, err = ediblelandscaping(rawURL)
+	case "flipkart.com":
+		p, err = flipkart(rawURL)
 	case "www.amazon.in":
 		p, err = amazon(rawURL)
 	default:
@@ -46,8 +42,10 @@ func main() {
 	if err != nil {
 		fmt.Println("error occurred", err)
 	}
+	
+   fmt.Printf("%+v",p)
 
-	fmt.Printf("%+v", p)
+	
 }
 
 
@@ -57,10 +55,22 @@ func scrapeme(url string)(product, error){
 
 	c := colly.NewCollector()
 	c.OnHTML("p.stock.in-stock", func(h *colly.HTMLElement) {
-		p.availability = h.Text
+		availability:= h.Text  
+		if availability=="In stock"{
+            p.availability=true 
+		}else{
+			p.availability=false
+		}
+
+
 	})
 	c.OnHTML("p.price", func(h *colly.HTMLElement) {
-		p.price = h.Text
+		price:= h.Text
+		s,err:=strconv.Atoi(price)
+		if err != nil{
+			log.Printf("error")
+		}
+		p.price=s
 
 	})
 	c.OnRequest(func(r *colly.Request) {
@@ -72,17 +82,28 @@ func scrapeme(url string)(product, error){
 	c.Visit(url)
    return p, err
 }
-func ediblelandscaping(url string) (product, error) {
+func flipkart(url string) (product, error) {
 	var p product
 	var err error
 
 	c := colly.NewCollector()
-	c.OnHTML("p.note", func(h *colly.HTMLElement) {
-		p.availability = h.Text
+	c.OnHTML("div._2JC05C", func(h *colly.HTMLElement) {
+		availability:= h.Text
+		if availability==" In stock "{
+			p.availability=true
+		}else{
+		    p.availability=false
+		}
 	})
-	c.OnHTML("table.prices", func(h *colly.HTMLElement) {
-		p.price = h.ChildText("td")
+	c.OnHTML("div._30jeq3._16Jk6d",func(h *colly.HTMLElement) {
+		price:=h.Text
+		s,err:=strconv.Atoi(price)
+		if err!=nil{
+			log.Printf("error")
+		}
+		p.price=s
 	})
+
 	c.OnRequest(func(r *colly.Request) {
 		fmt.Printf(fmt.Sprintf("visiting %s\n", r.URL))
 	})
@@ -101,10 +122,22 @@ func amazon(url string) (product, error) {
 
 	c := colly.NewCollector()
 	c.OnHTML("#availability", func(h *colly.HTMLElement) {
-		p.availability = h.Text
+		availability:= h.Text 
+		if availability==" In stock "{
+			p.availability=true
+		}else{
+			p.availability=false 
+		}
+		
 	})
 	c.OnHTML("div.a-section.a-spacing-none.aok-align-center", func(h *colly.HTMLElement) {
-		p.price = h.ChildText("span.a-price-whole")
+		price:= h.ChildText("span.a-price-whole")
+		r,err:= strconv.Atoi(price)
+		if err != nil {
+			fmt.Println("error")
+		}
+
+		p.price=r
 	})
 
 
@@ -118,13 +151,13 @@ func amazon(url string) (product, error) {
 
 	return p, err
 }
-func notify(i input)(bool,error){
-	var err error
+//func shouldNotify(i input)(bool,error){
+	//var err error
 	//var p product
-	if err!=nil{
-		fmt.Println(err)
-    }
+	//if err!=nil{
+		//fmt.Println(err)
+    //}
 
 
-	return true,err
-}
+	//return true,err
+//}
