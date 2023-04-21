@@ -2,9 +2,8 @@ package main
 
 import (
 	"fmt"
-	"log"
+
 	"net/url"
-	"strconv"
 
 	"github.com/gocolly/colly"
 )
@@ -16,7 +15,7 @@ type product struct {
 type input struct {
 	url           string
 	typeOfRequest string
-	minThreshold  float32
+	minThreshold  float64
 }
 
 func main() {
@@ -50,12 +49,19 @@ func main() {
 func scrapeme(url string) (product, error) {
 	var p product
 	var err error
-
+	var statement string
 	c := colly.NewCollector()
 	c.OnHTML("p.stock.in-stock", func(h *colly.HTMLElement) {
-		availability := h.Text
-		if availability == "In stock" {
+		statement = h.Text
+
+		if statement == "                                                In stock                               " {
 			p.availability = true
+		} else if statement == "Hurry, Only %d left!" {
+			for i := 0; i < len(statement); i++ {
+				if statement[i] >= '0' && statement[i] <= '9' {
+					p.availability = true
+				}
+			}
 		} else {
 			p.availability = false
 		}
@@ -63,11 +69,29 @@ func scrapeme(url string) (product, error) {
 	})
 	c.OnHTML("p.price", func(h *colly.HTMLElement) {
 		price := h.Text
-		s, err := strconv.ParseFloat(price,10)
-		if err != nil {
-			log.Printf("error")
+		var f float64
+		var j float64
+		j = 1
+		var i int
+		for i = 0; i < len(price); i++ {
+			if price[i] >= '0' && price[i] <= '9' {
+				//fmt.Printf("%T",price[i]-48)
+				f = (f * 10) + float64(price[i]-48)
+			}
+			if price[i] == '.' {
+				break
+			}
 		}
-		p.price = s
+		for i < len(price) {
+			if price[i] >= '0' && price[i] <= '9' {
+				j = j * 10
+				f = f + float64(price[i]-48)/j
+
+			}
+			i++
+		}
+
+		p.price = f
 
 	})
 	c.OnRequest(func(r *colly.Request) {
@@ -82,23 +106,49 @@ func scrapeme(url string) (product, error) {
 func flipkart(url string) (product, error) {
 	var p product
 	var err error
-
+	var statement string
 	c := colly.NewCollector()
 	c.OnHTML("div._2JC05C", func(h *colly.HTMLElement) {
-		availability := h.Text
-		if availability == " In stock " {
+
+		if statement == "                                                In stock                               " {
 			p.availability = true
+		} else if statement == "Hurry, Only %d left!" {
+			for i := 0; i < len(statement); i++ {
+				if statement[i] >= '0' && statement[i] <= '9' {
+					p.availability = true
+				}
+			}
 		} else {
 			p.availability = false
 		}
+
 	})
 	c.OnHTML("div._30jeq3._16Jk6d", func(h *colly.HTMLElement) {
 		price := h.Text
-		s, err := strconv.ParseFloat(price,10)
-		if err != nil {
-			log.Printf("error")
+		var f float64
+		var j float64
+		j = 1
+		var i int
+		for i = 0; i < len(price); i++ {
+			if price[i] >= '0' && price[i] <= '9' {
+				//fmt.Printf("%T",price[i]-48)
+				f = (f * 10) + float64(price[i]-48)
+			}
+			if price[i] == '.' {
+				break
+			}
 		}
-		p.price = s
+		for i < len(price) {
+			if price[i] >= '0' && price[i] <= '9' {
+				j = j * 10
+				f = f + float64(price[i]-48)/j
+
+			}
+			i++
+		}
+
+		p.price = f
+
 	})
 
 	c.OnRequest(func(r *colly.Request) {
@@ -115,13 +165,19 @@ func flipkart(url string) (product, error) {
 func amazon(url string) (product, error) {
 	var p product
 	var err error
-    var statement string
+	var statement string
 	c := colly.NewCollector()
 	c.OnHTML("#availability", func(h *colly.HTMLElement) {
 		statement = h.Text
-		fmt.Println(statement)
+
 		if statement == "                                                In stock                               " {
 			p.availability = true
+		} else if statement == "Hurry, Only 3 left!" {
+			for i := 0; i < len(statement); i++ {
+				if statement[i] >= '0' && statement[i] <= '9' {
+					p.availability = true
+				}
+			}
 		} else {
 			p.availability = false
 		}
@@ -129,28 +185,27 @@ func amazon(url string) (product, error) {
 	})
 	c.OnHTML("div.a-section.a-spacing-none.aok-align-center", func(h *colly.HTMLElement) {
 		price := h.ChildText("span.a-price-whole")
-        var f float64
+		var f float64
 		var j float64
-		j=1
+		j = 1
 		var i int
-		for i=0 ;i<len(price);i++ {
-			if price[i]>='0' && price[i]<='9'{
+		for i = 0; i < len(price); i++ {
+			if price[i] >= '0' && price[i] <= '9' {
 				//fmt.Printf("%T",price[i]-48)
-                f=(f*10 ) + float64(price[i]-48)	
+				f = (f * 10) + float64(price[i]-48)
 			}
-			if price[i]=='.'{
-               break
+			if price[i] == '.' {
+				break
 			}
 		}
-		for i<len(price){
-			if price[i]>='0' && price[i]<='9'{
-			  j=j*10
-              f=f+float64(price[i]-48)/j
+		for i < len(price) {
+			if price[i] >= '0' && price[i] <= '9' {
+				j = j * 10
+				f = f + float64(price[i]-48)/j
 
 			}
-		 i++	
+			i++
 		}
-
 
 		p.price = f
 	})
@@ -166,12 +221,17 @@ func amazon(url string) (product, error) {
 	return p, err
 }
 
-//func shouldNotify(i input)(bool,error){
-//var err error
-//var p product
-//if err!=nil{
-//fmt.Println(err)
-//}
-
-//return true,err
-//}
+func shouldNotify(i input)(bool,error){
+	var err error
+	var p product
+	var minThreshold float64
+	flag:=1
+	if p.price <= minThreshold{
+       flag=0 
+	}
+	if flag==0{
+		return true,err
+	}else {
+		return false,err
+	}
+}
