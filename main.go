@@ -23,7 +23,8 @@ func main() {
 	rawURL := "https://www.amazon.in/Noise-Launched-Bluetooth-Calling-Tracking/dp/B0BJ72WZQ7/ref=sr_1_2?pd_rd_r=b244f48d-24db-4f55-8fe7-20bbe6ade0d2&pd_rd_w=Iq0zo&pd_rd_wg=EZ5WS&pf_rd_p=3a59b28c-4626-48f9-b66f-114571ee563d&pf_rd_r=XA5YK79N3KZGRAMATR6X&qid=1681233130&sr=8-2&th=1"
 	u, err := url.Parse(rawURL)
 	if err != nil {
-		fmt.Println("error occurred ", err)
+		fmt.Println("invalid url ", err)
+        return 
 	}
 	p := product{}
 
@@ -39,7 +40,8 @@ func main() {
 		return
 	}
 	if err != nil {
-		fmt.Println("error occurred", err)
+		fmt.Println("error occurred while scraping", err)
+		return
 	}
 
 	fmt.Printf("%+v", p)
@@ -223,10 +225,10 @@ func amazon(url string) (product, error) {
 
 func shouldNotify(i input)(bool,error){
 	var err error
-	var p product
-	var minThreshold float64
+	var p product 
+	var r input
 	flag:=1
-	if p.price <= minThreshold{
+	if p.price <= r.minThreshold{
        flag=0 
 	}
 	if flag==0{
