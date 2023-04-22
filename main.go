@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"regexp"
+	"strconv"
 
 	"strings"
 
@@ -53,43 +55,24 @@ func main() {
 
 }
 func checkAvailability(s string) bool {
+	var r = regexp.MustCompile(`^[a-z]+\[[0-9]+\]$`)
+
 	if strings.Contains(s, "In stock") {
 		return true
-	} else if s == "Hurry, Only %d left!" {
-		for i := 0; i < len(s); i++ {
-			if s[i] >= '0' && s[i] <= '9' {
-				return true
-			}
-		}
+	} else if r.MatchString(s) {
+		return true
 	}
+
 	return false
 
 }
 func checkPrice(price string) float64 {
-	var f float64
-	var j float64
-	j = 1
-	var i int
-	for i = 0; i < len(price); i++ {
-		if price[i] >= '0' && price[i] <= '9' {
-			//fmt.Printf("%T",price[i]-48)
-			f = (f * 10) + float64(price[i]-48)
-		}
-		if price[i] == '.' {
-			break
-		}
+	price = strings.Replace(price, ",", "", -1)
+	s, err := strconv.ParseFloat(price, 64)
+	if err != nil {
+		fmt.Println("error occurred while parsing value", err)
 	}
-	for i < len(price) {
-		if price[i] >= '0' && price[i] <= '9' {
-			j = j * 10
-			f = f + float64(price[i]-48)/j
-
-		}
-		i++
-	}
-
-	return f
-
+	return s
 }
 
 func scrapeme(url string) (product, error) {
@@ -101,30 +84,7 @@ func scrapeme(url string) (product, error) {
 
 	})
 	c.OnHTML("p.price", func(h *colly.HTMLElement) {
-		price := h.Text
-		var f float64
-		var j float64
-		j = 1
-		var i int
-		for i = 0; i < len(price); i++ {
-			if price[i] >= '0' && price[i] <= '9' {
-				//fmt.Printf("%T",price[i]-48)
-				f = (f * 10) + float64(price[i]-48)
-			}
-			if price[i] == '.' {
-				break
-			}
-		}
-		for i < len(price) {
-			if price[i] >= '0' && price[i] <= '9' {
-				j = j * 10
-				f = f + float64(price[i]-48)/j
-
-			}
-			i++
-		}
-
-		p.price = f
+		p.price = checkPrice(h.Text)
 
 	})
 	c.OnRequest(func(r *colly.Request) {
@@ -139,48 +99,14 @@ func scrapeme(url string) (product, error) {
 func flipkart(url string) (product, error) {
 	var p product
 	var err error
-	var statement string
+
 	c := colly.NewCollector()
 	c.OnHTML("div._2JC05C", func(h *colly.HTMLElement) {
-
-		if statement == "                                                In stock                               " {
-			p.availability = true
-		} else if statement == "Hurry, Only %d left!" {
-			for i := 0; i < len(statement); i++ {
-				if statement[i] >= '0' && statement[i] <= '9' {
-					p.availability = true
-				}
-			}
-		} else {
-			p.availability = false
-		}
+		p.availability = checkAvailability(h.Text)
 
 	})
 	c.OnHTML("div._30jeq3._16Jk6d", func(h *colly.HTMLElement) {
-		price := h.Text
-		var f float64
-		var j float64
-		j = 1
-		var i int
-		for i = 0; i < len(price); i++ {
-			if price[i] >= '0' && price[i] <= '9' {
-				//fmt.Printf("%T",price[i]-48)
-				f = (f * 10) + float64(price[i]-48)
-			}
-			if price[i] == '.' {
-				break
-			}
-		}
-		for i < len(price) {
-			if price[i] >= '0' && price[i] <= '9' {
-				j = j * 10
-				f = f + float64(price[i]-48)/j
-
-			}
-			i++
-		}
-
-		p.price = f
+		p.price = checkPrice(h.Text)
 
 	})
 
