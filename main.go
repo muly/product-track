@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"regexp"
+
 	"strconv"
 
 	"strings"
@@ -55,11 +55,11 @@ func main() {
 
 }
 func checkAvailability(s string) bool {
-	var r = regexp.MustCompile(`^[a-z]+\[[0-9]+\]$`)
+	var r = "Hurry ,only /d left!"
 
 	if strings.Contains(s, "In stock") {
 		return true
-	} else if r.MatchString(s) {
+	} else if r==s {
 		return true
 	}
 
