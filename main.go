@@ -66,13 +66,14 @@ func checkAvailability(s string) bool {
 	return false
 
 }
-func checkPrice(price string) float64 {
+func checkPrice(price string) (float64,error) {
 	price = strings.Replace(price, ",", "", -1)
 	s, err := strconv.ParseFloat(price, 64)
 	if err != nil {
 		fmt.Println("error occurred while parsing value", err)
+		return 0,err
 	}
-	return s
+	return s,nil
 }
 
 func scrapeme(url string) (product, error) {
@@ -84,7 +85,7 @@ func scrapeme(url string) (product, error) {
 
 	})
 	c.OnHTML("p.price", func(h *colly.HTMLElement) {
-		p.price = checkPrice(h.Text)
+		p.price,err= checkPrice(h.Text)
 
 	})
 	c.OnRequest(func(r *colly.Request) {
@@ -106,7 +107,7 @@ func flipkart(url string) (product, error) {
 
 	})
 	c.OnHTML("div._30jeq3._16Jk6d", func(h *colly.HTMLElement) {
-		p.price = checkPrice(h.Text)
+		p.price,err = checkPrice(h.Text)
 
 	})
 
@@ -130,7 +131,8 @@ func amazon(url string) (product, error) {
 		p.availability = checkAvailability(h.Text)
 	})
 	c.OnHTML("div.a-section.a-spacing-none.aok-align-center", func(h *colly.HTMLElement) {
-		p.price = checkPrice(h.ChildText("span.a-price-whole"))
+		p.price,err = checkPrice(h.ChildText("span.a-price-whole"))
+		
 	})
 
 	c.OnRequest(func(r *colly.Request) {

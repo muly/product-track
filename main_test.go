@@ -26,13 +26,21 @@ func Test_shouldNotify(t *testing.T) {
 		},
 		{
 			name: "less than minimum threshold limit ",
-			args: args{},
+			args: args{i:input{typeOfRequest: "PRICE",
+		            minThreshold: 700.0000,  },
+		        p:product{price:699.99999},
+			    
+			},
 			want: true,
 		},
 		{
 			name: "greater than minimum threshold limit",
-			args: args{},
-			want: true,
+			args: args{i:input{typeOfRequest: "PRICE",
+		            minThreshold: 800.000,},
+		        p:product{price:19000.087786},
+			    
+			},
+			want: false,
 		},
 	}
 	for _, tt := range tests {
