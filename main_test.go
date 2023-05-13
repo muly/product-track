@@ -117,21 +117,20 @@ func Test_checkAvailability(t *testing.T) {
 		want bool
 	}{
 		{
-           name:"product available",
-		   args:args{"In stock"},
-		   want: true,
+			name: "product available",
+			args: args{"In stock"},
+			want: true,
 		},
 		{
-			name:"less number of products available",
-			args:args{"Hurry ,only 4 items left!"},
+			name: "less number of products available",
+			args: args{"Hurry ,only 4 items left!"},
 			want: true,
-		 },
-		 {
-			name:"product unavailable",
-			args:args{"Currently unavailable"},
+		},
+		{
+			name: "product unavailable",
+			args: args{"Currently unavailable"},
 			want: false,
-		 },
-		 
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
