@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	rawURL := "https://www.amazon.in/Bassbuds-Duo-Headphones-Water-Resistant-Assistance/dp/B09DD9SX9Z/ref=sr_1_1?_encoding=UTF8&_ref=dlx_gate_sd_dcl_tlt_a1f4109b_dt&content-id=amzn1.sym.0d1fafce-0d80-4ffc-b8c3-74f55ca06beb&pd_rd_r=c7d70bbf-7c14-4bf2-b7bf-3b4e92859c5e&pd_rd_w=MLpI8&pd_rd_wg=TZMUW&pf_rd_p=0d1fafce-0d80-4ffc-b8c3-74f55ca06beb&pf_rd_r=DZ2A8Y82Z4JPJE5B7A4W&qid=1682187704&sr=8-1&th=1"
+	rawURL := "https://www.flipkart.com/hp-deskjet-1112-single-function-color-inkjet-printer/p/itme9wgtatxfzggg?pid=PRNE9WGTZCQGJ6PZ&lid=LSTPRNE9WGTZCQGJ6PZND3GV1&marketplace=FLIPKART&store=6bo%2Ftia%2Fffn%2Ft64&srno=b_3_98&otracker=hp_omu_Best%2Bof%2BElectronics_2_3.dealCard.OMU_D54DFY00C5JD_3&otracker1=hp_rich_navigation_PINNED_neo%2Fmerchandising_NA_NAV_EXPANDABLE_navigationCard_cc_2_L2_view-all%2Chp_omu_PINNED_neo%2Fmerchandising_Best%2Bof%2BElectronics_NA_dealCard_cc_2_NA_view-all_3&fm=neo%2Fmerchandising"
 	u, err := url.Parse(rawURL)
 	if err != nil {
 		fmt.Println("invalid url ", err)
@@ -18,7 +18,7 @@ func main() {
 	switch u.Hostname() {
 	case "scrapeme.live":
 		p, err = scrapeme(rawURL)
-	case "flipkart.com":
+	case "www.flipkart.com" :
 		p, err = flipkart(rawURL)
 	case "www.amazon.in":
 		p, err = amazon(rawURL)

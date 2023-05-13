@@ -75,6 +75,18 @@ func Test_checkPrice(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			name:    "number with ₹",
+			args:    args{"₹1,899,99"},
+			want:    189999,
+			wantErr: false,
+		},
+		{
+			name:    "number with $",
+			args:    args{"$1,899,99"},
+			want:    189999,
+			wantErr: false,
+		},
+		{
 			name:    "number",
 			args:    args{"8000"},
 			want:    8000,
@@ -123,7 +135,12 @@ func Test_checkAvailability(t *testing.T) {
 		},
 		{
 			name: "less number of products available",
-			args: args{"Hurry ,only 4 items left!"},
+			args: args{"Hurry, only 4 items left!"},
+			want: true,
+		},
+		{
+			name: "less number of products available: regex without comma",
+			args: args{"Hurry only 4 items left!"},
 			want: true,
 		},
 		{

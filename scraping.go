@@ -26,6 +26,7 @@ func scrapeme(url string) (product, error) {
 
 	return p, err
 }
+
 func flipkart(url string) (product, error) {
 	var p product
 	var err error
