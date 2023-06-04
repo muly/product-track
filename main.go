@@ -16,6 +16,7 @@ func main() {
 	}
 
 	fmt.Printf("%+v", p)
+	handleRequest()
 }
 
 func process(rawURL string) (product, error) {

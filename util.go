@@ -8,7 +8,7 @@ import (
 )
 
 type product struct {
-	price        float64
+	price        float64   
 	availability bool
 }
 type input struct {
