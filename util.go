@@ -8,8 +8,9 @@ import (
 )
 
 type product struct {
-	price        float64   
-	availability bool
+	Url string             `json:"url"`
+	Price        float64   `json:"price"`
+	Availability bool      `json:"availability"`
 }
 type input struct {
 	typeOfRequest string
@@ -54,10 +55,10 @@ func checkPrice(price string) (float64, error) {
 }
 
 func shouldNotify(i input, p product) bool {
-	if i.typeOfRequest == requestTypePrice && p.price < i.minThreshold {
+	if i.typeOfRequest == requestTypePrice && p.Price < i.minThreshold {
 		return true
 	}
-	if i.typeOfRequest == requestTypeAvailability && p.availability {
+	if i.typeOfRequest == requestTypeAvailability && p.Availability {
 		return true
 	}
 	return false
