@@ -41,7 +41,7 @@ func checkAvailability(s string) bool {
 }
 
 func checkPrice(price string) (float64, error) {
-	currencyList := []string{"₹", "$"}
+	currencyList := []string{"₹", "$","£"}
 	price = strings.Replace(price, ",", "", -1)
 	for _, c:= range currencyList{
 		price = strings.Replace(price, c, "", -1)
