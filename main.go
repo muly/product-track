@@ -11,8 +11,8 @@ func main() {
 
 	//p, err := process(rawURL)
 	//if err != nil {
-		//fmt.Println("error occurred while scraping", err)
-		//return
+	//fmt.Println("error occurred while scraping", err)
+	//return
 	//}
 
 	//fmt.Printf("%+v", p)
@@ -20,7 +20,6 @@ func main() {
 	handleRequest()
 
 }
-
 
 func process(rawURL string) (product, error) {
 	u, err := url.Parse(rawURL)

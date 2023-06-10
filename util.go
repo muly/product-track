@@ -8,9 +8,9 @@ import (
 )
 
 type product struct {
-	Url string             `json:"url"`
-	Price        float64   `json:"price"`
-	Availability bool      `json:"availability"`
+	Url          string  `json:"url"`
+	Price        float64 `json:"price"`
+	Availability bool    `json:"availability"`
 }
 type input struct {
 	typeOfRequest string
@@ -41,9 +41,9 @@ func checkAvailability(s string) bool {
 }
 
 func checkPrice(price string) (float64, error) {
-	currencyList := []string{"₹", "$","£"}
+	currencyList := []string{"₹", "$", "£"}
 	price = strings.Replace(price, ",", "", -1)
-	for _, c:= range currencyList{
+	for _, c := range currencyList {
 		price = strings.Replace(price, c, "", -1)
 	}
 	s, err := strconv.ParseFloat(price, 64)

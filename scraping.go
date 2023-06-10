@@ -23,7 +23,7 @@ func scrapeme(url string) (product, error) {
 		err = scrapeErr
 	})
 	c.Visit(url)
-	p.Url=url
+	p.Url = url
 	return p, err
 }
 
@@ -45,7 +45,7 @@ func flipkart(url string) (product, error) {
 		err = scrapeErr
 	})
 	c.Visit(url)
-	p.Url=url
+	p.Url = url
 	return p, err
 }
 
@@ -67,6 +67,6 @@ func amazon(url string) (product, error) {
 		err = scrapeErr
 	})
 	c.Visit(url)
-	p.Url=url 
+	p.Url = url
 	return p, err
 }

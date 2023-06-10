@@ -1,7 +1,7 @@
-package main 
+package main
+
 import (
 	"testing"
-	
 )
 
 func Test_shouldNotify(t *testing.T) {
@@ -23,7 +23,7 @@ func Test_shouldNotify(t *testing.T) {
 		{
 			name: "checking product unavailability",
 			args: args{i: input{typeOfRequest: "AVAILABILITY"},
-			p: product{Availability: false}},
+				p: product{Availability: false}},
 			want: false,
 		},
 		{

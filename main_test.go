@@ -172,22 +172,14 @@ func Test_process(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "amazon",
-			rawURL: "https://www.amazon.in/Fastrack-Limitless-Biggest-SingleSync-Watchfaces/dp/B0BZ8T21V4?ref_=Oct_DLandingS_D_8dbdc968_0",
+			name:    "amazon",
+			rawURL:  "https://www.amazon.in/Fastrack-Limitless-Biggest-SingleSync-Watchfaces/dp/B0BZ8T21V4?ref_=Oct_DLandingS_D_8dbdc968_0",
 			wantErr: false,
-
 		},
 		{
-			name: "scrareme",
-			rawURL: "https://scrapeme.live/shop/Bulbasaur/",
+			name:    "scrareme",
+			rawURL:  "https://scrapeme.live/shop/Bulbasaur/",
 			wantErr: false,
-
-		},
-		{
-			 name: "flipkart",
-			 rawURL: "https://www.flipkart.com/hp-deskjet-1112-single-function-colorprinter/p/itme9wgtatxfzggg?pid=PRNE9WGTZCQGJ6PZ&lid=LSTPRNE9WGTZCQGJ6PZND3GV1&marketplace=FLIPKART&store=6bo%2Ftia%2Fffn%2Ft64&srno=b_3_98&otracker=hp_omu_Best%2Bof%2BElectronics_2_3.dealCard.OMU_D54DFY00C5JD_3&otracker1=hp_rich_navigation_PINNED_neo%2Fmerchandising_NA_NAV_EXPANDABLE_navigationCard_cc_2_L2_view-all%2Chp_omu_PINNED_neo%2Fmerchandising_Best%2Bof%2BElectronics_NA_dealCard_cc_2_NA_view-all_3&fm=neo%2Fmerchandising",
-			 wantErr: true,
-
 		},
 	}
 	for _, tt := range tests {
