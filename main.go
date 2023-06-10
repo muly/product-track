@@ -1,8 +1,7 @@
 package main
 
 import (
-	"fmt"
-
+	"log"
 	"net/url"
 )
 
@@ -35,7 +34,7 @@ func process(rawURL string) (product, error) {
 	case "www.amazon.in":
 		return amazon(rawURL)
 	default:
-		fmt.Printf("%s is not supported\n", u.Hostname())
+		log.Printf("%s is not supported\n", u.Hostname())
 		return product{}, err
 	}
 }
