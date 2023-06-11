@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -18,14 +19,17 @@ type priceTrackInput struct {
 }
 
 func handleRequest() {
-	// http.HandleFunc("/", homePage)
-	// http.HandleFunc("/products", productss)
-	// log.Fatal(http.ListenAndServe(":8006", nil))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+		log.Printf("Defaulting to port %s", port)
+	}
+
 	router := httprouter.New()
 	router.POST("/track/availability", availabilityHandler)
 	router.POST("/product", productHandler)
 	router.POST("/track/price", priceHandler)
-	log.Fatal(http.ListenAndServe(":8006", router))
+	log.Fatal(http.ListenAndServe(":"+port,router))
 }
 
 func productHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
