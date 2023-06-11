@@ -30,7 +30,6 @@ func scrapeme(url string) (product, error) {
 func flipkart(url string) (product, error) {
 	var p product
 	var err error
-
 	c := colly.NewCollector()
 	c.OnHTML("div._2JC05C", func(h *colly.HTMLElement) {
 		p.Availability = checkAvailability(h.Text)
@@ -52,7 +51,6 @@ func flipkart(url string) (product, error) {
 func amazon(url string) (product, error) {
 	var p product
 	var err error
-
 	c := colly.NewCollector()
 	c.OnHTML("#availability", func(h *colly.HTMLElement) {
 		p.Availability = checkAvailability(h.Text)
