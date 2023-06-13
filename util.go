@@ -1,15 +1,16 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
 type product struct {
-	price        float64
-	availability bool
+	Url          string  `json:"url"`
+	Price        float64 `json:"price"`
+	Availability bool    `json:"availability"`
 }
 type input struct {
 	typeOfRequest string
@@ -36,29 +37,32 @@ func checkAvailability(s string) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
 func checkPrice(price string) (float64, error) {
-	currencyList := []string{"₹", "$"}
+	currencyList := []string{"₹", "$", "£"}
 	price = strings.Replace(price, ",", "", -1)
-	for _, c:= range currencyList{
+	for _, c := range currencyList {
 		price = strings.Replace(price, c, "", -1)
 	}
 	s, err := strconv.ParseFloat(price, 64)
 	if err != nil {
-		fmt.Println("error occurred while parsing price", err)
+		log.Println("error occurred while parsing price", err)
 		return 0, err
 	}
+
 	return s, nil
 }
 
 func shouldNotify(i input, p product) bool {
-	if i.typeOfRequest == requestTypePrice && p.price < i.minThreshold {
+	if i.typeOfRequest == requestTypePrice && p.Price < i.minThreshold {
 		return true
 	}
-	if i.typeOfRequest == requestTypeAvailability && p.availability {
+	if i.typeOfRequest == requestTypeAvailability && p.Availability {
 		return true
 	}
+
 	return false
 }

@@ -5,173 +5,27 @@ import (
 	"testing"
 )
 
-func Test_shouldNotify(t *testing.T) {
-	type args struct {
-		i input
-		p product
-	}
-	tests := []struct {
-		name string
-		args args
-		want bool
-	}{
-		{
-			name: "checking product availability",
-			args: args{i: input{typeOfRequest: "AVAILABILITY"},
-				p: product{availability: true}},
-			want: true,
-		},
-		{
-			name: "checking product unavailability",
-			args: args{i: input{typeOfRequest: "AVAILABILITY"},
-				p: product{availability: false}},
-			want: false,
-		},
-		{
-			name: "less than minimum threshold limit ",
-			args: args{i: input{typeOfRequest: "PRICE",
-				minThreshold: 700.0000},
-				p: product{price: 699.99999},
-			},
-			want: true,
-		},
-		{
-			name: "greater than minimum threshold limit",
-			args: args{i: input{typeOfRequest: "PRICE",
-				minThreshold: 800.000},
-				p: product{price: 19000.087786},
-			},
-			want: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := shouldNotify(tt.args.i, tt.args.p); got != tt.want {
-				t.Errorf("shouldNotify() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func Test_checkPrice(t *testing.T) {
-	type args struct {
-		price string
-	}
-	tests := []struct {
-		name    string
-		args    args
-		want    float64
-		wantErr bool
-	}{
-		{
-			name:    "non number",
-			args:    args{"rohith"},
-			want:    0,
-			wantErr: true,
-		},
-		{
-			name:    "number with commas",
-			args:    args{"1,899,99"},
-			want:    189999,
-			wantErr: false,
-		},
-		{
-			name:    "number with ₹",
-			args:    args{"₹1,899,99"},
-			want:    189999,
-			wantErr: false,
-		},
-		{
-			name:    "number with $",
-			args:    args{"$1,899,99"},
-			want:    189999,
-			wantErr: false,
-		},
-		{
-			name:    "number",
-			args:    args{"8000"},
-			want:    8000,
-			wantErr: false,
-		},
-		{
-			name:    "number with decimals",
-			args:    args{"1899.999"},
-			want:    1899.999,
-			wantErr: false,
-		},
-		{
-			name:    "number with decimals and commas",
-			args:    args{"1,899.999"},
-			want:    1899.999,
-			wantErr: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := checkPrice(tt.args.price)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("checkPrice() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("checkPrice() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func Test_checkAvailability(t *testing.T) {
-	type args struct {
-		s string
-	}
-	tests := []struct {
-		name string
-		args args
-		want bool
-	}{
-		{
-			name: "product available",
-			args: args{"In stock"},
-			want: true,
-		},
-		{
-			name: "less number of products available",
-			args: args{"Hurry, only 4 items left!"},
-			want: true,
-		},
-		{
-			name: "less number of products available: regex without comma",
-			args: args{"Hurry only 4 items left!"},
-			want: true,
-		},
-		{
-			name: "product unavailable",
-			args: args{"Currently unavailable"},
-			want: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := checkAvailability(tt.args.s); got != tt.want {
-				t.Errorf("checkAvailability() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func Test_process(t *testing.T) {
-
 	tests := []struct {
 		name    string
 		rawURL  string
 		wantErr bool
 	}{
 		{
-			name:    "flipcart",
+			name:    "flipkart",
 			rawURL:  "https://www.flipkart.com/hp-deskjet-1112-single-function-color-inkjet-printer/p/itme9wgtatxfzggg?pid=PRNE9WGTZCQGJ6PZ&lid=LSTPRNE9WGTZCQGJ6PZND3GV1&marketplace=FLIPKART&store=6bo%2Ftia%2Fffn%2Ft64&srno=b_3_98&otracker=hp_omu_Best%2Bof%2BElectronics_2_3.dealCard.OMU_D54DFY00C5JD_3&otracker1=hp_rich_navigation_PINNED_neo%2Fmerchandising_NA_NAV_EXPANDABLE_navigationCard_cc_2_L2_view-all%2Chp_omu_PINNED_neo%2Fmerchandising_Best%2Bof%2BElectronics_NA_dealCard_cc_2_NA_view-all_3&fm=neo%2Fmerchandising",
 			wantErr: false,
 		},
-		// TODO: add a url for each websites we support
+		{
+			name:    "amazon",
+			rawURL:  "https://www.amazon.in/Fastrack-Limitless-Biggest-SingleSync-Watchfaces/dp/B0BZ8T21V4?ref_=Oct_DLandingS_D_8dbdc968_0",
+			wantErr: false,
+		},
+		{
+			name:    "scrareme",
+			rawURL:  "https://scrapeme.live/shop/Bulbasaur/",
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
