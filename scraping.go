@@ -17,13 +17,14 @@ func scrapeme(url string) (product, error) {
 		p.Price, err = checkPrice(h.Text)
 	})
 	c.OnRequest(func(r *colly.Request) {
-		fmt.Printf(fmt.Sprintf("visiting %s\n", r.URL))
+		fmt.Printf("visiting %s\n", r.URL)
 	})
 	c.OnError(func(r *colly.Response, scrapeErr error) {
 		err = scrapeErr
 	})
 	c.Visit(url)
 	p.Url = url
+
 	return p, err
 }
 
@@ -38,13 +39,14 @@ func flipkart(url string) (product, error) {
 		p.Price, err = checkPrice(h.Text)
 	})
 	c.OnRequest(func(r *colly.Request) {
-		fmt.Printf(fmt.Sprintf("visiting %s\n", r.URL))
+		fmt.Printf("visiting %s\n", r.URL)
 	})
 	c.OnError(func(r *colly.Response, scrapeErr error) {
 		err = scrapeErr
 	})
 	c.Visit(url)
 	p.Url = url
+
 	return p, err
 }
 
@@ -59,12 +61,13 @@ func amazon(url string) (product, error) {
 		p.Price, err = checkPrice(h.ChildText("span.a-price-whole"))
 	})
 	c.OnRequest(func(r *colly.Request) {
-		fmt.Printf(fmt.Sprintf("visiting %s\n", r.URL))
+		fmt.Printf("visiting %s\n", r.URL)
 	})
 	c.OnError(func(r *colly.Response, scrapeErr error) {
 		err = scrapeErr
 	})
 	c.Visit(url)
 	p.Url = url
+
 	return p, err
 }

@@ -13,6 +13,7 @@ import (
 type trackInput struct {
 	Url string `json:"url"`
 }
+
 type priceTrackInput struct {
 	Url          string  `json:"url"`
 	MinThreshold float64 `json:"min_threshold"`
@@ -34,8 +35,8 @@ func handleRequest() {
 func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var t trackInput
 	defer r.Body.Close()
-	if err := json.NewDecoder(r.Body).Decode(&t);err !=nil {
-		log.Fatal("error during handling the url",err)
+	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
+		log.Println("error during handling the url", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -56,18 +57,20 @@ func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var t trackInput
 	defer r.Body.Close()
-	if err := json.NewDecoder(r.Body).Decode(&t);err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		log.Println("error during handling the url", err)
+		// TODO: return with status code 400
 	}
-	fmt.Println(t.Url) 
+	fmt.Println(t.Url)
 	//TODO:need to persist the request in a database
 }
 
 func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var t priceTrackInput
 	defer r.Body.Close()
-	if err := json.NewDecoder(r.Body).Decode(&t);err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		log.Println("error during price  handling ", err)
+		// TODO: return with status code 400
 	}
 	fmt.Println(t)
 	//TODO:need to persist the request in a database

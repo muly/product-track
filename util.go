@@ -37,6 +37,7 @@ func checkAvailability(s string) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -51,6 +52,7 @@ func checkPrice(price string) (float64, error) {
 		log.Println("error occurred while parsing price", err)
 		return 0, err
 	}
+
 	return s, nil
 }
 
@@ -61,5 +63,6 @@ func shouldNotify(i input, p product) bool {
 	if i.typeOfRequest == requestTypeAvailability && p.Availability {
 		return true
 	}
+
 	return false
 }
