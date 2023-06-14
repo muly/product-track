@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	handleRequest()
 	clientSide(context.Background())
+	handleRequest()
 }
 
 func process(rawURL string) (product, error) {

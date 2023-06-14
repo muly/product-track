@@ -13,6 +13,7 @@ import (
 var client *firestore.Client
 
 func clientSide(ctx context.Context) {
+	log.Println("clientside is started")
 	projectID := os.Getenv("GCP_PROJECT")
 	if projectID == "" {
 		projectID = firestore.DetectProjectID
@@ -22,7 +23,9 @@ func clientSide(ctx context.Context) {
 	if err != nil {
 		log.Printf("error occurred during database", err)
 	}
+	
 	ny := client.Collection("track_request")
+	log.Println("writing document is started")
 	wr, err := ny.Parent.Create(ctx, trackInput{
 		Url:           "www.youtube.com",
 		TypeOfRequest: "priceRequest",
