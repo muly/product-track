@@ -2,13 +2,16 @@ module github.com/muly/product-track
 
 go 1.19
 
-require github.com/gocolly/colly v1.2.0
+require (
+	cloud.google.com/go/firestore v1.10.0
+	github.com/gocolly/colly v1.2.0
+	github.com/julienschmidt/httprouter v1.3.0
+)
 
 require (
 	cloud.google.com/go v0.110.2 // indirect
 	cloud.google.com/go/compute v1.19.0 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
-	cloud.google.com/go/firestore v1.10.0 // indirect
 	cloud.google.com/go/longrunning v0.4.2 // indirect
 	github.com/PuerkitoBio/goquery v1.8.1 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
@@ -22,7 +25,6 @@ require (
 	github.com/google/s2a-go v0.1.3 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.3 // indirect
 	github.com/googleapis/gax-go/v2 v2.8.0 // indirect
-	github.com/julienschmidt/httprouter v1.3.0 // indirect
 	github.com/kennygrant/sanitize v1.2.4 // indirect
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d // indirect
 	github.com/temoto/robotstxt v1.1.2 // indirect
