@@ -1,7 +1,9 @@
 package main
 
+
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -20,4 +22,16 @@ func clientSide(ctx context.Context) {
 	if err != nil {
 		log.Printf("error occurred during database", err)
 	}
+	ny := client.Collection("track_request")
+	wr, err := ny.Parent.Create(ctx, trackInput{
+		Url:           "www.youtube.com",
+		TypeOfRequest: "priceRequest",
+		MinThreshold:  1500,
+	})
+	if err != nil {
+		log.Printf("error in create",err)
+		return 
+	}
+	fmt.Println(wr)
+
 }

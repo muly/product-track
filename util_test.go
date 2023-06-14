@@ -6,7 +6,7 @@ import (
 
 func Test_shouldNotify(t *testing.T) {
 	type args struct {
-		i input
+		i trackInput
 		p product
 	}
 	tests := []struct {
@@ -16,28 +16,28 @@ func Test_shouldNotify(t *testing.T) {
 	}{
 		{
 			name: "checking product availability",
-			args: args{i: input{typeOfRequest: "AVAILABILITY"},
+			args: args{i: trackInput{TypeOfRequest: "AVAILABILITY"},
 				p: product{Availability: true}},
 			want: true,
 		},
 		{
 			name: "checking product unavailability",
-			args: args{i: input{typeOfRequest: "AVAILABILITY"},
+			args: args{i: trackInput{TypeOfRequest: "AVAILABILITY"},
 				p: product{Availability: false}},
 			want: false,
 		},
 		{
 			name: "less than minimum threshold limit ",
-			args: args{i: input{typeOfRequest: "PRICE",
-				minThreshold: 700.0000},
+			args: args{i: trackInput{TypeOfRequest: "PRICE",
+				MinThreshold: 700.0000},
 				p: product{Price: 699.99999},
 			},
 			want: true,
 		},
 		{
 			name: "greater than minimum threshold limit",
-			args: args{i: input{typeOfRequest: "PRICE",
-				minThreshold: 800.000},
+			args: args{i: trackInput{TypeOfRequest: "PRICE",
+				MinThreshold: 800.000},
 				p: product{Price: 19000.087786},
 			},
 			want: false,

@@ -12,10 +12,10 @@ type product struct {
 	Price        float64 `json:"price"`
 	Availability bool    `json:"availability"`
 }
-type input struct {
-	typeOfRequest string
-	minThreshold  float64
-}
+// type input struct {
+// 	typeOfRequest string
+// 	minThreshold  float64
+// }
 
 const requestTypeAvailability = "AVAILABILITY"
 const requestTypePrice = "PRICE"
@@ -56,11 +56,11 @@ func checkPrice(price string) (float64, error) {
 	return s, nil
 }
 
-func shouldNotify(i input, p product) bool {
-	if i.typeOfRequest == requestTypePrice && p.Price < i.minThreshold {
+func shouldNotify(i trackInput, p product) bool {
+	if i.TypeOfRequest == requestTypePrice && p.Price < i.MinThreshold {
 		return true
 	}
-	if i.typeOfRequest == requestTypeAvailability && p.Availability {
+	if i.TypeOfRequest == requestTypeAvailability && p.Availability {
 		return true
 	}
 

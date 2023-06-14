@@ -10,13 +10,14 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-type trackInput struct {
-	Url string `json:"url"`
-}
+// type trackInput struct {
+// 	Url string `json:"url"`
+// }
 
-type priceTrackInput struct {
+type trackInput struct {
 	Url          string  `json:"url"`
 	MinThreshold float64 `json:"min_threshold"`
+	TypeOfRequest string  `json:"type_of_request"`
 }
 
 func handleRequest() {
@@ -66,7 +67,7 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 }
 
 func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	var t priceTrackInput
+	var t trackInput
 	defer r.Body.Close()
 	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		log.Println("error during price  handling ", err)

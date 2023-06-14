@@ -4,24 +4,11 @@ import (
 	"context"
 	"log"
 	"net/url"
-	"os"
-
-	"cloud.google.com/go/firestore"
 )
 
 func main() {
 	handleRequest()
-	ctx:=context.Background()
-	projectID := os.Getenv("GCP_PROJECT")
-	if projectID == "" {
-		projectID = firestore.DetectProjectID
-	}
-	var err error
-	client, err = firestore.NewClient(ctx, projectID)
-	if err != nil {
-		log.Printf("error occurred during database", err)
-	}
-
+	clientSide(context.Background())
 }
 
 func process(rawURL string) (product, error) {
