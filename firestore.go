@@ -22,6 +22,7 @@ func clientSide(ctx context.Context) {
 	client, err = firestore.NewClient(ctx, projectID)
 	if err != nil {
 		log.Printf("error occurred during database", err)
+		return
 	}
 	
 	ny := client.Collection("track_request")
