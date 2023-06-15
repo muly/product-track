@@ -12,6 +12,7 @@ type product struct {
 	Price        float64 `json:"price"`
 	Availability bool    `json:"availability"`
 }
+
 // type input struct {
 // 	typeOfRequest string
 // 	minThreshold  float64

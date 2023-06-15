@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/julienschmidt/httprouter"
@@ -15,8 +16,8 @@ import (
 // }
 
 type trackInput struct {
-	Url          string  `json:"url"`
-	MinThreshold float64 `json:"min_threshold"`
+	Url           string  `json:"url"`
+	MinThreshold  float64 `json:"min_threshold"`
 	TypeOfRequest string  `json:"type_of_request"`
 }
 
@@ -56,14 +57,50 @@ func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 }
 
 func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	ctx := r.Context()
 	var t trackInput
 	defer r.Body.Close()
 	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		log.Println("error during handling the url", err)
 		// TODO: return with status code 400
+		return
 	}
 	fmt.Println(t.Url)
 	//TODO:need to persist the request in a database
+
+	id := fmt.Sprintf("%s|%s", url.QueryEscape(t.Url), t.TypeOfRequest)
+	// id = "test123"
+	fmt.Println("ID ###############", id)
+	fmt.Println("client ###############", client)
+
+	dref := client.Doc(id)
+	fmt.Println("dref ###############", dref)
+
+	_, err := dref.Set(ctx, t)
+	if err != nil {
+		log.Println("error during firestore write", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprint("error during firestore write", err)))
+		return
+	}
+
+	d, err := client.Doc(id).Get(ctx)
+	if err != nil {
+		log.Println("error during firestore get", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprint("error during firestore get", err)))
+		return
+	}
+	var out trackInput
+	if err := d.DataTo(&out); err != nil {
+		log.Println("error during firestore datato", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprint("error during firestore datato", err)))
+		return
+	}
+
+	fmt.Println("data retrieved from firestore", out)
+
 }
 
 func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {

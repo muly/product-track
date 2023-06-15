@@ -11,5 +11,5 @@ lint:
 	go fmt ./...
 	go mod verify
 
-deploy:
-	# TODO: add commands to deploy to gcp
+deploy_local:
+	./scripts/local.sh

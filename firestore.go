@@ -1,9 +1,7 @@
 package main
 
-
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 
@@ -24,18 +22,18 @@ func clientSide(ctx context.Context) {
 		log.Printf("error occurred during database", err)
 		return
 	}
-	
-	ny := client.Collection("track_request")
-	log.Println("writing document is started")
-	wr, err := ny.Parent.Create(ctx, trackInput{
-		Url:           "www.youtube.com",
-		TypeOfRequest: "priceRequest",
-		MinThreshold:  1500,
-	})
-	if err != nil {
-		log.Printf("error in create",err)
-		return 
-	}
-	fmt.Println(wr)
+
+	// ny := client.Collection("track_request")
+	// log.Println("writing document is started")
+	// wr, err := ny.Parent.Create(ctx, trackInput{
+	// 	Url:           "www.youtube.com",
+	// 	TypeOfRequest: "priceRequest",
+	// 	MinThreshold:  1500,
+	// })
+	// if err != nil {
+	// 	log.Printf("error in create", err)
+	// 	return
+	// }
+	// fmt.Println(wr)
 
 }
