@@ -19,7 +19,7 @@ func clientSide(ctx context.Context) {
 	var err error
 	client, err = firestore.NewClient(ctx, projectID)
 	if err != nil {
-		log.Printf("error occurred during database", err)
+		log.Println("error occurred during database", err)
 		return
 	}
 
