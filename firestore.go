@@ -35,5 +35,10 @@ func clientSide(ctx context.Context) {
 	// 	return
 	// }
 	// fmt.Println(wr)
+	// Firebase previously initialized using firebase.initializeApp().
+	// var db = firebase.firestore();
+	// if (location.hostname === "localhost"){
+	//  db.useEmulator("127.0.0.1", 8080);
+	// }
 
 }
