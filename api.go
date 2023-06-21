@@ -64,13 +64,7 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 	}
 	t.TypeOfRequest = requestTypeAvailability
 
-<<<<<<< HEAD
-	id := fmt.Sprintf("[%s][%s]", url.QueryEscape(t.Url),requestTypeAvailability)
-
-	_, err := client.Collection("track_requests").Doc(id).Set(ctx, t)
-=======
 	_, err := client.Collection("track_requests").Doc(t.id()).Set(ctx, t)
->>>>>>> c27568400b9b0f6c5789cce81c1c47b1f823cafb
 	if err != nil {
 		log.Println("error during firestore write", err)
 		w.WriteHeader(http.StatusInternalServerError)
