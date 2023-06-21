@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 
 	"github.com/julienschmidt/httprouter"
@@ -15,6 +14,7 @@ type trackInput struct {
 	Url           string  `json:"url"`
 	MinThreshold  float64 `json:"min_threshold"`
 	TypeOfRequest string  `json:"type_of_request"`
+	activeRequest bool
 }
 
 func handleRequest() {
@@ -32,6 +32,7 @@ func handleRequest() {
 
 func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var t trackInput
+
 	defer r.Body.Close()
 	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		log.Println("error during handling the url", err)
@@ -61,10 +62,9 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	t.TypeOfRequest = requestTypeAvailability
 
-	id := fmt.Sprintf("%s|%s", url.QueryEscape(t.Url), t.TypeOfRequest)
-
-	_, err := client.Collection("track_requests").Doc(id).Set(ctx, t)
+	_, err := client.Collection("track_requests").Doc(t.id()).Set(ctx, t)
 	if err != nil {
 		log.Println("error during firestore write", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -72,22 +72,15 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		return
 	}
 
-	d, err := client.Collection("track_requests").Doc(id).Get(ctx)
-	if err != nil {
+	var tOut trackInput
+	if err := tOut.getByID(ctx); err != nil {
 		log.Println("error during firestore get", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(fmt.Sprint("error during firestore get ", err)))
 		return
 	}
-	var out trackInput
-	if err := d.DataTo(&out); err != nil {
-		log.Println("error during firestore datato", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(fmt.Sprint("error during firestore datato ", err)))
-		return
-	}
 
-	log.Printf("data retrieved from firestore %+v\n", out)
+	log.Printf("data retrieved from firestore %+v\n", tOut)
 }
 
 func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
