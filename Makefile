@@ -12,4 +12,7 @@ lint:
 	go mod verify
 
 deploy_local:
-	./scripts/local.sh
+	./scripts/local.sh 
+
+deploy_dev:
+	gcloud app deploy

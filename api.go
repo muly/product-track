@@ -62,7 +62,7 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		return
 	}
 
-	id := fmt.Sprintf("%s|%s", url.QueryEscape(t.Url), t.TypeOfRequest)
+	id := fmt.Sprintf("[%s][%s]", url.QueryEscape(t.Url),requestTypeAvailability)
 
 	_, err := client.Collection("track_requests").Doc(id).Set(ctx, t)
 	if err != nil {
