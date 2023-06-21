@@ -5,10 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+
+	"cloud.google.com/go/firestore"
 )
 
 const (
 	tableTrackRequests = "track_requests"
+
 )
 
 // - get using filter
@@ -22,7 +25,7 @@ const (
 type trackInputRecords []trackInput
 
 func (t *trackInput) id() string {
-	return fmt.Sprintf("%s|%s", url.QueryEscape(t.Url), t.TypeOfRequest)
+	return fmt.Sprintf("%s %s", url.QueryEscape(t.Url), t.TypeOfRequest)
 }
 
 func (t *trackInput) getByID(ctx context.Context) error {
@@ -39,18 +42,28 @@ func (t *trackInput) getByID(ctx context.Context) error {
 }
 
 func (t *trackInput) deleteByID(ctx context.Context) error {
+	_, err := client.Collection(tableTrackRequests).Doc(t.id()).Delete(ctx)
+	if err != nil {
+		return errors.New("implementation pending")
 
-	return errors.New("implementation pending")
+	}
+	return nil
 }
 
 func (t *trackInput) create(ctx context.Context) error {
-
-	return errors.New("implementation pending")
+	_, err := client.Collection(tableTrackRequests).Doc(t.id()).Create(ctx, t)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (t *trackInput) update(ctx context.Context) error {
-
-	return errors.New("implementation pending")
+	_, err := client.Collection(tableTrackRequests).Doc(t.id()).Update(ctx, []firestore.Update{})
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // // get using filter:

@@ -17,28 +17,9 @@ func clientSide(ctx context.Context) {
 		projectID = firestore.DetectProjectID
 	}
 	var err error
-	client, err = firestore.NewClient(ctx, projectID)
+	client, err = firestore.NewClient(ctx,"projectID")
 	if err != nil {
 		log.Println("error occurred during database", err)
 		return
 	}
-
-	// ny := client.Collection("track_request")
-	// log.Println("writing document is started")
-	// wr, err := ny.Parent.Create(ctx, trackInput{
-	// 	Url:           "www.youtube.com",
-	// 	TypeOfRequest: "priceRequest",
-	// 	MinThreshold:  1500,
-	// })
-	// if err != nil {
-	// 	log.Printf("error in create", err)
-	// 	return
-	// }
-	// fmt.Println(wr)
-	// Firebase previously initialized using firebase.initializeApp().
-	// var db = firebase.firestore();
-	// if (location.hostname === "localhost"){
-	//  db.useEmulator("127.0.0.1", 8080);
-	// }
-
 }
