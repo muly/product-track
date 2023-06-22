@@ -24,7 +24,7 @@ const (
 type trackInputRecords []trackInput
 
 func (t *trackInput) id() string {
-	return fmt.Sprintf("%s %s", url.QueryEscape(t.Url), t.TypeOfRequest)
+	return fmt.Sprintf("[%s][%s]", url.QueryEscape(t.Url), t.TypeOfRequest)
 }
 
 func (t *trackInput) getByID(ctx context.Context) error {
