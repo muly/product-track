@@ -12,8 +12,6 @@ const (
 	tableTrackRequests = "track_requests"
 )
 
-// type trackInputRecords []trackInput
-
 func (t *trackInput) id() string {
 	return fmt.Sprintf("[%s][%s]", url.QueryEscape(t.Url), t.TypeOfRequest)
 }
@@ -23,11 +21,9 @@ func (t *trackInput) getByID(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-
 	if err := d.DataTo(t); err != nil {
 		return err
 	}
-
 	return nil
 }
 
@@ -61,7 +57,6 @@ func (t *trackInput) upsert(ctx context.Context) error {
 		return err
 	}
 	return nil
-
 }
 
 // // get using filter:
