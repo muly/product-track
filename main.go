@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	clientSide(context.Background())
+	initFirestore(context.Background())
 	handleRequest()
 }
 

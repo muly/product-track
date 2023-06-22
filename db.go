@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/url"
 
@@ -13,15 +12,7 @@ const (
 	tableTrackRequests = "track_requests"
 )
 
-// - get using filter
-// - get by id
-// - delete by id
-// - create/insert
-// - update by id
-
-// type trackRequest struct{}
-
-type trackInputRecords []trackInput
+// type trackInputRecords []trackInput
 
 func (t *trackInput) id() string {
 	return fmt.Sprintf("[%s][%s]", url.QueryEscape(t.Url), t.TypeOfRequest)
@@ -43,8 +34,7 @@ func (t *trackInput) getByID(ctx context.Context) error {
 func (t *trackInput) deleteByID(ctx context.Context) error {
 	_, err := client.Collection(tableTrackRequests).Doc(t.id()).Delete(ctx)
 	if err != nil {
-		return errors.New("implementation pending")
-
+		return err
 	}
 	return nil
 }
@@ -64,6 +54,7 @@ func (t *trackInput) patch(ctx context.Context) error {
 	}
 	return nil
 }
+
 func (t *trackInput) upsert(ctx context.Context) error {
 	_, err := client.Collection(tableTrackRequests).Doc(t.id()).Set(ctx, t)
 	if err != nil {

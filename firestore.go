@@ -10,8 +10,7 @@ import (
 
 var client *firestore.Client
 
-func clientSide(ctx context.Context) {
-	log.Println("clientside is started")
+func initFirestore(ctx context.Context) {
 	projectID := os.Getenv("GCP_PROJECT")
 	if projectID == "" {
 		projectID = firestore.DetectProjectID
