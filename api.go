@@ -68,16 +68,6 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		w.Write([]byte(fmt.Sprint("error during firestore upsert in availability handler", err)))
 		return
 	}
-
-	// _, err := client.Collection("track_requests").Doc(t.id()).Set(ctx, t)
-
-	// if err != nil {
-	// 	log.Println("error during firestore write in availability handler", err)
-	// 	w.WriteHeader(http.StatusInternalServerError)
-	// 	w.Write([]byte(fmt.Sprint("error during firestore write in availability handler", err)))
-	// 	return
-	// }
-
 	var tOut = trackInput{Url: t.Url, TypeOfRequest: t.TypeOfRequest}
 	if err := tOut.getByID(ctx); err != nil {
 		log.Println("error during firestore get in availability handler", err)
@@ -85,54 +75,32 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		w.Write([]byte(fmt.Sprint("error during firestore get in availability handler", err)))
 		return
 	}
-	// if err := tOut.create(ctx); err != nil {
-	// 	log.Println("error during firestore create in availability handler", err)
-	// 	w.WriteHeader(http.StatusInternalServerError)
-	// 	w.Write([]byte(fmt.Sprint("error during firestore create in availability handler", err)))
-	// 	return
-	// }
-	// if err := tOut.update(ctx); err != nil {
-	// 	log.Println("error during firestore create in availability handler", err)
-	// 	w.WriteHeader(http.StatusInternalServerError)
-	// 	w.Write([]byte(fmt.Sprint("error during firestore create in availability handler", err)))
-	// 	return
-	// }
-	// if err := tOut.deleteByID(ctx); err != nil {
-	// 	log.Println("error during firestore create in availability handler", err)
-	// 	w.WriteHeader(http.StatusInternalServerError)
-	// 	w.Write([]byte(fmt.Sprint("error during firestore create in availability handler", err)))
-	// 	return
-	// }
-
 	log.Printf("data retrieved from firestore %+v\n", tOut)
 }
 
 func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var t trackInput
-	//ctx := r.Context()
+	ctx := r.Context()
 	defer r.Body.Close()
 	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		log.Println("error during price  handling ", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	// t.TypeOfRequest = requestTypePrice
-	// _, err := client.Collection("track_requests").Doc(t.id()).Set(ctx, t)
-	// if err != nil {
-	// 	log.Println("error during firestore write in price handler", err)
-	// 	w.WriteHeader(http.StatusInternalServerError)
-	// 	w.Write([]byte(fmt.Sprint("error during firestore write in price handler", err)))
-	// 	return
-	// }
-
-	// var tOut trackInput
-	// if err := tOut.getByID(ctx); err != nil {
-	// 	log.Println("error during firestore get in price handler", err)
-	// 	w.WriteHeader(http.StatusInternalServerError)
-	// 	w.Write([]byte(fmt.Sprint("error during firestore get in price handler ", err)))
-	// 	return
-	// }
-
-	// log.Printf("data retrieved from firestore %+v\n", tOut)
+	t.TypeOfRequest = requestTypePrice
+	if err := t.upsert(ctx); err != nil {
+		log.Println("error during firestore upsert in availability handler", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprint("error during firestore upsert in availability handler", err)))
+		return
+	}
+	var tOut = trackInput{Url: t.Url, TypeOfRequest: t.TypeOfRequest}
+	if err := tOut.getByID(ctx); err != nil {
+		log.Println("error during firestore get in availability handler", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprint("error during firestore get in availability handler", err)))
+		return
+	}
+	log.Printf("data retrieved from firestore %+v\n", tOut)
 
 }
