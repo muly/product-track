@@ -11,7 +11,6 @@ import (
 
 const (
 	tableTrackRequests = "track_requests"
-
 )
 
 // - get using filter
@@ -58,12 +57,20 @@ func (t *trackInput) create(ctx context.Context) error {
 	return nil
 }
 
-func (t *trackInput) update(ctx context.Context) error {
+func (t *trackInput) patch(ctx context.Context) error {
 	_, err := client.Collection(tableTrackRequests).Doc(t.id()).Update(ctx, []firestore.Update{})
 	if err != nil {
 		return err
 	}
 	return nil
+}
+func (t *trackInput) upsert(ctx context.Context) error {
+	_, err := client.Collection(tableTrackRequests).Doc(t.id()).Set(ctx, t)
+	if err != nil {
+		return err
+	}
+	return nil
+
 }
 
 // // get using filter:

@@ -17,7 +17,7 @@ func clientSide(ctx context.Context) {
 		projectID = firestore.DetectProjectID
 	}
 	var err error
-	client, err = firestore.NewClient(ctx,"projectID")
+	client, err = firestore.NewClient(ctx, "projectID")
 	if err != nil {
 		log.Println("error occurred during database", err)
 		return

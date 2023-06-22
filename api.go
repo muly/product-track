@@ -62,40 +62,47 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		return
 	}
 	t.TypeOfRequest = requestTypeAvailability
-
-	_, err := client.Collection("track_requests").Doc(t.id()).Set(ctx, t)
-	if err != nil {
-		log.Println("error during firestore write in availability handler", err)
+	if err := t.upsert(ctx); err != nil {
+		log.Println("error during firestore upsert in availability handler", err)
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(fmt.Sprint("error during firestore write in availability handler", err)))
+		w.Write([]byte(fmt.Sprint("error during firestore upsert in availability handler", err)))
 		return
 	}
 
-	var tOut trackInput
+	// _, err := client.Collection("track_requests").Doc(t.id()).Set(ctx, t)
+
+	// if err != nil {
+	// 	log.Println("error during firestore write in availability handler", err)
+	// 	w.WriteHeader(http.StatusInternalServerError)
+	// 	w.Write([]byte(fmt.Sprint("error during firestore write in availability handler", err)))
+	// 	return
+	// }
+
+	var tOut = trackInput{Url: t.Url, TypeOfRequest: t.TypeOfRequest}
 	if err := tOut.getByID(ctx); err != nil {
 		log.Println("error during firestore get in availability handler", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(fmt.Sprint("error during firestore get in availability handler", err)))
 		return
 	}
-	if err:=tOut.create(ctx);err!=nil {
-		log.Println("error during firestore create in availability handler", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(fmt.Sprint("error during firestore create in availability handler", err)))
-		return
-	}
-	if err:=tOut.update(ctx);err!=nil {
-		log.Println("error during firestore create in availability handler", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(fmt.Sprint("error during firestore create in availability handler", err)))
-		return
-	}
-	if err:=tOut.deleteByID(ctx);err!=nil {
-		log.Println("error during firestore create in availability handler", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(fmt.Sprint("error during firestore create in availability handler", err)))
-		return
-	}
+	// if err := tOut.create(ctx); err != nil {
+	// 	log.Println("error during firestore create in availability handler", err)
+	// 	w.WriteHeader(http.StatusInternalServerError)
+	// 	w.Write([]byte(fmt.Sprint("error during firestore create in availability handler", err)))
+	// 	return
+	// }
+	// if err := tOut.update(ctx); err != nil {
+	// 	log.Println("error during firestore create in availability handler", err)
+	// 	w.WriteHeader(http.StatusInternalServerError)
+	// 	w.Write([]byte(fmt.Sprint("error during firestore create in availability handler", err)))
+	// 	return
+	// }
+	// if err := tOut.deleteByID(ctx); err != nil {
+	// 	log.Println("error during firestore create in availability handler", err)
+	// 	w.WriteHeader(http.StatusInternalServerError)
+	// 	w.Write([]byte(fmt.Sprint("error during firestore create in availability handler", err)))
+	// 	return
+	// }
 
 	log.Printf("data retrieved from firestore %+v\n", tOut)
 }
