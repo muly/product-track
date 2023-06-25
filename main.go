@@ -1,11 +1,13 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/url"
 )
 
 func main() {
+	initFirestore(context.Background())
 	handleRequest()
 }
 

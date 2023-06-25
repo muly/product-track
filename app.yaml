@@ -1,2 +1,2 @@
-runtime: go115
+runtime: go119
 app_engine_apis: true

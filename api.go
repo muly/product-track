@@ -11,12 +11,9 @@ import (
 )
 
 type trackInput struct {
-	Url string `json:"url"`
-}
-
-type priceTrackInput struct {
-	Url          string  `json:"url"`
-	MinThreshold float64 `json:"min_threshold"`
+	Url           string  `json:"url"`
+	MinThreshold  float64 `json:"min_threshold"`
+	TypeOfRequest string  `json:"type_of_request"`
 }
 
 func handleRequest() {
@@ -34,6 +31,7 @@ func handleRequest() {
 
 func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var t trackInput
+
 	defer r.Body.Close()
 	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		log.Println("error during handling the url", err)
@@ -59,19 +57,31 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 	defer r.Body.Close()
 	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		log.Println("error during handling the url", err)
-		// TODO: return with status code 400
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
-	fmt.Println(t.Url)
-	//TODO:need to persist the request in a database
+	t.TypeOfRequest = requestTypeAvailability
+	if err := t.upsert(r.Context()); err != nil {
+		log.Println("error during firestore upsert in availability handler", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprint("error during firestore upsert in availability handler", err)))
+		return
+	}
 }
 
 func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	var t priceTrackInput
+	var t trackInput
 	defer r.Body.Close()
 	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		log.Println("error during price  handling ", err)
-		// TODO: return with status code 400
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
-	fmt.Println(t)
-	//TODO:need to persist the request in a database
+	t.TypeOfRequest = requestTypePrice
+	if err := t.upsert(r.Context()); err != nil {
+		log.Println("error during firestore upsert in availability handler", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprint("error during firestore upsert in availability handler", err)))
+		return
+	}
 }

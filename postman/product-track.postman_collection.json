@@ -1,0 +1,75 @@
+{
+	"info": {
+		"_postman_id": "1c7a0371-e8c4-4f7b-8cbc-14567252d39e",
+		"name": "product-track",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4009003"
+	},
+	"item": [
+		{
+			"name": "{{host}}/track/availability",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\":\"https://www.flipkart.com/samsung-galaxy-f13-nightsky-green-64-gb/p/itmeadfda1bd23fa?pid=MOBGENJWF4KJTPEN&lid=LSTMOBGENJWF4KJTPENS2XJXA&marketplace=FLIPKART&store=tyy%2F4io&srno=b_1_1&otracker=clp_banner_1_14.bannerX3.BANNER_mobile-phones-store_ARV72AV1ALWY&fm=neo%2Fmerchandising&iid=d2edff5a-41be-41c5-825a-89fbf189399b.MOBGENJWF4KJTPEN.SEARCH&ppt=clp&ppn=mobile-phones-store&ssid=m55kbf5z280000001686801244020\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/track/availability",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"track",
+						"availability"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{host}}/product",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\":\"https://www.flipkart.com/samsung-galaxy-f13-nightsky-green-64-gb/p/itmeadfda1bd23fa?pid=MOBGENJWF4KJTPEN&lid=LSTMOBGENJWF4KJTPENS2XJXA&marketplace=FLIPKART&store=tyy%2F4io&srno=b_1_1&otracker=clp_banner_1_14.bannerX3.BANNER_mobile-phones-store_ARV72AV1ALWY&fm=neo%2Fmerchandising&iid=d2edff5a-41be-41c5-825a-89fbf189399b.MOBGENJWF4KJTPEN.SEARCH&ppt=clp&ppn=mobile-phones-store&ssid=m55kbf5z280000001686801244020\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/product",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{host}}/track/price",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\":\"https://www.flipkart.com/samsung-galaxy-f13-nightsky-green-64-gb/p/itmeadfda1bd23fa?pid=MOBGENJWF4KJTPEN&lid=LSTMOBGENJWF4KJTPENS2XJXA&marketplace=FLIPKART&store=tyy%2F4io&srno=b_1_1&otracker=clp_banner_1_14.bannerX3.BANNER_mobile-phones-store_ARV72AV1ALWY&fm=neo%2Fmerchandising&iid=d2edff5a-41be-41c5-825a-89fbf189399b.MOBGENJWF4KJTPEN.SEARCH&ppt=clp&ppn=mobile-phones-store&ssid=m55kbf5z280000001686801244020\",\n    \"min_threshold\":100\n}"
+				},
+				"url": {
+					"raw": "{{host}}/track/price",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"track",
+						"price"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
