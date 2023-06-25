@@ -94,7 +94,7 @@ func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		w.Write([]byte(fmt.Sprint("error during firestore upsert in availability handler", err)))
 		return
 	}
-	var tOut = trackInput{Url: t.Url, TypeOfRequest: t.TypeOfRequest}
+	var tOut = trackInput{Url: t.Url, TypeOfRequest: t.TypeOfRequest,MinThreshold: t.MinThreshold}
 	if err := tOut.getByID(ctx); err != nil {
 		log.Println("error during firestore get in availability handler", err)
 		w.WriteHeader(http.StatusInternalServerError)
