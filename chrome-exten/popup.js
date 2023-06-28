@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     event.preventDefault();
 
-    chrome.tabs.query({currentWindow:true, active : true},function(tabs){
-       var Url=(tabs[0].url)
-       console.log(Url)
-    });
+    // chrome.tabs.query({currentWindow:true, active : true},function(tabs){
+    //    var Url=(tabs[0].url)
+    //    console.log(Url)
+    // });
     
     // async function getCurrentTab() {
     //   let queryOptions = { active: true, currentWindow: true };
@@ -17,7 +17,38 @@ document.addEventListener('DOMContentLoaded', function() {
     //   getCurrentTab()
     //   .then((data) => { console.log('newdata',data)})
     //   .then(() => { console.log('error')});
-      
+    // function fetchActiveTabURL() {
+    //   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    //     if (tabs && tabs.length > 0) {
+    //       var url = tabs[0].url;
+    //       // or perform any other action with the URL
+    //     }
+    //   });
+    // }
+    
+    // // Call the function to fetch the URL
+    //   var Url=fetchActiveTabURL();  
+    //   console.log(Url)
+    // Ensure the extension has the "tabs" permission in the manifest.json file.
+
+// Function to fetch the URL of the current active tab and pass it to a callback function
+    function fetchActiveTabURL(callback) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        if (tabs && tabs.length > 0) {
+        var url = tabs[0].url;
+        callback(url);
+        }
+      });
+    }
+
+// Example usage
+    var activeTabURL;
+
+    fetchActiveTabURL(function(url) {
+    activeTabURL = url;
+  // console.log(activeTabURL); // or perform any other action with the URL
+   
+
    
 
     var submitBtn = document.getElementById('submitBtn');
@@ -32,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
             mode:"no-cors",
             headers : { "Content-Type" : "application/json" } ,
             body: JSON.stringify({
-              //url:objectname.url
+              url:activeTabURL
                 
                
             })
@@ -53,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 mode:"no-cors",
                 headers : { "Content-Type" : "application/json" } ,
                 body: JSON.stringify({
-                    //url:objectname.url,
+                    url:activeTabURL,
                     min_threshold:parseFloat(minPriceThreshold)
                 })
             })
@@ -66,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Tracking price with min threshold:', minPriceThreshold);
           }
         });
+      });
       });
       
     
