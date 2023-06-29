@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
-    "name": "Hello Extensions",
-    "description": "Base Level Extension",
+    "name": "product-track",
+    "description": "track your product price and availability",
     "version": "1.0",
     "action": {
       "default_popup": "popup.html",
@@ -11,5 +11,7 @@
         "64":"logo.png"
     },
     "permissions":["activeTab","tabs"]
+
+
 }
   
