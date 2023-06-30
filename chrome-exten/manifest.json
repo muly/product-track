@@ -10,8 +10,6 @@
     "icons":{
         "64":"logo.png"
     },
-    "permissions":["activeTab","tabs"]
-
-
+    "permissions":["activeTab"]
 }
   

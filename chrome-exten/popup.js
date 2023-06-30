@@ -31,8 +31,11 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch((err) => {
                 console.log(err. Message)
             })
+
         console.log('Tracking availability...');
-      } else if (selectedOption === 'price') {
+       window.close();  
+      }
+      else if (selectedOption === 'price') {
           fetch(apiurl+`/track/price`, {
               method: "POST",
               mode:"no-cors",
@@ -48,9 +51,9 @@ document.addEventListener('DOMContentLoaded', function() {
               .catch((err) => {
                 console.log(err. Message)
               })
-         console.log('Tracking price with min threshold:', minPriceThreshold);
-      }
-      window.close();
+          console.log('Tracking price with min threshold:', minPriceThreshold);
+        window.close();
+      }  
     });
   });
 });
