@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     activeTabURL = url;
     var submitBtn = document.getElementById('submitBtn');
     submitBtn.addEventListener('click', function() {  
+      window.close();
       var selectedOption = document.querySelector('input[name="option"]:checked').value;
       var minPriceThreshold = document.getElementById('minPrice').value;
       if (selectedOption === 'availability') {
@@ -31,9 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch((err) => {
                 console.log(err. Message)
             })
-
-        console.log('Tracking availability...');
-       window.close();  
       }
       else if (selectedOption === 'price') {
           fetch(apiurl+`/track/price`, {
@@ -52,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log(err. Message)
               })
           console.log('Tracking price with min threshold:', minPriceThreshold);
-        window.close();
+      
       }  
     });
   });
