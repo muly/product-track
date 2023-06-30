@@ -49,9 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
               .catch((err) => {
                 console.log(err. Message)
               })
-          console.log('Tracking price with min threshold:', minPriceThreshold);
-      
-      }  
+        }  
     });
   });
 });
