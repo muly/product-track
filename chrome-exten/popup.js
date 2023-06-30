@@ -1,6 +1,6 @@
 var apiurl=`https://smuly-test-ground.ue.r.appspot.com`
 document.addEventListener('DOMContentLoaded', function() {
-    event.preventDefault()
+    //event.preventDefault()
     function fetchActiveTabURL(callback) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         if (tabs && tabs.length > 0) {
@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchActiveTabURL(function(url) {
     activeTabURL = url;
     var submitBtn = document.getElementById('submitBtn');
-    submitBtn.addEventListener('click', function() {  
-      window.close();
+    submitBtn.addEventListener('click', function(event) {  
+      event.preventDefault();
       var selectedOption = document.querySelector('input[name="option"]:checked').value;
       var minPriceThreshold = document.getElementById('minPrice').value;
       if (selectedOption === 'availability') {
@@ -27,7 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
             })
         })
             .then((req) => {
-                alert('Successful') ;
+                alert("succesfull") ;
+                window.close();
             })
             .catch((err) => {
                 console.log(err. Message)
@@ -45,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
           })
               .then((req) => {
                   alert('Successful') ;
+                  window.close();
               })
               .catch((err) => {
                 console.log(err. Message)
