@@ -1,6 +1,5 @@
 var apiurl=`https://smuly-test-ground.ue.r.appspot.com`
 document.addEventListener('DOMContentLoaded', function() {
-    //event.preventDefault()
     function fetchActiveTabURL(callback) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         if (tabs && tabs.length > 0) {
