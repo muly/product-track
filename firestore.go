@@ -8,7 +8,7 @@ import (
 	"cloud.google.com/go/firestore"
 )
 
-var client *firestore.Client
+var firestoreClient *firestore.Client
 
 func initFirestore(ctx context.Context) {
 	projectID := os.Getenv("GCP_PROJECT")
@@ -16,7 +16,7 @@ func initFirestore(ctx context.Context) {
 		projectID = firestore.DetectProjectID
 	}
 	var err error
-	client, err = firestore.NewClient(ctx, projectID)
+	firestoreClient, err = firestore.NewClient(ctx, projectID)
 	if err != nil {
 		log.Println("error occurred during database", err)
 		return
