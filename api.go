@@ -26,7 +26,13 @@ func handleRequest() {
 	router.POST("/track/availability", availabilityHandler)
 	router.POST("/product", productHandler)
 	router.POST("/track/price", priceHandler)
+	router.POST("/execute-request",executeRequest)
 	log.Fatal(http.ListenAndServe(":"+port, router))
+}
+
+func executeRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params){
+
+
 }
 
 func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
