@@ -51,8 +51,8 @@ func (t *trackInput) patch(ctx context.Context) error {
 	currentTime := time.Now()
 
 	_, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Update(ctx, []firestore.Update{
-		{Path: "ProcessedDate", Value: currentTime},
-		{Path: "ProcessStatus", Value: "SUCCESS"},
+		{Path: "/execute-request", Value: currentTime},
+		{Path: "/excute-request", Value: "SUCCESS"},
 	})
 	if err != nil {
 		return err
