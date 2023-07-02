@@ -60,7 +60,7 @@ func shouldNotify(i trackInput, p product) bool {
 
 func notify(t trackInput) error {
 	// TODO: implement later
-	log.Println("MOCK NOTIFICATION SENT for %s request for %s", t.TypeOfRequest, t.Url)
+	log.Printf("MOCK NOTIFICATION SENT for %s request for %s", t.TypeOfRequest, t.Url)
 
 	return nil
 

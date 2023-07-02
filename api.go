@@ -62,10 +62,10 @@ func processRequestBatch(l trackInputList) {
 		p, err := process(t.Url)
 		ctx := context.Background()
 		if err != nil {
-			log.Println("error processing %s request for %s", t.TypeOfRequest, t.Url)
+			log.Printf("error processing %s request for %s", t.TypeOfRequest, t.Url)
 			// TODO: also update the track_request table in a status field.
 			update := map[string]interface{}{
-				t.ProcessStatus: "ERROR",
+				"ProcessStatus": "SUCCESS",
 			}
 			updateErr := t.patch(ctx)
 			if updateErr != nil {
@@ -78,10 +78,10 @@ func processRequestBatch(l trackInputList) {
 		}
 		if shouldNotify(t, p) {
 			if err := notify(t); err != nil {
-				log.Println("error sending notification: %s request for %s", t.TypeOfRequest, t.Url)
+				log.Printf("error sending notification: %s request for %s", t.TypeOfRequest, t.Url)
 				// TODO: also update the track_request table in a status field.
 				update := map[string]interface{}{
-					t.ProcessStatus: "ERROR",
+					"ProcessStatus": "SUCCESS",
 				}
 				updateErr := t.patch(ctx)
 				if updateErr != nil {
@@ -96,7 +96,7 @@ func processRequestBatch(l trackInputList) {
 		// TODO: update the records processed_date field with current timestamp, and status field as SUCCESS
 		update := map[string]interface{}{
 			"ProcessedDate": time.Now(),
-			t.ProcessStatus: "SUCCESS",
+			"ProcessStatus": "SUCCESS",
 		}
 		updateErr := t.patch(ctx)
 		if updateErr != nil {
