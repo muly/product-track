@@ -94,16 +94,16 @@ func processRequestBatch(l trackInputList) {
 			}
 		}
 		// TODO: update the records processed_date field with current timestamp, and status field as SUCCESS
-		update := map[string]interface{}{
-			"ProcessedDate": time.Now(),
-			t.ProcessStatus : "SUCCESS",
-		}
+		
+			t.ProcessedDate=time.Now()
+			t.ProcessStatus = "success"
+		
 		updateErr := t.patch(ctx)
 		if updateErr != nil {
 			log.Printf("Failed to update processed_date and status fields for document %s: %v\n", t.id(), updateErr)
 		}
 
-		fmt.Println("Document updated successfully.", update)
+		fmt.Println("Document updated successfully.")
 	}
 }
 
