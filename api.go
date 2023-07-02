@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -59,19 +60,50 @@ func executeRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 func processRequestBatch(l trackInputList) {
 	for _, t := range l {
 		p, err := process(t.Url)
+		ctx := context.Background()
 		if err != nil {
 			log.Println("error processing %s request for %s", t.TypeOfRequest, t.Url)
 			// TODO: also update the track_request table in a status field.
+			update := map[string]interface{}{
+				t.ProcessStatus: "ERROR",
+			}
+			updateErr := t.patch(ctx)
+			if updateErr != nil {
+				log.Printf("Failed to update status field for document %s: %v\n", t.id(), updateErr)
+			} else {
+				log.Println("track input updated", update)
+			}
+
 			continue
 		}
 		if shouldNotify(t, p) {
 			if err := notify(t); err != nil {
 				log.Println("error sending notification: %s request for %s", t.TypeOfRequest, t.Url)
 				// TODO: also update the track_request table in a status field.
+				update := map[string]interface{}{
+					t.ProcessStatus: "ERROR",
+				}
+				updateErr := t.patch(ctx)
+				if updateErr != nil {
+					log.Printf("Failed to update status field for document %s: %v\n", t.id(), updateErr)
+				} else {
+					log.Println("track input updated", update)
+				}
+
 				continue
 			}
 		}
 		// TODO: update the records processed_date field with current timestamp, and status field as SUCCESS
+		update := map[string]interface{}{
+			"ProcessedDate": time.Now(),
+			t.ProcessStatus: "SUCCESS",
+		}
+		updateErr := t.patch(ctx)
+		if updateErr != nil {
+			log.Printf("Failed to update processed_date and status fields for document %s: %v\n", t.id(), updateErr)
+		}
+
+		fmt.Println("Document updated successfully.", update)
 	}
 }
 
