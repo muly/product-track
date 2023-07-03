@@ -96,7 +96,6 @@ func processRequestBatch(l trackInputList) {
 		// TODO: update the records processed_date field with current timestamp, and status field as SUCCESS
 		currentTime := time.Now()
 
-		// Create a map with the fields to update
 		update := map[string]interface{}{
 			"ProcessedDate": currentTime,
 			"ProcessStatus": "SUCCESS",
