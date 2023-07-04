@@ -46,13 +46,19 @@ func (t *trackInput) create(ctx context.Context) error {
 	return nil
 }
 
-func (t *trackInput) patch(ctx context.Context,updates map[string]interface{}) error {
+func (t *trackInput) patch(ctx context.Context, updates map[string]interface{}) error {
 	//currentTime := time.Now()
+	firestoreUpdate := make([]firestore.Update,0, len(updates))
 
-	_, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Update(ctx, []firestore.Update{
-		// {Path: "/execute-request", Value: currentTime},
-		// {Path: "/execute-request", Value: "SUCCESS"},
-	})
+	for key , value:=range updates{
+		firestoreUpdate=append(firestoreUpdate,firestore.Update{
+			Path:key,
+			Value:value,
+		})
+		
+	}
+
+	_, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Update(ctx, firestoreUpdate)
 	if err != nil {
 		return err
 	}
