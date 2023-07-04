@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "1c7a0371-e8c4-4f7b-8cbc-14567252d39e",
+		"_postman_id": "d8e42773-b81e-46a1-8eec-c5531529428e",
 		"name": "product-track",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "4009003"
+		"_exporter_id": "25561777"
 	},
 	"item": [
 		{
@@ -66,6 +66,27 @@
 					"path": [
 						"track",
 						"price"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{host}}/execute-request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/execute-request",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"execute-request"
 					]
 				}
 			},
