@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"time"
 
 	"cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
@@ -47,12 +46,12 @@ func (t *trackInput) create(ctx context.Context) error {
 	return nil
 }
 
-func (t *trackInput) patch(ctx context.Context) error {
-	currentTime := time.Now()
+func (t *trackInput) patch(ctx context.Context,updates map[string]interface{}) error {
+	//currentTime := time.Now()
 
 	_, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Update(ctx, []firestore.Update{
-		{Path: "/execute-request", Value: currentTime},
-		{Path: "/excute-request", Value: "SUCCESS"},
+		// {Path: "/execute-request", Value: currentTime},
+		// {Path: "/execute-request", Value: "SUCCESS"},
 	})
 	if err != nil {
 		return err
