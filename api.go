@@ -20,6 +20,12 @@ type trackInput struct {
 	ProcessStatus string
 }
 
+const (
+	fieldProcessStatus = "ProcessStatus"
+	fieldProcessedDate = "ProcessedDate"
+	fieldProcessNotes  = "ProcessNotes"
+)
+
 func handleRequest() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -43,7 +49,7 @@ func executeRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 		log.Println("trackInputList.get() error:", err)
 		return
 	}
-	log.Println("all records :::::::::::::", len(l), l)
+	log.Println("records processed", len(l))
 
 	// make into batches
 	var batch []trackInputList
@@ -62,8 +68,8 @@ func processRequestBatch(ctx context.Context, l trackInputList) {
 		if err != nil {
 			log.Printf("error processing %s request for %s", t.TypeOfRequest, t.Url)
 			updates := map[string]interface{}{
-				"ProcessStatus": "ERROR",
-				"ProcessNotes":  err.Error(),
+				fieldProcessStatus: "ERROR",
+				fieldProcessNotes:  err.Error(),
 			}
 			if updateErr := t.patch(ctx, updates); updateErr != nil {
 				log.Printf("Failed to update status field for document %s: %v\n", t.id(), updateErr)
@@ -75,8 +81,8 @@ func processRequestBatch(ctx context.Context, l trackInputList) {
 			if err := notify(t); err != nil {
 				log.Printf("error sending notification: %s request for %s", t.TypeOfRequest, t.Url)
 				updates := map[string]interface{}{
-					"ProcessStatus": "ERROR",
-					"ProcessNotes":  err.Error(),
+					fieldProcessStatus: "ERROR",
+					fieldProcessNotes:  err.Error(),
 				}
 				if updateErr := t.patch(ctx, updates); updateErr != nil {
 					log.Printf("Failed to update status field for document %s: %v\n", t.id(), updateErr)
@@ -87,24 +93,13 @@ func processRequestBatch(ctx context.Context, l trackInputList) {
 		}
 
 		updates := map[string]interface{}{
-			"ProcessedDate": time.Now(),
-			"ProcessStatus": "SUCCESS",
+			fieldProcessedDate: time.Now(),
+			fieldProcessStatus: "SUCCESS",
 		}
 
 		if err := t.patch(ctx, updates); err != nil {
 			log.Printf("Failed to update processed_date and status fields for document %s: %v\n", t.id(), err)
 		}
-
-		// { // just for debugging
-		// 	tOut := trackInput{Url: t.Url, TypeOfRequest: t.TypeOfRequest}
-		// 	err = tOut.getByID(ctx)
-		// 	if err != nil {
-		// 		log.Printf("Failed  getByID(%v): %v\n", t.id(), err)
-		// 		continue
-		// 	}
-
-		// 	log.Println("getByID output :::::::::::", tOut)
-		// }
 	}
 }
 
@@ -146,9 +141,6 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		w.Write([]byte(fmt.Sprint("error during firestore upsert in availability handler", err)))
 		return
 	}
-
-	// // TODO: remove this after testing
-
 }
 
 func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {

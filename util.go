@@ -63,5 +63,4 @@ func notify(t trackInput) error {
 	log.Printf("MOCK NOTIFICATION SENT for %s request for %s", t.TypeOfRequest, t.Url)
 
 	return nil
-
 }
