@@ -101,12 +101,13 @@ func processRequestBatch(l trackInputList) {
 			"ProcessStatus": "SUCCESS",
 		}
 
-		updateErr := t.patch(ctx,updates)
-		if updateErr != nil {
-			log.Printf("Failed to update processed_date and status fields for document %s: %v\n", t.id(), updateErr)
+		err = t.patch(ctx,updates)
+		if err != nil {
+			log.Printf("Failed to update processed_date and status fields for document %s: %v\n", t.id(), err)
+			continue
 		}
 
-		//fmt.Println("Document updated successfully.", update)
+		log.Println("Document updated successfully.")
 	}
 }
 
