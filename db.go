@@ -16,7 +16,7 @@ const (
 type trackInputList []trackInput
 
 func (t *trackInput) id() string {
-	return fmt.Sprintf("[%s][%s]", url.QueryEscape(t.Url), t.TypeOfRequest)
+	return fmt.Sprintf("[%s][%s]", t.TypeOfRequest, url.QueryEscape(t.Url))
 }
 
 func (t *trackInput) getByID(ctx context.Context) error {
@@ -24,50 +24,41 @@ func (t *trackInput) getByID(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	if err := d.DataTo(t); err != nil {
-		return err
-	}
-	return nil
+	return d.DataTo(t)
 }
 
 func (t *trackInput) deleteByID(ctx context.Context) error {
-	_, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Delete(ctx)
-	if err != nil {
+	if _, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Delete(ctx); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (t *trackInput) create(ctx context.Context) error {
-	_, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Create(ctx, t)
-	if err != nil {
+	if _, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Create(ctx, t); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (t *trackInput) patch(ctx context.Context, updates map[string]interface{}) error {
-	//currentTime := time.Now()
-	firestoreUpdate := make([]firestore.Update,0, len(updates))
-
-	for key , value:=range updates{
-		firestoreUpdate=append(firestoreUpdate,firestore.Update{
-			Path:key,
-			Value:value,
+	// convert the map to slice
+	firestoreUpdate := make([]firestore.Update, 0, len(updates))
+	for key, value := range updates {
+		firestoreUpdate = append(firestoreUpdate, firestore.Update{
+			Path:  key,
+			Value: value,
 		})
-		
 	}
 
-	_, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Update(ctx, firestoreUpdate)
-	if err != nil {
+	if _, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Update(ctx, firestoreUpdate); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (t *trackInput) upsert(ctx context.Context) error {
-	_, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Set(ctx, t)
-	if err != nil {
+	if _, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Set(ctx, t); err != nil {
 		return err
 	}
 	return nil
@@ -81,7 +72,6 @@ type filter struct {
 
 // get using filter:
 func (l *trackInputList) get(ctx context.Context, filters []filter) error {
-
 	q := firestoreClient.Collection(tableTrackRequests).Query
 	for _, f := range filters {
 		q = q.Where(f.path, f.op, f.value)
