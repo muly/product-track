@@ -8,6 +8,7 @@ import (
 
 func main() {
 	initFirestore(context.Background())
+	initEmail()
 	handleRequest()
 }
 
