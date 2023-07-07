@@ -5,6 +5,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"gopkg.in/mail.v2"
 )
 
 type product struct {
@@ -58,9 +60,10 @@ func shouldNotify(i trackInput, p product) bool {
 	return false
 }
 
-// func notify(t trackInput) error {
-// 	// TODO: implement later
-// 	log.Printf("MOCK NOTIFICATION SENT for %s request for %s", t.TypeOfRequest, t.Url)
+func notify(t trackInput) error {
+	
+	requesttype(&mail.Message{})
+	log.Printf("MOCK NOTIFICATION SENT for %s request for %s", t.TypeOfRequest, t.Url)
 
-// 	return nil
-// }
+	return nil
+}
