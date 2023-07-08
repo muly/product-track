@@ -15,6 +15,7 @@ var payload []byte
 
 func main() {
 	initFirestore(context.Background())
+	initEmailClient()
 	handleRequest()
 	projectID := "smuly-test-ground"
 
@@ -63,7 +64,7 @@ func main() {
 		log.Fatalf("failed to access secret version: %v", err)
 	}
 	log.Printf("Plaintext: %s", result.Payload.Data)
-	initEmailClient()
+	
 	
 }
 
