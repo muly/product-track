@@ -16,16 +16,11 @@ func initEmailClient() {
 }
 
 //function for sending email to the user according to the type of request
-func sendEmail()(*mail.Message) {
-	var t trackInput
+func sendEmail(t trackInput) error {
 	log.Println("creating mail")
 	m := mail.NewMessage()
 	m.SetHeader("From", "smulytestground@gmail.com")
 	m.SetHeader("To", "rohith.knaidu0125@gmail.com")
-	if err := emailClient.DialAndSend(m); err != nil {
-		log.Println("Error sending email:", err)
-		return nil
-	}
 	if t.TypeOfRequest == requestTypeAvailability {
 		m.SetHeader("Subject", "Availability update Notification")
 		m.SetBody("text/plain", "product %s is available"+t.Url)
@@ -33,5 +28,9 @@ func sendEmail()(*mail.Message) {
 		m.SetHeader("Subject", "price update Notification")
 		m.SetBody("text/plain", "product %s is available with the minimum cost you needed"+t.Url)
 	}
-	return m 
+	if err := emailClient.DialAndSend(m); err != nil {
+		log.Println("Error sending email:", err)
+	}
+	
+	return nil 
 }

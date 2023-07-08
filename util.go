@@ -63,9 +63,6 @@ func shouldNotify(i trackInput, p product) bool {
 
 //function for calling  sendemail function
 func notify(t trackInput) error {
-	if err:=sendEmail();err!=nil{
-		log.Println("error occured in notify function",err)
-		return nil 
-	}
+	sendEmail(t)
 	return nil
 }
