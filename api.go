@@ -26,6 +26,7 @@ const (
 	fieldProcessNotes  = "ProcessNotes"
 )
 
+//initializing port with 4 end points of post type
 func handleRequest() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -40,6 +41,7 @@ func handleRequest() {
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }
 
+//api function for  execute_request  end point 
 func executeRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	// get records
 	todayDate := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 0, 0, 0, 0, time.UTC)
@@ -62,6 +64,7 @@ func executeRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	}
 }
 
+//function for updating time and status once executing api with endpoint execute_request is called 
 func processRequestBatch(ctx context.Context, l trackInputList) {
 	for _, t := range l {
 		p, err := process(t.Url)
@@ -103,6 +106,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) {
 	}
 }
 
+//function for processing the url 
 func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var t trackInput
 
@@ -126,6 +130,7 @@ func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	}
 }
 
+//function for availability request with /track/availability end point
 func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var t trackInput
 	defer r.Body.Close()
@@ -143,6 +148,7 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 	}
 }
 
+//function for price request with /track/price end point
 func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var t trackInput
 	defer r.Body.Close()

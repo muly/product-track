@@ -12,6 +12,7 @@ func main() {
 	handleRequest()
 }
 
+//function for processing a url according the url provided
 func process(rawURL string) (product, error) {
 	u, err := url.Parse(rawURL)
 	if err != nil {

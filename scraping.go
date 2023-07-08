@@ -6,6 +6,7 @@ import (
 	"github.com/gocolly/colly"
 )
 
+//scraping function for collecting  scrapeme data
 func scrapeme(url string) (product, error) {
 	var p product
 	var err error
@@ -28,6 +29,7 @@ func scrapeme(url string) (product, error) {
 	return p, err
 }
 
+//scraping function for collecting  flipkart data
 func flipkart(url string) (product, error) {
 	var p product
 	var err error
@@ -50,6 +52,7 @@ func flipkart(url string) (product, error) {
 	return p, err
 }
 
+//scraping function for collecting  amazon data
 func amazon(url string) (product, error) {
 	var p product
 	var err error

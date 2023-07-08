@@ -5,8 +5,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-
-	"gopkg.in/mail.v2"
 )
 
 type product struct {
@@ -18,6 +16,7 @@ type product struct {
 const requestTypeAvailability = "AVAILABILITY"
 const requestTypePrice = "PRICE"
 
+//function for checking availability using regular expressions
 func checkAvailability(s string) bool {
 	if strings.Contains(s, "In stock") {
 		return true
@@ -36,6 +35,7 @@ func checkAvailability(s string) bool {
 	return false
 }
 
+//function for converting price from converting string type to float64 
 func checkPrice(price string) (float64, error) {
 	currencyList := []string{"₹", "$", "£"}
 	price = strings.Replace(price, ",", "", -1)
@@ -50,6 +50,7 @@ func checkPrice(price string) (float64, error) {
 	return s, nil
 }
 
+//function for conditions to satisfy for sending email
 func shouldNotify(i trackInput, p product) bool {
 	if i.TypeOfRequest == requestTypePrice && p.Price < i.MinThreshold {
 		return true
@@ -60,10 +61,8 @@ func shouldNotify(i trackInput, p product) bool {
 	return false
 }
 
+//function for calling  sendemail function
 func notify(t trackInput) error {
-	
-	requesttype(&mail.Message{})
-	log.Printf("MOCK NOTIFICATION SENT for %s request for %s", t.TypeOfRequest, t.Url)
-
+	sendEmail()
 	return nil
 }
