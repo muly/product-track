@@ -2,20 +2,19 @@ package main
 
 import (
 	"log"
-	"os"
 
 	"gopkg.in/mail.v2"
 )
 
 var emailClient *mail.Dialer
 
-//function for initializing email 
+// function for initializing email
 func initEmailClient() {
-	password := os.Getenv("GMAIL_PASSWORD")
+	password := string(payload)
 	emailClient = mail.NewDialer("smtp.gmail.com", 587, "smulytestground@gmail.com", password)
 }
 
-//function for sending email to the user according to the type of request
+// function for sending email to the user according to the type of request
 func sendEmail(t trackInput) error {
 	log.Println("creating mail")
 	m := mail.NewMessage()
@@ -31,6 +30,6 @@ func sendEmail(t trackInput) error {
 	if err := emailClient.DialAndSend(m); err != nil {
 		log.Println("Error sending email:", err)
 	}
-	
-	return nil 
+
+	return nil
 }

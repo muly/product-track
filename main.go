@@ -11,6 +11,7 @@ import (
 )
 
 var secretManagerClient *secretmanager.Client
+var payload []byte 
 
 func main() {
 	initFirestore(context.Background())
@@ -44,7 +45,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to create secret: %v", err)
 	}
-	payload := []byte("nihavebfxhzbkhml")
+	payload = []byte("nihavebfxhzbkhml")
 	addSecretVersionReq := &secretmanagerpb.AddSecretVersionRequest{
 		Parent: secret.Name,
 		Payload: &secretmanagerpb.SecretPayload{
