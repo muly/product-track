@@ -20,8 +20,8 @@ func sendEmail()(*mail.Message) {
 	var t trackInput
 	log.Println("creating mail")
 	m := mail.NewMessage()
-	m.SetHeader("From", "smulytestground@gmail.com")
-	m.SetHeader("To", "rohith.knaidu0125@gmail.com")
+	m.SetHeader("From", "rohith.knaidu0125@gmail.com")
+	m.SetHeader("To", "smulytestground@gmail.com")
 	if err := emailClient.DialAndSend(m); err != nil {
 		log.Println("Error sending email:", err)
 		return nil
