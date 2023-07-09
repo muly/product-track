@@ -11,7 +11,7 @@ import (
 )
 
 var secretManagerClient *secretmanager.Client
-var payload []byte
+var secretVersion *secretmanagerpb.AccessSecretVersionResponse
 
 func main() {
 	log.Println("main function started")
@@ -34,9 +34,25 @@ func testSecret() {
 		log.Printf("failed to setup client: %v", err)
 		return
 	}
-	defer secretManagerClient.Close()
+	defer secretManagerClient.Close() 
+	
+	req := &secretmanagerpb.CreateSecretRequest{
+		Parent:"smuly-test-ground" ,
+		SecretId: projectID,
+		Secret: &secretmanagerpb.Secret{
+				Replication: &secretmanagerpb.Replication{
+						Replication: &secretmanagerpb.Replication_Automatic_{
+								Automatic: &secretmanagerpb.Replication_Automatic{},
+						},
+				},
+		},
+	}
+	result, err := secretManagerClient.CreateSecret(ctx, req)
+        if err != nil {
+                return 
+        }
+    log.Printf( "Created secret: %s\n", result.Name)
 	secretID := "TEST_SECRET"
-
 	secretVersion, err := secretManagerClient.AccessSecretVersion(ctx, &secretmanagerpb.AccessSecretVersionRequest{
 		Name: fmt.Sprintf("projects/%s/secrets/%s/versions/1", projectID, secretID),
 	})
