@@ -11,7 +11,8 @@ import (
 )
 
 var secretManagerClient *secretmanager.Client
-var secretVersion *secretmanagerpb.AccessSecretVersionResponse
+var Payload *secretmanagerpb.SecretPayload
+var Data []byte 
 
 func main() {
 	log.Println("main function started")
@@ -35,24 +36,7 @@ func testSecret() {
 		return
 	}
 	defer secretManagerClient.Close() 
-	
-	req := &secretmanagerpb.CreateSecretRequest{
-		Parent:"smuly-test-ground" ,
-		SecretId: projectID,
-		Secret: &secretmanagerpb.Secret{
-				Replication: &secretmanagerpb.Replication{
-						Replication: &secretmanagerpb.Replication_Automatic_{
-								Automatic: &secretmanagerpb.Replication_Automatic{},
-						},
-				},
-		},
-	}
-	result, err := secretManagerClient.CreateSecret(ctx, req)
-        if err != nil {
-                return 
-        }
-    log.Printf( "Created secret: %s\n", result.Name)
-	secretID := "TEST_SECRET"
+	secretID := "TEST_SECRET"//get gmail password
 	secretVersion, err := secretManagerClient.AccessSecretVersion(ctx, &secretmanagerpb.AccessSecretVersionRequest{
 		Name: fmt.Sprintf("projects/%s/secrets/%s/versions/1", projectID, secretID),
 	})
@@ -66,7 +50,7 @@ func testSecret() {
 		// -> Add Another Role -> search and add "Secret Manager Secret Accessor" role -> Save
 		return
 	}
-	log.Printf("secret %s is %s, %s", secretID, string(secretVersion.Payload.Data), secretVersion.Payload.String)
+	log.Printf("secret %s is %s, %s", secretID, string(secretVersion.Payload.Data), secretVersion.Payload.String) // package level
 }
 
 // function for processing a url according the url provided

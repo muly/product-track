@@ -7,10 +7,11 @@ import (
 )
 
 var emailClient *mail.Dialer
+var password string
 
 // function for initializing email
 func initEmailClient() {
-	password := secretVersion.String()
+	password =string(Payload.Data)
 	emailClient = mail.NewDialer("smtp.gmail.com", 587, "smulytestground@gmail.com", password)
 }
 
