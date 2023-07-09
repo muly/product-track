@@ -11,61 +11,46 @@ import (
 )
 
 var secretManagerClient *secretmanager.Client
-var payload []byte 
+var payload []byte
 
 func main() {
+	log.Println("main function started")
 	initFirestore(context.Background())
 	initEmailClient()
+
+	testSecret()
+
 	handleRequest()
-	projectID := "smuly-test-ground"
+}
+
+func testSecret() {
+	projectID := "149500152182" // project id in number format, not alpha string
 
 	// Create the client.
 	ctx := context.Background()
 	var err error
 	secretManagerClient, err = secretmanager.NewClient(ctx)
 	if err != nil {
-		log.Fatalf("failed to setup client: %v", err)
+		log.Println("failed to setup client: %v", err)
+		return
 	}
 	defer secretManagerClient.Close()
+	secretID := "TEST_SECRET"
 
-	// Create the request to create the secret.
-	createSecretReq := &secretmanagerpb.CreateSecretRequest{
-		Parent:   fmt.Sprintf("projects/%s", projectID),
-		SecretId: "test123",
-		Secret: &secretmanagerpb.Secret{
-			Replication: &secretmanagerpb.Replication{
-				Replication: &secretmanagerpb.Replication_Automatic_{
-					Automatic: &secretmanagerpb.Replication_Automatic{},
-				},
-			},
-		},
-	}
-
-	secret, err := secretManagerClient.CreateSecret(ctx, createSecretReq)
+	secretVersion, err := secretManagerClient.AccessSecretVersion(ctx, &secretmanagerpb.AccessSecretVersionRequest{
+		Name: fmt.Sprintf("projects/%s/secrets/%s/versions/1", projectID, secretID),
+	})
 	if err != nil {
-		log.Fatalf("failed to create secret: %v", err)
+		log.Printf("failed to access secret version: %v", err)
+		// ERROR: rpc error: code = PermissionDenied desc = Permission 'secretmanager.versions.access' denied for resource 'projects/149500152182/secrets/TEST_SECRET/versions/1' (or it may not exist).
+		// Note: secretmanager.versions.access permission is part of "Secret Manager Secret Accessor" role. 
+		// Fix: add "Secret Manager Secret Accessor" role to the Principal which is used as service account for the app engine. in this case it is the App Engine default service account (smuly-test-ground@appspot.gserviceaccount.com). 
+		// steps: go to IAM -> IAM (https://console.cloud.google.com/iam-admin/iam?project=smuly-test-ground)  
+		// -> edit the "App Engine default service account" principal
+		// -> Add Another Role -> search and add "Secret Manager Secret Accessor" role -> Save
+		return
 	}
-	payload = []byte("nihavebfxhzbkhml")
-	addSecretVersionReq := &secretmanagerpb.AddSecretVersionRequest{
-		Parent: secret.Name,
-		Payload: &secretmanagerpb.SecretPayload{
-			Data: payload,
-		},
-	}
-	version, err := secretManagerClient.AddSecretVersion(ctx, addSecretVersionReq)
-	if err != nil {
-		log.Fatalf("failed to add secret version: %v", err)
-	}
-	accessRequest := &secretmanagerpb.AccessSecretVersionRequest{
-		Name: version.Name,
-	}
-	result, err := secretManagerClient.AccessSecretVersion(ctx, accessRequest)
-	if err != nil {
-		log.Fatalf("failed to access secret version: %v", err)
-	}
-	log.Printf("Plaintext: %s", result.Payload.Data)
-	
-	
+	log.Printf("secret %s is %s, %s", secretID, string(secretVersion.Payload.Data), secretVersion.Payload.String)
 }
 
 // function for processing a url according the url provided
