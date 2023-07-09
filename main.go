@@ -37,7 +37,7 @@ func testSecret() {
 		return
 	}
 	defer secretManagerClient.Close() 
-	secretID := "TEST_SECRET"//get gmail password
+	secretID := "GMAIL_PASSWORD"//get gmail password
 	secretVersion, err := secretManagerClient.AccessSecretVersion(ctx, &secretmanagerpb.AccessSecretVersionRequest{
 		Name: fmt.Sprintf("projects/%s/secrets/%s/versions/1", projectID, secretID),
 	})
