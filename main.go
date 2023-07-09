@@ -31,7 +31,7 @@ func testSecret() {
 	var err error
 	secretManagerClient, err = secretmanager.NewClient(ctx)
 	if err != nil {
-		log.Println("failed to setup client: %v", err)
+		log.Printf("failed to setup client: %v", err)
 		return
 	}
 	defer secretManagerClient.Close()
