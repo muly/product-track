@@ -11,8 +11,7 @@ import (
 )
 
 var secretManagerClient *secretmanager.Client
-var Payload *secretmanagerpb.SecretPayload
-var Data []byte 
+var payloadData []byte 
 
 func main() {
 	log.Println("main function started")
@@ -51,6 +50,7 @@ func testSecret() {
 		// -> Add Another Role -> search and add "Secret Manager Secret Accessor" role -> Save
 		return
 	}
+	payloadData=secretVersion.Payload.Data
 	log.Printf("secret %s is %s, %s", secretID, string(secretVersion.Payload.Data), secretVersion.Payload.String) // package level
 }
 
