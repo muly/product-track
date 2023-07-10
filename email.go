@@ -18,7 +18,7 @@ func initEmailClient() {
 func sendEmail(t trackInput) error {
 	log.Println("creating mail")
 	m := mail.NewMessage()
-	m.SetHeader("From", "rohith.knaidu0125d@gmail.com")
+	m.SetHeader("From", "rohith.knaidu0125@gmail.com")
 	m.SetHeader("To", "smulytestground@gmail.com")
 	if t.TypeOfRequest == requestTypeAvailability {
 		m.SetHeader("Subject", "Availability update Notification")
