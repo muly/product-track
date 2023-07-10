@@ -51,7 +51,7 @@ func testSecret() {
 		return
 	}
 	payloadData=secretVersion.Payload.Data
-	//log.Printf("secret %s is %s, %s", secretID, string(secretVersion.Payload.Data), secretVersion.Payload.String) // package level
+	log.Printf("secret %s is %s", secretID, string(payloadData)) // package level
 }
 
 // function for processing a url according the url provided
