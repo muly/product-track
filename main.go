@@ -16,11 +16,11 @@ var payloadData []byte
 func main() {
 	log.Println("main function started")
 	initFirestore(context.Background())
-	handleRequest()
 
 	initEmailClient()
 
 	testSecret()
+	handleRequest()
 
 }
 
