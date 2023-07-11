@@ -12,7 +12,7 @@ import (
 
 var secretManagerClient *secretmanager.Client
 var payloadData []byte 
-var p string
+var password string
 
 func main() {
 	log.Println("main function started")
@@ -52,7 +52,7 @@ func testSecret() {
 		return
 	}
 	payloadData=secretVersion.Payload.Data
-	p=string(payloadData)
+	password=string(payloadData)
 }
 
 // function for processing a url according the url provided
