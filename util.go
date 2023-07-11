@@ -22,8 +22,7 @@ func checkAvailability(s string) bool {
 		return true
 	}
 	hurryRegexList := []string{
-		`^[Hh]urry, only ([0-9]+) items left!$`,
-		`^[Hh]urry only ([0-9]+) items left!$`,
+		`^[Hh]urry, Only ([0-9]+) left!$`,   //this is not working for flipkart if there are more than 10 products avaialble
 	}
 	for _, hurryRegex := range hurryRegexList {
 		hurryRegex := regexp.MustCompile(hurryRegex)
@@ -35,7 +34,7 @@ func checkAvailability(s string) bool {
 	return false
 }
 
-//function for converting price from converting string type to float64 
+//function for converting price from converting string type to float64  //price conversion
 func checkPrice(price string) (float64, error) {
 	currencyList := []string{"₹", "$", "£"}
 	price = strings.Replace(price, ",", "", -1)
@@ -50,7 +49,7 @@ func checkPrice(price string) (float64, error) {
 	return s, nil
 }
 
-//function for conditions to satisfy for sending email
+//function for conditions to satisfy for sending email   //notify condition
 func shouldNotify(i trackInput, p product) bool {
 	if i.TypeOfRequest == requestTypePrice && p.Price < i.MinThreshold {
 		return true
@@ -62,7 +61,7 @@ func shouldNotify(i trackInput, p product) bool {
 }
 
 //function for calling  sendemail function
-func notify(t trackInput) error {
+func notify(t trackInput) error { //should notify
 	sendEmail(t)
 	return nil
 }

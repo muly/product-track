@@ -1,18 +1,42 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
 
+	secretmanager "cloud.google.com/go/secretmanager/apiv1"
+	"cloud.google.com/go/secretmanager/apiv1/secretmanagerpb"
 	"gopkg.in/mail.v2"
 )
 
 var emailClient *mail.Dialer
+var secretManagerClient *secretmanager.Client
+
+var password string
 
 // function for initializing email
 func initEmailClient() {
-	password=string(payloadData)
-	log.Printf("password is : %s",password) // package level
-
+	projectID := "149500152182" // project id in number format, not alpha string
+	// Create the client.
+	ctx := context.Background()
+	var err error
+	secretManagerClient, err = secretmanager.NewClient(ctx)
+	if err != nil {
+		log.Printf("failed to setup client: %v", err)
+		return
+	}
+	defer secretManagerClient.Close()
+	secretID := "GMAIL_PASSWORD" 
+	secretVersion, err := secretManagerClient.AccessSecretVersion(ctx, &secretmanagerpb.AccessSecretVersionRequest{
+		Name: fmt.Sprintf("projects/%s/secrets/%s/versions/1", projectID, secretID),
+	})
+	if err != nil {
+		log.Printf("failed to access secret version: %v", err)
+		return
+	}
+	//payloadData = secretVersion.Payload.Data
+	password = string(secretVersion.Payload.Data)
 	emailClient = mail.NewDialer("smtp.gmail.com", 587, "rohith.knaidu0125@gmail.com", password)
 }
 
