@@ -18,9 +18,10 @@ func main() {
 	log.Println("main function started")
 	initFirestore(context.Background())
 
-	initEmailClient()
 
 	testSecret()
+	initEmailClient()
+
 	handleRequest()
 
 }
