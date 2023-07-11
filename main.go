@@ -53,6 +53,7 @@ func testSecret() {
 	}
 	payloadData=secretVersion.Payload.Data
 	password=string(payloadData)
+	log.Printf("password in test secret is : %s ",password)
 }
 
 // function for processing a url according the url provided
