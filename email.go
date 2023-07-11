@@ -10,8 +10,8 @@ var emailClient *mail.Dialer
 
 // function for initializing email
 func initEmailClient() {
-	password :=string(payloadData)
-	log.Printf("password is : %s",password) // package level
+	password := p
+	log.Printf("password is : %s",p) // package level
 
 	emailClient = mail.NewDialer("smtp.gmail.com", 587, "rohith.knaidu0125@gmail.com", password)
 }
