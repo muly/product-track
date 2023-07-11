@@ -6,7 +6,7 @@ import (
 	"github.com/gocolly/colly"
 )
 
-//scraping function for collecting  scrapeme data
+// scraping function for collecting  scrapeme data
 func scrapeme(url string) (product, error) {
 	var p product
 	var err error
@@ -15,7 +15,7 @@ func scrapeme(url string) (product, error) {
 		p.Availability = checkAvailability(h.Text)
 	})
 	c.OnHTML("p.price", func(h *colly.HTMLElement) {
-		p.Price, err = checkPrice(h.Text)
+		p.Price, err = priceConvertor(h.Text)
 	})
 	c.OnRequest(func(r *colly.Request) {
 		fmt.Printf("visiting %s\n", r.URL)
@@ -29,7 +29,7 @@ func scrapeme(url string) (product, error) {
 	return p, err
 }
 
-//scraping function for collecting  flipkart data
+// scraping function for collecting  flipkart data
 func flipkart(url string) (product, error) {
 	var p product
 	var err error
@@ -38,7 +38,7 @@ func flipkart(url string) (product, error) {
 		p.Availability = checkAvailability(h.Text)
 	})
 	c.OnHTML("div._30jeq3._16Jk6d", func(h *colly.HTMLElement) {
-		p.Price, err = checkPrice(h.Text)
+		p.Price, err = priceConvertor(h.Text)
 	})
 	c.OnRequest(func(r *colly.Request) {
 		fmt.Printf("visiting %s\n", r.URL)
@@ -52,7 +52,7 @@ func flipkart(url string) (product, error) {
 	return p, err
 }
 
-//scraping function for collecting  amazon data
+// scraping function for collecting  amazon data
 func amazon(url string) (product, error) {
 	var p product
 	var err error
@@ -61,7 +61,7 @@ func amazon(url string) (product, error) {
 		p.Availability = checkAvailability(h.Text)
 	})
 	c.OnHTML("div.a-section.a-spacing-none.aok-align-center", func(h *colly.HTMLElement) {
-		p.Price, err = checkPrice(h.ChildText("span.a-price-whole"))
+		p.Price, err = priceConvertor(h.ChildText("span.a-price-whole"))
 	})
 	c.OnRequest(func(r *colly.Request) {
 		fmt.Printf("visiting %s\n", r.URL)

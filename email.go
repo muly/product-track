@@ -12,7 +12,6 @@ import (
 
 var emailClient *mail.Dialer
 var secretManagerClient *secretmanager.Client
-
 var password string
 
 // function for initializing email
@@ -27,7 +26,7 @@ func initEmailClient() {
 		return
 	}
 	defer secretManagerClient.Close()
-	secretID := "GMAIL_PASSWORD" 
+	secretID := "GMAIL_PASSWORD"
 	secretVersion, err := secretManagerClient.AccessSecretVersion(ctx, &secretmanagerpb.AccessSecretVersionRequest{
 		Name: fmt.Sprintf("projects/%s/secrets/%s/versions/1", projectID, secretID),
 	})

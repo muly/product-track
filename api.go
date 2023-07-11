@@ -26,7 +26,7 @@ const (
 	fieldProcessNotes  = "ProcessNotes"
 )
 
-//initializing port with 4 end points of post type
+// initializing port with 4 end points of post type
 func handleRequest() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -41,7 +41,7 @@ func handleRequest() {
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }
 
-//api function for  execute_request  end point 
+// api function for  execute_request  end point
 func executeRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	// get records
 	todayDate := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 0, 0, 0, 0, time.UTC)
@@ -64,10 +64,10 @@ func executeRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	}
 }
 
-//function for updating time and status once executing api with endpoint execute_request is called 
+// function for updating time and status once executing api with endpoint execute_request is called
 func processRequestBatch(ctx context.Context, l trackInputList) {
 	for _, t := range l {
-		p, err := process(t.Url)
+		p, err := callScraping(t.Url)
 		if err != nil {
 			log.Printf("error processing %s request for %s", t.TypeOfRequest, t.Url)
 			updates := map[string]interface{}{
@@ -77,10 +77,9 @@ func processRequestBatch(ctx context.Context, l trackInputList) {
 			if updateErr := t.patch(ctx, updates); updateErr != nil {
 				log.Printf("Failed to update status field for document %s: %v\n", t.id(), updateErr)
 			}
-
 			continue
 		}
-		if shouldNotify(t, p) {
+		if notifyConditions(t, p) {
 			if err := notify(t); err != nil {
 				log.Printf("error sending notification: %s request for %s", t.TypeOfRequest, t.Url)
 				updates := map[string]interface{}{
@@ -90,33 +89,29 @@ func processRequestBatch(ctx context.Context, l trackInputList) {
 				if updateErr := t.patch(ctx, updates); updateErr != nil {
 					log.Printf("Failed to update status field for document %s: %v\n", t.id(), updateErr)
 				}
-
 				continue
 			}
 		}
-
 		updates := map[string]interface{}{
 			fieldProcessedDate: time.Now(),
 			fieldProcessStatus: "SUCCESS",
 		}
-
 		if err := t.patch(ctx, updates); err != nil {
 			log.Printf("Failed to update processed_date and status fields for document %s: %v\n", t.id(), err)
 		}
 	}
 }
 
-//function for processing the url 
+// function for processing the url
 func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var t trackInput
-
 	defer r.Body.Close()
 	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		log.Println("error during handling the url", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	pr, err := process(t.Url)
+	pr, err := callScraping(t.Url)
 	if err != nil {
 		log.Println("error in processing url", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -130,7 +125,7 @@ func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	}
 }
 
-//function for availability request with /track/availability end point
+// function for availability request with /track/availability end point
 func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var t trackInput
 	defer r.Body.Close()
@@ -148,7 +143,7 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 	}
 }
 
-//function for price request with /track/price end point
+// function for price request with /track/price end point
 func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var t trackInput
 	defer r.Body.Close()

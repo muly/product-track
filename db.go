@@ -19,7 +19,7 @@ func (t *trackInput) id() string {
 	return fmt.Sprintf("[%s][%s]", t.TypeOfRequest, url.QueryEscape(t.Url))
 }
 
-//get operation using id
+// get operation using id
 func (t *trackInput) getByID(ctx context.Context) error {
 	d, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Get(ctx)
 	if err != nil {
@@ -28,7 +28,7 @@ func (t *trackInput) getByID(ctx context.Context) error {
 	return d.DataTo(t)
 }
 
-//delete operation using id 
+// delete operation using id
 func (t *trackInput) deleteByID(ctx context.Context) error {
 	if _, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Delete(ctx); err != nil {
 		return err
@@ -36,7 +36,7 @@ func (t *trackInput) deleteByID(ctx context.Context) error {
 	return nil
 }
 
-//create operation
+// create operation
 func (t *trackInput) create(ctx context.Context) error {
 	if _, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Create(ctx, t); err != nil {
 		return err
@@ -44,7 +44,7 @@ func (t *trackInput) create(ctx context.Context) error {
 	return nil
 }
 
-//update operation
+// update operation
 func (t *trackInput) patch(ctx context.Context, updates map[string]interface{}) error {
 	// convert the map to slice
 	firestoreUpdate := make([]firestore.Update, 0, len(updates))
@@ -60,7 +60,7 @@ func (t *trackInput) patch(ctx context.Context, updates map[string]interface{}) 
 	return nil
 }
 
-//perform set operation
+// perform set operation
 func (t *trackInput) upsert(ctx context.Context) error {
 	if _, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Set(ctx, t); err != nil {
 		return err

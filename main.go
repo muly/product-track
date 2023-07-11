@@ -12,8 +12,8 @@ func main() {
 	handleRequest()
 }
 
-// function for processing a url according the url provided  //scraping
-func process(rawURL string) (product, error) {
+// function for processing a url according the url provided
+func callScraping(rawURL string) (product, error) {
 	u, err := url.Parse(rawURL)
 	if err != nil {
 		return product{}, err
