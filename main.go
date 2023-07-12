@@ -8,10 +8,12 @@ import (
 
 func main() {
 	initFirestore(context.Background())
+	initEmailClient()
 	handleRequest()
 }
 
-func process(rawURL string) (product, error) {
+// function for processing a url according the url provided
+func callScraping(rawURL string) (product, error) {
 	u, err := url.Parse(rawURL)
 	if err != nil {
 		return product{}, err

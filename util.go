@@ -16,17 +16,17 @@ type product struct {
 const requestTypeAvailability = "AVAILABILITY"
 const requestTypePrice = "PRICE"
 
+// function for checking availability using regular expressions
 func checkAvailability(s string) bool {
 	if strings.Contains(s, "In stock") {
 		return true
 	}
 	hurryRegexList := []string{
-		`^[Hh]urry, only ([0-9]+) items left!$`,
-		`^[Hh]urry only ([0-9]+) items left!$`,
+		`^[Hh]urry, Only ([0-9]+) left!$`,
+		`^Delivery by([0-9]+) [a-zA-Z], [a-zA-Z]$`, //Delivery by19 Jul, Wednesday|Free₹40?
 	}
 	for _, hurryRegex := range hurryRegexList {
 		hurryRegex := regexp.MustCompile(hurryRegex)
-
 		if hurryRegex.MatchString(s) {
 			return true
 		}
@@ -34,7 +34,8 @@ func checkAvailability(s string) bool {
 	return false
 }
 
-func checkPrice(price string) (float64, error) {
+// function for converting price from converting string type to float64  //price conversion
+func priceConvertor(price string) (float64, error) {
 	currencyList := []string{"₹", "$", "£"}
 	price = strings.Replace(price, ",", "", -1)
 	for _, c := range currencyList {
@@ -48,7 +49,8 @@ func checkPrice(price string) (float64, error) {
 	return s, nil
 }
 
-func shouldNotify(i trackInput, p product) bool {
+// function for conditions to satisfy for sending email   //notify condition
+func notifyConditions(i trackInput, p product) bool {
 	if i.TypeOfRequest == requestTypePrice && p.Price < i.MinThreshold {
 		return true
 	}
@@ -58,9 +60,8 @@ func shouldNotify(i trackInput, p product) bool {
 	return false
 }
 
-func notify(t trackInput) error {
-	// TODO: implement later
-	log.Printf("MOCK NOTIFICATION SENT for %s request for %s", t.TypeOfRequest, t.Url)
-
+// function for calling  sendemail function
+func notify(t trackInput) error { //should notify
+	sendEmail(t)
 	return nil
 }

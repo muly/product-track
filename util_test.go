@@ -45,7 +45,7 @@ func Test_shouldNotify(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := shouldNotify(tt.args.i, tt.args.p); got != tt.want {
+			if got := notifyConditions(tt.args.i, tt.args.p); got != tt.want {
 				t.Errorf("shouldNotify() = %v, want %v", got, tt.want)
 			}
 		})
@@ -107,7 +107,7 @@ func Test_checkPrice(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := checkPrice(tt.args.price)
+			got, err := priceConvertor(tt.args.price)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("checkPrice() error = %v, wantErr %v", err, tt.wantErr)
 				return
