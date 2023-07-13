@@ -61,7 +61,7 @@ func notifyConditions(i trackInput, p product) bool {
 }
 
 // function for calling  sendemail function
-func notify(t trackInput) error { //should notify
+func shouldNotify(t trackInput) error { //should notify
 	sendEmail(t)
 	return nil
 }
