@@ -3,30 +3,33 @@ package main
 import (
 	"context"
 	"log"
-	"net/url"
+	"net/http"
+	"os"
+
+	"github.com/julienschmidt/httprouter"
 )
 
 func main() {
-	initFirestore(context.Background())
-	initEmailClient()
-	handleRequest()
-}
 
-// function for processing a url according the url provided
-func callScraping(rawURL string) (product, error) {
-	u, err := url.Parse(rawURL)
-	if err != nil {
-		return product{}, err
+	if err := initFirestore(context.Background()); err != nil {
+		log.Printf("failed to create firestore client: %v", err)
+		os.Exit(1)
 	}
-	switch u.Hostname() {
-	case "scrapeme.live":
-		return scrapeme(rawURL)
-	case "www.flipkart.com":
-		return flipkart(rawURL)
-	case "www.amazon.in":
-		return amazon(rawURL)
-	default:
-		log.Printf("%s is not supported\n", u.Hostname())
-		return product{}, err
+
+	if err := initEmailClient(); err != nil {
+		log.Printf("failed to create email client: %v", err)
+		os.Exit(1)
 	}
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8006"
+		log.Printf("Defaulting to port %s", port)
+	}
+	router := httprouter.New()
+	router.POST("/track/availability", availabilityHandler)
+	router.POST("/product", productHandler)
+	router.POST("/track/price", priceHandler)
+	router.POST("/execute-request", executeRequest)
+	log.Fatal(http.ListenAndServe(":"+port, router))
 }

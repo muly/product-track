@@ -2,9 +2,30 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/url"
 
 	"github.com/gocolly/colly"
 )
+
+// function for processing a url according the url provided
+func callScraping(rawURL string) (product, error) {
+	u, err := url.Parse(rawURL)
+	if err != nil {
+		return product{}, err
+	}
+	switch u.Hostname() {
+	case "scrapeme.live":
+		return scrapeme(rawURL)
+	case "www.flipkart.com":
+		return flipkart(rawURL)
+	case "www.amazon.in":
+		return amazon(rawURL)
+	default:
+		log.Printf("%s is not supported\n", u.Hostname())
+		return product{}, err
+	}
+}
 
 // scraping function for collecting  scrapeme data
 func scrapeme(url string) (product, error) {
@@ -34,7 +55,7 @@ func flipkart(url string) (product, error) {
 	var p product
 	var err error
 	c := colly.NewCollector()
-	c.OnHTML("div._2JC05C", func(h *colly.HTMLElement) {
+	c.OnHTML("div._3XINqE", func(h *colly.HTMLElement) {
 		p.Availability = checkAvailability(h.Text)
 	})
 	c.OnHTML("div._30jeq3._16Jk6d", func(h *colly.HTMLElement) {

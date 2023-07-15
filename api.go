@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/julienschmidt/httprouter"
@@ -25,21 +24,6 @@ const (
 	fieldProcessedDate = "ProcessedDate"
 	fieldProcessNotes  = "ProcessNotes"
 )
-
-// initializing port with 4 end points of post type
-func handleRequest() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8006"
-		log.Printf("Defaulting to port %s", port)
-	}
-	router := httprouter.New()
-	router.POST("/track/availability", availabilityHandler)
-	router.POST("/product", productHandler)
-	router.POST("/track/price", priceHandler)
-	router.POST("/execute-request", executeRequest)
-	log.Fatal(http.ListenAndServe(":"+port, router))
-}
 
 // api function for  execute_request  end point
 func executeRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -79,8 +63,8 @@ func processRequestBatch(ctx context.Context, l trackInputList) {
 			}
 			continue
 		}
-		if notifyConditions(t, p) {
-			if err := shouldNotify(t); err != nil {
+		if shouldNotify(t, p) {
+			if err := sendEmail(t); err != nil {
 				log.Printf("error sending notification: %s request for %s", t.TypeOfRequest, t.Url)
 				updates := map[string]interface{}{
 					fieldProcessStatus: "ERROR",

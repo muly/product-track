@@ -22,8 +22,7 @@ func checkAvailability(s string) bool {
 		return true
 	}
 	hurryRegexList := []string{
-		`^[Hh]urry, Only ([0-9]+) left!$`,
-		`^Delivery by([0-9]+) [a-zA-Z], [a-zA-Z]$`, //Delivery by19 Jul, Wednesday|Free₹40?
+		`^Delivery by`,
 	}
 	for _, hurryRegex := range hurryRegexList {
 		hurryRegex := regexp.MustCompile(hurryRegex)
@@ -50,7 +49,7 @@ func priceConvertor(price string) (float64, error) {
 }
 
 // function for conditions to satisfy for sending email   //notify condition
-func notifyConditions(i trackInput, p product) bool {
+func shouldNotify(i trackInput, p product) bool {
 	if i.TypeOfRequest == requestTypePrice && p.Price < i.MinThreshold {
 		return true
 	}
@@ -60,8 +59,4 @@ func notifyConditions(i trackInput, p product) bool {
 	return false
 }
 
-// function for calling  sendemail function
-func shouldNotify(t trackInput) error { //should notify
-	sendEmail(t)
-	return nil
-}
+

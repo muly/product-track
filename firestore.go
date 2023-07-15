@@ -8,11 +8,9 @@ import (
 	"cloud.google.com/go/firestore"
 )
 
-// declaring variable at package level to access it easily
 var firestoreClient *firestore.Client
 
-// function for initializing firestore
-func initFirestore(ctx context.Context) {
+func initFirestore(ctx context.Context) error {
 	projectID := os.Getenv("GCP_PROJECT")
 	if projectID == "" {
 		projectID = firestore.DetectProjectID
@@ -21,6 +19,7 @@ func initFirestore(ctx context.Context) {
 	firestoreClient, err = firestore.NewClient(ctx, projectID)
 	if err != nil {
 		log.Println("error occurred during database", err)
-		return
+		return err
 	}
+	return nil
 }

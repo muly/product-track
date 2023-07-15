@@ -45,7 +45,7 @@ func Test_shouldNotify(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := notifyConditions(tt.args.i, tt.args.p); got != tt.want {
+			if got := shouldNotify(tt.args.i, tt.args.p); got != tt.want {
 				t.Errorf("shouldNotify() = %v, want %v", got, tt.want)
 			}
 		})
@@ -134,13 +134,13 @@ func Test_checkAvailability(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "less number of products available",
-			args: args{"Hurry, only 4 items left!"},
+			name: "delivery by format 1",
+			args: args{"Delivery by19 Jul, Wednesday|Free₹40?"},
 			want: true,
 		},
 		{
-			name: "less number of products available: regex without comma",
-			args: args{"Hurry only 4 items left!"},
+			name: "delivery by format 2",
+			args: args{"Delivery by19 Jul"},
 			want: true,
 		},
 		{
