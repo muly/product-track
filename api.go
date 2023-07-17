@@ -64,7 +64,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) {
 			continue
 		}
 		if shouldNotify(t, p) {
-			if err := sendEmail(t); err != nil {
+			if err := sendTrackNotificationEmail(t); err != nil {
 				log.Printf("error sending notification: %s request for %s", t.TypeOfRequest, t.Url)
 				updates := map[string]interface{}{
 					fieldProcessStatus: "ERROR",
