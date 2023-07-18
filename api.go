@@ -36,7 +36,7 @@ func executeRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	var l trackInputList
 	filters := []filter{
 		{"ProcessedDate", "<", todayDate},
-		{"ProcessStatus", "!=", processStatusSuccess},
+		// {"ProcessStatus", "!=", processStatusSuccess},
 	}
 	if err := l.get(r.Context(), filters); err != nil {
 		log.Println("trackInputList.get() error:", err)
@@ -68,7 +68,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 				typeOfRequest: t.TypeOfRequest,
 				url:           t.Url,
 				patchData: map[string]interface{}{
-					fieldProcessedDate: time.Now(),
+					// fieldProcessedDate: time.Now(),
 					fieldProcessStatus: processStatusError,
 					fieldProcessNotes:  processNotes,
 				}})
@@ -82,7 +82,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 					typeOfRequest: t.TypeOfRequest,
 					url:           t.Url,
 					patchData: map[string]interface{}{
-						fieldProcessedDate: time.Now(),
+						// fieldProcessedDate: time.Now(),
 						fieldProcessStatus: processStatusError,
 						fieldProcessNotes:  err.Error(),
 					}})
