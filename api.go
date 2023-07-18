@@ -46,7 +46,7 @@ func executeRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	var lTodayFailed trackInputList
 	filters = []filter{
 		{"ProcessedDate", "==", todayDate},
-		{"ProcessStatus", "!=", processStatusSuccess},
+		{"ProcessStatus", "==", processStatusError}, // TODO: looks like this filter is not working.
 	}
 	if err := lTodayFailed.get(r.Context(), filters); err != nil {
 		log.Println("trackInputList.get() [today failed records] error:", err)
@@ -54,7 +54,7 @@ func executeRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	}
 
 	var l trackInputList = append(lPrev, lTodayFailed...)
-	log.Println("records processed", len(l))
+	log.Println("total records to be processed", len(l))
 
 	// make into batches
 	var batch []trackInputList

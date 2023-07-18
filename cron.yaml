@@ -2,3 +2,4 @@ cron:
 - description: "daily execute-requests job"
   url: /execute-request
   schedule: every 24 hours
+  timezone: Asia/Calcutta
