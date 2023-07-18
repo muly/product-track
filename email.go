@@ -62,13 +62,13 @@ func prepareTrackNotificationEmail(t trackInput) (*mail.Message, error) {
 	log.Println("creating mail")
 	m := mail.NewMessage()
 	m.SetHeader("From", "rohith.knaidu0125@gmail.com")
-	m.SetHeader("To", "msrinivasareddy@gmail.com,rohith.knaidu0125@gmail.com")
+	m.SetHeader("To", "msrinivasareddy@gmail.com", "rohith.knaidu0125@gmail.com")
 	if t.TypeOfRequest == requestTypeAvailability {
 		m.SetHeader("Subject", "Availability update Notification")
-		m.SetBody("text/plain", "product %s is available"+t.Url)
+		m.SetBody("text/plain", "product is available: "+t.Url)
 	} else if t.TypeOfRequest == requestTypePrice {
 		m.SetHeader("Subject", "price update Notification")
-		m.SetBody("text/plain", "product %s is available with the minimum cost you needed"+t.Url)
+		m.SetBody("text/plain", "product is available with the minimum cost you needed: "+t.Url)
 	} else {
 		return nil, fmt.Errorf("invalid request type %s", t.TypeOfRequest)
 	}

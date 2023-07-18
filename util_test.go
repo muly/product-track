@@ -42,6 +42,14 @@ func Test_shouldNotify(t *testing.T) {
 			},
 			want: false,
 		},
+		{
+			name: "empty product",
+			args: args{i: trackInput{TypeOfRequest: "PRICE",
+				MinThreshold: 800.000},
+				p: product{},
+			},
+			want: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

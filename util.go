@@ -50,6 +50,9 @@ func priceConvertor(price string) (float64, error) {
 
 // function for conditions to satisfy for sending email   //notify condition
 func shouldNotify(i trackInput, p product) bool {
+	if (p == product{}) {
+		return false
+	}
 	if i.TypeOfRequest == requestTypePrice && p.Price < i.MinThreshold {
 		return true
 	}
@@ -58,5 +61,3 @@ func shouldNotify(i trackInput, p product) bool {
 	}
 	return false
 }
-
-

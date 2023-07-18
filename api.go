@@ -23,6 +23,9 @@ const (
 	fieldProcessStatus = "ProcessStatus"
 	fieldProcessedDate = "ProcessedDate"
 	fieldProcessNotes  = "ProcessNotes"
+
+	processStatusSuccess = "SUCCESS"
+	processStatusError   = "ERROR"
 )
 
 // api function for  execute_request  end point
@@ -31,7 +34,11 @@ func executeRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	todayDate := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 0, 0, 0, 0, time.UTC)
 
 	var l trackInputList
-	if err := l.get(r.Context(), []filter{filter{"ProcessedDate", "<", todayDate}}); err != nil {
+	filters := []filter{
+		{"ProcessedDate", "<", todayDate},
+		{"ProcessStatus", "!=", processStatusSuccess},
+	}
+	if err := l.get(r.Context(), filters); err != nil {
 		log.Println("trackInputList.get() error:", err)
 		return
 	}
@@ -48,42 +55,52 @@ func executeRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	}
 }
 
-// function for updating time and status once executing api with endpoint execute_request is called
-func processRequestBatch(ctx context.Context, l trackInputList) {
+// processRequestBatch processes the given batch of track inputs and return the payload for process updates back to database
+func processRequestBatch(ctx context.Context, l trackInputList) patchList {
+	processNotes := ""
+	var updatesTodo patchList
 	for _, t := range l {
 		p, err := callScraping(t.Url)
 		if err != nil {
-			log.Printf("error processing %s request for %s", t.TypeOfRequest, t.Url)
-			updates := map[string]interface{}{
-				fieldProcessStatus: "ERROR",
-				fieldProcessNotes:  err.Error(),
-			}
-			if updateErr := t.patch(ctx, updates); updateErr != nil {
-				log.Printf("Failed to update status field for document %s: %v\n", t.id(), updateErr)
-			}
+			log.Printf("error processing %s request for %s: %v", t.TypeOfRequest, t.Url, err)
+			processNotes = "scrape error: " + err.Error()
+			updatesTodo = append(updatesTodo, patch{
+				typeOfRequest: t.TypeOfRequest,
+				url:           t.Url,
+				patchData: map[string]interface{}{
+					fieldProcessedDate: time.Now(),
+					fieldProcessStatus: processStatusError,
+					fieldProcessNotes:  processNotes,
+				}})
 			continue
 		}
+
 		if shouldNotify(t, p) {
 			if err := sendTrackNotificationEmail(t); err != nil {
 				log.Printf("error sending notification: %s request for %s", t.TypeOfRequest, t.Url)
-				updates := map[string]interface{}{
-					fieldProcessStatus: "ERROR",
-					fieldProcessNotes:  err.Error(),
-				}
-				if updateErr := t.patch(ctx, updates); updateErr != nil {
-					log.Printf("Failed to update status field for document %s: %v\n", t.id(), updateErr)
-				}
+				updatesTodo = append(updatesTodo, patch{
+					typeOfRequest: t.TypeOfRequest,
+					url:           t.Url,
+					patchData: map[string]interface{}{
+						fieldProcessedDate: time.Now(),
+						fieldProcessStatus: processStatusError,
+						fieldProcessNotes:  err.Error(),
+					}})
 				continue
 			}
 		}
-		updates := map[string]interface{}{
-			fieldProcessedDate: time.Now(),
-			fieldProcessStatus: "SUCCESS",
-		}
-		if err := t.patch(ctx, updates); err != nil {
-			log.Printf("Failed to update processed_date and status fields for document %s: %v\n", t.id(), err)
-		}
+		processNotes = "notification sent"
+		updatesTodo = append(updatesTodo, patch{
+			typeOfRequest: t.TypeOfRequest,
+			url:           t.Url,
+			patchData: map[string]interface{}{
+				fieldProcessedDate: time.Now(),
+				fieldProcessStatus: processStatusSuccess,
+				fieldProcessNotes:  processNotes,
+			}})
+
 	}
+	return updatesTodo
 }
 
 // function for processing the url

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/url"
 
 	"cloud.google.com/go/firestore"
@@ -14,6 +15,15 @@ const (
 )
 
 type trackInputList []trackInput
+
+// patchList struct defines the patch payload for multiple patches together
+type patch struct {
+	typeOfRequest string
+	url           string
+	patchData     map[string]interface{}
+}
+
+type patchList []patch
 
 func (t *trackInput) id() string {
 	return fmt.Sprintf("[%s][%s]", t.TypeOfRequest, url.QueryEscape(t.Url))
@@ -94,4 +104,19 @@ func (l *trackInputList) get(ctx context.Context, filters []filter) error {
 		*l = append(*l, d)
 	}
 	return nil
+}
+
+// patch runs the patch updates for the given multiple patch records ignoring the db errors
+func (pl patchList) patch(ctx context.Context) {
+	for _, p := range pl {
+		t := trackInput{
+			Url:           p.url,
+			TypeOfRequest: p.typeOfRequest,
+		}
+		if err := t.patch(ctx, p.patchData); err != nil {
+			log.Printf("Failed to update process fields for id %s: %v", t.id(), err)
+			// Note: no need to return error, just continue processing next record
+			continue
+		}
+	}
 }
