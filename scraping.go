@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/url"
 
@@ -39,7 +38,7 @@ func scrapeme(url string) (product, error) {
 		p.Price, err = priceConvertor(h.Text)
 	})
 	c.OnRequest(func(r *colly.Request) {
-		fmt.Printf("visiting %s\n", r.URL)
+		log.Printf("visiting %s\n", r.URL)
 	})
 	c.OnError(func(r *colly.Response, scrapeErr error) {
 		err = scrapeErr
@@ -62,7 +61,7 @@ func flipkart(url string) (product, error) {
 		p.Price, err = priceConvertor(h.Text)
 	})
 	c.OnRequest(func(r *colly.Request) {
-		fmt.Printf("visiting %s\n", r.URL)
+		log.Printf("visiting %s\n", r.URL)
 	})
 	c.OnError(func(r *colly.Response, scrapeErr error) {
 		err = scrapeErr
@@ -85,7 +84,7 @@ func amazon(url string) (product, error) {
 		p.Price, err = priceConvertor(h.ChildText("span.a-price-whole"))
 	})
 	c.OnRequest(func(r *colly.Request) {
-		fmt.Printf("visiting %s\n", r.URL)
+		log.Printf("visiting %s\n", r.URL)
 	})
 	c.OnError(func(r *colly.Response, scrapeErr error) {
 		err = scrapeErr

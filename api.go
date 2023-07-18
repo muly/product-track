@@ -30,18 +30,30 @@ const (
 
 // api function for  execute_request  end point
 func executeRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	// get records
+
 	todayDate := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 0, 0, 0, 0, time.UTC)
 
-	var l trackInputList
+	// get records
+	var lPrev trackInputList
 	filters := []filter{
 		{"ProcessedDate", "<", todayDate},
-		// {"ProcessStatus", "!=", processStatusSuccess},
 	}
-	if err := l.get(r.Context(), filters); err != nil {
-		log.Println("trackInputList.get() error:", err)
+	if err := lPrev.get(r.Context(), filters); err != nil {
+		log.Println("trackInputList.get() [old records] error:", err)
 		return
 	}
+
+	var lTodayFailed trackInputList
+	filters = []filter{
+		{"ProcessedDate", "==", todayDate},
+		{"ProcessStatus", "!=", processStatusSuccess},
+	}
+	if err := lTodayFailed.get(r.Context(), filters); err != nil {
+		log.Println("trackInputList.get() [today failed records] error:", err)
+		return
+	}
+
+	var l trackInputList = append(lPrev, lTodayFailed...)
 	log.Println("records processed", len(l))
 
 	// make into batches
@@ -49,10 +61,15 @@ func executeRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	batch = append(batch, l) // TODO: need to split data into batches. for now only 1 batch
 
 	ctx := r.Context()
+
+	var pl patchList
 	// go routine: process the batch.
 	for _, b := range batch {
-		processRequestBatch(ctx, b) // TODO: go routine resulting in context cancelled error
+		l := processRequestBatch(ctx, b) // TODO: go routine resulting in context cancelled error
+		pl = append(pl, l...)
 	}
+
+	pl.patch(ctx)
 }
 
 // processRequestBatch processes the given batch of track inputs and return the payload for process updates back to database

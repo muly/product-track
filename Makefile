@@ -15,4 +15,6 @@ deploy_local_mac:
 	./scripts/local_mac.sh
 
 deploy_dev:
-	gcloud app deploy
+	gcloud config set project smuly-test-ground
+	gcloud app deploy app.yaml --quiet --stop-previous-version
+	gcloud app deploy cron.yaml --quiet 
