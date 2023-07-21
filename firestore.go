@@ -10,7 +10,7 @@ import (
 
 var firestoreClient *firestore.Client
 
-func initFirestore(ctx context.Context) {
+func initFirestore(ctx context.Context) error {
 	projectID := os.Getenv("GCP_PROJECT")
 	if projectID == "" {
 		projectID = firestore.DetectProjectID
@@ -19,6 +19,7 @@ func initFirestore(ctx context.Context) {
 	firestoreClient, err = firestore.NewClient(ctx, projectID)
 	if err != nil {
 		log.Println("error occurred during database", err)
-		return
+		return err
 	}
+	return nil
 }

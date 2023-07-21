@@ -1,9 +1,6 @@
 build:
 	go build -o product-track 
 
-run:
-	go run main.go scraping.go util.go api.go 
-
 test:
 	go test ./... --cover
 
@@ -18,4 +15,6 @@ deploy_local_mac:
 	./scripts/local_mac.sh
 
 deploy_dev:
-	gcloud app deploy
+	gcloud config set project smuly-test-ground
+	gcloud app deploy app.yaml --quiet --stop-previous-version
+	gcloud app deploy cron.yaml --quiet 

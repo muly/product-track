@@ -42,6 +42,14 @@ func Test_shouldNotify(t *testing.T) {
 			},
 			want: false,
 		},
+		{
+			name: "empty product",
+			args: args{i: trackInput{TypeOfRequest: "PRICE",
+				MinThreshold: 800.000},
+				p: product{},
+			},
+			want: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -107,7 +115,7 @@ func Test_checkPrice(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := checkPrice(tt.args.price)
+			got, err := priceConvertor(tt.args.price)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("checkPrice() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -134,13 +142,13 @@ func Test_checkAvailability(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "less number of products available",
-			args: args{"Hurry, only 4 items left!"},
+			name: "delivery by format 1",
+			args: args{"Delivery by19 Jul, Wednesday|Free₹40?"},
 			want: true,
 		},
 		{
-			name: "less number of products available: regex without comma",
-			args: args{"Hurry only 4 items left!"},
+			name: "delivery by format 2",
+			args: args{"Delivery by19 Jul"},
 			want: true,
 		},
 		{
