@@ -100,7 +100,7 @@ func (l *trackInputList) get(ctx context.Context, filters []filter) error {
 			return err
 		}
 		d := trackInput{}
-		if err := doc.DataTo(&d); err != nil{
+		if err := doc.DataTo(&d); err != nil {
 			return err
 		}
 		*l = append(*l, d)

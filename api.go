@@ -45,8 +45,8 @@ func executeRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 
 	var lTodayFailed trackInputList
 	filters = []filter{
-		{"ProcessedDate", "==", todayDate},
-		{"ProcessStatus", "==", processStatusError}, // TODO: looks like this filter is not working.
+		{"ProcessedDate", ">", todayDate.Add(-time.Second)},
+		{"ProcessStatus", "==", processStatusError},
 	}
 	if err := lTodayFailed.get(r.Context(), filters); err != nil {
 		log.Println("trackInputList.get() [today failed records] error:", err)
@@ -85,7 +85,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 				typeOfRequest: t.TypeOfRequest,
 				url:           t.Url,
 				patchData: map[string]interface{}{
-					// fieldProcessedDate: time.Now(),
+					fieldProcessedDate: time.Now(),
 					fieldProcessStatus: processStatusError,
 					fieldProcessNotes:  processNotes,
 				}})
@@ -99,22 +99,31 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 					typeOfRequest: t.TypeOfRequest,
 					url:           t.Url,
 					patchData: map[string]interface{}{
-						// fieldProcessedDate: time.Now(),
+						fieldProcessedDate: time.Now(),
 						fieldProcessStatus: processStatusError,
 						fieldProcessNotes:  err.Error(),
 					}})
 				continue
 			}
+
+			updatesTodo = append(updatesTodo, patch{
+				typeOfRequest: t.TypeOfRequest,
+				url:           t.Url,
+				patchData: map[string]interface{}{
+					fieldProcessedDate: time.Now(),
+					fieldProcessStatus: processStatusSuccess,
+					fieldProcessNotes:  "processed & notification sent",
+				}})
+		} else {
+			updatesTodo = append(updatesTodo, patch{
+				typeOfRequest: t.TypeOfRequest,
+				url:           t.Url,
+				patchData: map[string]interface{}{
+					fieldProcessedDate: time.Now(),
+					fieldProcessStatus: processStatusSuccess,
+					fieldProcessNotes:  "processed",
+				}})
 		}
-		processNotes = "notification sent"
-		updatesTodo = append(updatesTodo, patch{
-			typeOfRequest: t.TypeOfRequest,
-			url:           t.Url,
-			patchData: map[string]interface{}{
-				fieldProcessedDate: time.Now(),
-				fieldProcessStatus: processStatusSuccess,
-				fieldProcessNotes:  processNotes,
-			}})
 
 	}
 	return updatesTodo
