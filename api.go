@@ -28,8 +28,29 @@ const (
 	processStatusError   = "ERROR"
 )
 
+type user struct {
+	Email string `json:"email"`
+}
+
+func storeEmailHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	var u user
+	log.Println("store email end point is started")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		return
+	}
+
+	if err := u.upsert(r.Context()); err != nil {
+		log.Println("error during firestore ups func", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprint("error during firestore ups func", err)))
+		return
+	}
+}
+
 // api function for  execute_request  end point
-func executeRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func executeRequestHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	todayDate := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 0, 0, 0, 0, time.UTC)
 

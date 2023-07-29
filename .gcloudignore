@@ -28,4 +28,5 @@
 secrets
 postman
 
-*_test.go
+*_test.go 
+

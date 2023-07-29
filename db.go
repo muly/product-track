@@ -12,6 +12,7 @@ import (
 
 const (
 	tableTrackRequests = "track_requests"
+	tableUsers         = "user"
 )
 
 type trackInputList []trackInput
@@ -100,7 +101,7 @@ func (l *trackInputList) get(ctx context.Context, filters []filter) error {
 			return err
 		}
 		d := trackInput{}
-		if err := doc.DataTo(&d); err != nil{
+		if err := doc.DataTo(&d); err != nil {
 			return err
 		}
 		*l = append(*l, d)
@@ -121,4 +122,14 @@ func (pl patchList) patch(ctx context.Context) {
 			continue
 		}
 	}
+}
+
+func (u *user) upsert(ctx context.Context) error {
+	log.Println("storing email is started")
+	_, err := firestoreClient.Collection(tableUsers).Doc(u.Email).Set(ctx, map[string]interface{}{})
+	if err != nil {
+		log.Printf("Failed to store email in Firestore: %v", err)
+		return err
+	}
+	return nil
 }
