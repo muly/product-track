@@ -13,12 +13,7 @@ document.getElementById('signInBtn').addEventListener('click', function() {
           return response.json();
         })
         .then(function(data) {
-           //need to write error handling
-           console.log('User email1:', data.email);
-          //chrome.tabs.update({ url: 'popup.html' });
-          window.location.href="./popup.html"
-          
-          fetch(apiurl + `/store-email`, {
+          fetch(apiurl + `/store-email`, {                            
             method: 'POST',
             mode: 'no-cors',
             headers: {
@@ -26,15 +21,12 @@ document.getElementById('signInBtn').addEventListener('click', function() {
             },
             body: JSON.stringify({ email: data.email }),
           })
-          .then((req) => {
-            alert("succesfull") ;
-            window.close();
+          .then((req) =>  {
+            window.location.href="./popup.html"
           })
           .catch((err) => {
             console.log(err. Message)
           })
-          console.log('User email2:', data.email);
-          
         })
         .catch(function(error) {
           console.error('Error retrieving user email:', error);
