@@ -5,7 +5,7 @@ document.getElementById('signInBtn').addEventListener('click', function() {
         console.error(chrome.runtime.lastError.message);
         return;
       }
-      fetch('https://www.googleapis.com/oauth2/v2/userinfo?access_token=' + token)
+      fetch('https://www.googleapis.com/oauth2/v2/userinfo?access_token=' +token)
         .then(function(response) {
           if (!response.ok) {
             throw new Error('Error: ' + response.status);
@@ -13,6 +13,7 @@ document.getElementById('signInBtn').addEventListener('click', function() {
           return response.json();
         })
         .then(function(data) {
+          console.log('User Info:', data);
           fetch(apiurl + `/store-email`, {                            
             method: 'POST',
             mode: 'no-cors',
