@@ -18,7 +18,6 @@ type trackInput struct {
 	ProcessedDate time.Time
 	ProcessStatus string
 	User          User   `json:"user"`
-	Email         string `json:"email"`
 }
 
 const (
