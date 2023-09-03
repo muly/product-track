@@ -27,7 +27,7 @@ type patch struct {
 type patchList []patch
 
 func (t *trackInput) id() string {
-	return fmt.Sprintf("[%s][%s]", t.TypeOfRequest, url.QueryEscape(t.Url))
+	return fmt.Sprintf("[%s][%s][%s]", t.TypeOfRequest, emailid, url.QueryEscape(t.Url))
 }
 
 // get operation using id
@@ -124,7 +124,7 @@ func (pl patchList) patch(ctx context.Context) {
 	}
 }
 
-func (u *user) upsert(ctx context.Context) error {
+func (u *User) upsert(ctx context.Context) error {
 	log.Println("storing email is started")
 	_, err := firestoreClient.Collection(tableUsers).Doc(u.Email).Set(ctx, map[string]interface{}{})
 	if err != nil {
