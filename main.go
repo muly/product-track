@@ -30,6 +30,8 @@ func main() {
 	router.POST("/track/availability", availabilityHandler)
 	router.POST("/product", productHandler)
 	router.POST("/track/price", priceHandler)
-	router.GET("/execute-request", executeRequest)
+	router.GET("/execute-request", executeRequestHandler)
+	router.POST("/store-email", storeEmailHandler)
+
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }

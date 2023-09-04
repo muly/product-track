@@ -62,7 +62,7 @@ func prepareTrackNotificationEmail(t trackInput) (*mail.Message, error) {
 	log.Println("creating mail")
 	m := mail.NewMessage()
 	m.SetHeader("From", "rohith.knaidu0125@gmail.com")
-	m.SetHeader("To", "msrinivasareddy@gmail.com", "rohith.knaidu0125@gmail.com")
+	m.SetHeader("To", t.EmailId)
 	if t.TypeOfRequest == requestTypeAvailability {
 		m.SetHeader("Subject", "Availability update Notification")
 		m.SetBody("text/plain", "product is available: "+t.Url)

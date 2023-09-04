@@ -12,6 +12,7 @@ import (
 
 const (
 	tableTrackRequests = "track_requests"
+	tableUsers         = "user"
 )
 
 type trackInputList []trackInput
@@ -26,7 +27,7 @@ type patch struct {
 type patchList []patch
 
 func (t *trackInput) id() string {
-	return fmt.Sprintf("[%s][%s]", t.TypeOfRequest, url.QueryEscape(t.Url))
+	return fmt.Sprintf("[%s][%s][%s]", t.TypeOfRequest, t.EmailId, url.QueryEscape(t.Url))
 }
 
 // get operation using id
@@ -121,4 +122,14 @@ func (pl patchList) patch(ctx context.Context) {
 			continue
 		}
 	}
+}
+
+func (u *User) upsert(ctx context.Context) error {
+	log.Println("storing email is started")
+	_, err := firestoreClient.Collection(tableUsers).Doc(u.Email).Set(ctx, map[string]interface{}{})
+	if err != nil {
+		log.Printf("Failed to store email in Firestore: %v", err)
+		return err
+	}
+	return nil
 }

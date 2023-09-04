@@ -1,4 +1,21 @@
 var apiurl=`https://smuly-test-ground.ue.r.appspot.com`
+let emailid 
+chrome.identity.getAuthToken({ interactive: true, scopes: ['email'] }, function(token) {
+  if (chrome.runtime.lastError) {
+    console.error(chrome.runtime.lastError.message);
+    return;
+  }
+  fetch('https://www.googleapis.com/oauth2/v2/userinfo?access_token=' +token)
+      .then(function(response) {
+        if (!response.ok) {
+          throw new Error('Error: ' + response.status);
+        }
+        return response.json();
+  })
+  .then(function(data) {
+      emailid=data.email
+  })
+  })
 document.addEventListener('DOMContentLoaded', function() {
     function fetchActiveTabURL(callback) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -22,7 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
             mode:"no-cors",
             headers : { "Content-Type" : "application/json" } ,
             body: JSON.stringify({
-              url:activeTabURL
+              url:activeTabURL,
+              emailid:emailid
             })
         })
             .then((req) => {
@@ -40,7 +58,8 @@ document.addEventListener('DOMContentLoaded', function() {
               headers : { "Content-Type" : "application/json" } ,
               body: JSON.stringify({
                   url:activeTabURL,
-                  min_threshold:parseFloat(minPriceThreshold)
+                  min_threshold:parseFloat(minPriceThreshold),
+                  emailid:emailid
               })
           })
               .then((req) => {
