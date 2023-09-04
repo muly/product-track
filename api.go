@@ -17,7 +17,7 @@ type trackInput struct {
 	TypeOfRequest string  `json:"type_of_request"`
 	ProcessedDate time.Time
 	ProcessStatus string
-	User          User   `json:"user"`
+	EmailId       string `json:"emailid"`
 }
 
 const (
@@ -33,8 +33,6 @@ type User struct {
 	Email string `json:"email"`
 }
 
-var emailid string
-
 func storeEmailHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var u User
 	log.Println("store email end point is started")
@@ -43,8 +41,6 @@ func storeEmailHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
-	emailid = u.Email
-	//log.Println(emailid)
 	if err := u.upsert(r.Context()); err != nil {
 		log.Println("error during firestore ups func", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -178,7 +174,6 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		return
 	}
 	t.TypeOfRequest = requestTypeAvailability
-	t.User.Email=emailid 
 	if err := t.upsert(r.Context()); err != nil {
 		log.Println("error during firestore upsert in availability handler", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -196,8 +191,7 @@ func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	t.TypeOfRequest = requestTypePrice 
-	t.User.Email=emailid
+	t.TypeOfRequest = requestTypePrice
 	if err := t.upsert(r.Context()); err != nil {
 		log.Println("error during firestore upsert in availability handler", err)
 		w.WriteHeader(http.StatusInternalServerError)

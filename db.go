@@ -27,7 +27,7 @@ type patch struct {
 type patchList []patch
 
 func (t *trackInput) id() string {
-	return fmt.Sprintf("[%s][%s][%s]", t.TypeOfRequest, emailid, url.QueryEscape(t.Url))
+	return fmt.Sprintf("[%s][%s][%s]", t.TypeOfRequest, t.EmailId, url.QueryEscape(t.Url))
 }
 
 // get operation using id
