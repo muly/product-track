@@ -18,7 +18,7 @@ func callScraping(rawURL string) (product, error) {
 		return scrapeme(rawURL)
 	case "www.flipkart.com":
 		return flipkart(rawURL)
-	case "www.amazon.in":
+	case "www.amazon.in","localhost:5500":
 		return amazon(rawURL)
 	default:
 		log.Printf("%s is not supported\n", u.Hostname())
