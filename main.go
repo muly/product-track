@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -21,8 +22,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	
-
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8006"
@@ -34,17 +33,14 @@ func main() {
 	router.POST("/track/price", priceHandler)
 	router.GET("/execute-request", executeRequestHandler)
 	router.POST("/store-email", storeEmailHandler)
+	router.GET("/mock/*path", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		path := ps.ByName("path")
+		http.ServeFile(w, r, "./integration_testing/mock_websites/"+path)
+	})
+
+	// Start the server
+	fmt.Printf("Server is running on port %s\n", port)
 
 	log.Fatal(http.ListenAndServe(":"+port, router))
-	go staticServer();
-}
 
-func staticServer(){
-	fs:=http.FileServer(http.Dir("./integration_testing/mock_websites/amazon_available.html"))
-	http.Handle("/",fs)
-	log.Printf("Listening on port:9090")
-	err:=http.ListenAndServe(":9090",nil)
-	if err !=nil {
-		log.Fatal(err)
-	}
 }

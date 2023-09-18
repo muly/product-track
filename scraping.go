@@ -20,8 +20,6 @@ func callScraping(rawURL string) (product, error) {
 		return flipkart(rawURL)
 	case "www.amazon.in":
 		return amazon(rawURL)
-	// case "localhost:9090":
-	// 	integrationTestingMock(rawURL)		
 	default:
 		log.Printf("%s is not supported\n", u.Hostname())
 		return product{}, err
@@ -39,7 +37,7 @@ func callScraping(rawURL string) (product, error) {
 // 	case "www.flipkart.com":
 // 		return flipkart(rawURL)
 // 	case "www.amazon.in":
-// 		return amazon(rawURL)		
+// 		return amazon(rawURL)
 // 	default:
 // 		log.Printf("%s is not supported\n", u.Hostname())
 // 		return product{}, err
@@ -114,4 +112,3 @@ func amazon(url string) (product, error) {
 
 	return p, err
 }
-
