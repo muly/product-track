@@ -1,0 +1,24 @@
+.pic1{
+  align-items: center;
+  padding-top: 5px;
+  margin-right: 5px;
+}
+.xy{
+  padding: 5px;
+}
+body {
+  min-width: 250px;
+  
+  padding: 20px;
+  background:linear-gradient(to bottom, #fbf9fa,#75d2f1);
+}
+
+
+.flex-container{
+  display: flex;
+  align-items: center;
+}
+.btn{
+  padding: 3px;
+  border-radius: 10px;;
+}

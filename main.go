@@ -21,6 +21,8 @@ func main() {
 		os.Exit(1)
 	}
 
+	
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8006"
@@ -34,4 +36,15 @@ func main() {
 	router.POST("/store-email", storeEmailHandler)
 
 	log.Fatal(http.ListenAndServe(":"+port, router))
+	go staticServer();
+}
+
+func staticServer(){
+	fs:=http.FileServer(http.Dir("./integration_testing/mock_websites/amazon_available.html"))
+	http.Handle("/",fs)
+	log.Printf("Listening on port:9090")
+	err:=http.ListenAndServe(":9090",nil)
+	if err !=nil {
+		log.Fatal(err)
+	}
 }

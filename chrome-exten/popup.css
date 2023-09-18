@@ -7,3 +7,9 @@ body {
     width: 100px;
   }
   
+  body {
+    min-width: 250px;
+    
+    padding: 20px;
+    background:linear-gradient(to bottom, #fbf9fa,#75d2f1);
+  }

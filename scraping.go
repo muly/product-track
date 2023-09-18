@@ -18,13 +18,33 @@ func callScraping(rawURL string) (product, error) {
 		return scrapeme(rawURL)
 	case "www.flipkart.com":
 		return flipkart(rawURL)
-	case "www.amazon.in","localhost:5500":
+	case "www.amazon.in":
 		return amazon(rawURL)
+	// case "localhost:9090":
+	// 	integrationTestingMock(rawURL)		
 	default:
 		log.Printf("%s is not supported\n", u.Hostname())
 		return product{}, err
 	}
 }
+
+// func integrationTestingMock(rawURL string) (product, error) {
+// 	// u, err := url.Parse(rawURL)
+// 	// if err != nil {
+// 	// 	return product{}, err
+// 	// }
+// 	switch rawURL() {
+// 	case "localhost":
+// 		return scrapeme(rawURL)
+// 	case "www.flipkart.com":
+// 		return flipkart(rawURL)
+// 	case "www.amazon.in":
+// 		return amazon(rawURL)		
+// 	default:
+// 		log.Printf("%s is not supported\n", u.Hostname())
+// 		return product{}, err
+// 	}
+// }
 
 // scraping function for collecting  scrapeme data
 func scrapeme(url string) (product, error) {
@@ -94,3 +114,4 @@ func amazon(url string) (product, error) {
 
 	return p, err
 }
+
