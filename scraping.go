@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"net/url"
 
@@ -20,29 +21,34 @@ func callScraping(rawURL string) (product, error) {
 		return flipkart(rawURL)
 	case "www.amazon.in":
 		return amazon(rawURL)
+	case "localhost","smuly-test-ground.ue.r.appspot.com":
+		log.Println("scraping localhost")
+		return integrationTestingMock(rawURL)
 	default:
 		log.Printf("%s is not supported\n", u.Hostname())
 		return product{}, err
 	}
 }
 
-// func integrationTestingMock(rawURL string) (product, error) {
-// 	// u, err := url.Parse(rawURL)
-// 	// if err != nil {
-// 	// 	return product{}, err
-// 	// }
-// 	switch rawURL() {
-// 	case "localhost":
-// 		return scrapeme(rawURL)
-// 	case "www.flipkart.com":
-// 		return flipkart(rawURL)
-// 	case "www.amazon.in":
-// 		return amazon(rawURL)
-// 	default:
-// 		log.Printf("%s is not supported\n", u.Hostname())
-// 		return product{}, err
-// 	}
-// }
+func integrationTestingMock(rawURL string) (product, error) {
+	u, err := url.Parse(rawURL)
+	if err != nil {
+		return product{}, err
+	}
+
+	path := u.Path
+
+	switch path {
+	case "/mock/amazon_available.html":
+		return amazon(rawURL)
+	case "/mock/amazon_unavailable.html":
+		return amazon(rawURL)
+	// Add more cases for different paths if needed
+	default:
+		log.Printf("%s is not supported\n", path)
+		return product{}, errors.New("unsupported URL path")
+	}
+}
 
 // scraping function for collecting  scrapeme data
 func scrapeme(url string) (product, error) {
@@ -95,9 +101,11 @@ func amazon(url string) (product, error) {
 	var p product
 	var err error
 	c := colly.NewCollector()
+	//availability
 	c.OnHTML("#availability", func(h *colly.HTMLElement) {
 		p.Availability = checkAvailability(h.Text)
 	})
+	//a-section.a-spacing-none.aok-align-center
 	c.OnHTML("div.a-section.a-spacing-none.aok-align-center", func(h *colly.HTMLElement) {
 		p.Price, err = priceConvertor(h.ChildText("span.a-price-whole"))
 	})
