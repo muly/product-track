@@ -21,7 +21,7 @@ func callScraping(rawURL string) (product, error) {
 		return flipkart(rawURL)
 	case "www.amazon.in":
 		return amazon(rawURL)
-	case "localhost","smuly-test-ground.ue.r.appspot.com":
+	case "localhost", "smuly-test-ground.ue.r.appspot.com":
 		log.Println("scraping localhost")
 		return integrationTestingMock(rawURL)
 	default:
@@ -43,7 +43,6 @@ func integrationTestingMock(rawURL string) (product, error) {
 		return amazon(rawURL)
 	case "/mock/amazon_unavailable.html":
 		return amazon(rawURL)
-	// Add more cases for different paths if needed
 	default:
 		log.Printf("%s is not supported\n", path)
 		return product{}, errors.New("unsupported URL path")
