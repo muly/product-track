@@ -104,6 +104,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 			processNotes = "scrape error: " + err.Error()
 			updatesTodo = append(updatesTodo, patch{
 				typeOfRequest: t.TypeOfRequest,
+				emailid: t.EmailId,
 				url:           t.Url,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
@@ -129,6 +130,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 
 			updatesTodo = append(updatesTodo, patch{
 				typeOfRequest: t.TypeOfRequest,
+				emailid: t.EmailId,
 				url:           t.Url,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
@@ -138,6 +140,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 		} else {
 			updatesTodo = append(updatesTodo, patch{
 				typeOfRequest: t.TypeOfRequest,
+				emailid: t.EmailId,
 				url:           t.Url,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),

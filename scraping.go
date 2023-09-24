@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"net/url"
 
@@ -26,7 +27,7 @@ func callScraping(rawURL string) (product, error) {
 		return integrationTestingMock(rawURL)
 	default:
 		log.Printf("%s is not supported\n", u.Hostname())
-		return product{}, err
+		return product{}, fmt.Errorf("%s is not supported",u.Hostname())
 	}
 }
 
