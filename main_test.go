@@ -63,7 +63,7 @@ func TestMain(m *testing.M) {
 		ScenarioInitializer: InitializeScenario,
 		Options:             &opts,
 	}.Run()
-	
+
 	if st := m.Run(); st > status {
 		status = st
 	}

@@ -27,7 +27,7 @@ func callScraping(rawURL string) (product, error) {
 		return integrationTestingMock(rawURL)
 	default:
 		log.Printf("%s is not supported\n", u.Hostname())
-		return product{}, fmt.Errorf("%s is not supported",u.Hostname())
+		return product{}, fmt.Errorf("%s is not supported", u.Hostname())
 	}
 }
 

@@ -20,8 +20,8 @@ type trackInputList []trackInput
 // patchList struct defines the patch payload for multiple patches together
 type patch struct {
 	typeOfRequest string
-	emailid string
-	url           string 
+	emailid       string
+	url           string
 	patchData     map[string]interface{}
 }
 
@@ -115,7 +115,7 @@ func (pl patchList) patch(ctx context.Context) {
 	for _, p := range pl {
 		t := trackInput{
 			Url:           p.url,
-			EmailId: p.emailid,
+			EmailId:       p.emailid,
 			TypeOfRequest: p.typeOfRequest,
 		}
 		if err := t.patch(ctx, p.patchData); err != nil {
