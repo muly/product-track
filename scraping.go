@@ -44,6 +44,10 @@ func integrationTestingMock(rawURL string) (product, error) {
 		return amazon(rawURL)
 	case "/mock/amazon_unavailable.html":
 		return amazon(rawURL)
+	case "/mock/flipkart_available.html":
+		return flipkart(rawURL)
+	case "/mock/flipkart_unavailable.html":
+		return flipkart((rawURL))
 	default:
 		log.Printf("%s is not supported\n", path)
 		return product{}, errors.New("unsupported URL path")
