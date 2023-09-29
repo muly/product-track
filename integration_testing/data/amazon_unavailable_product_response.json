@@ -1,5 +1,5 @@
 {
-    "url": "http://localhost:8006/mock/amazon_unavailable.html",
+    "url": "{{API_HOST}}/mock/amazon_unavailable.html",
     "price": 0,
     "availability": false 
 }

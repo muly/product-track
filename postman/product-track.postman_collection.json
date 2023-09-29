@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "d8e42773-b81e-46a1-8eec-c5531529428e",
+		"_postman_id": "30d91009-2271-4c8e-96e7-ce855e61d7bd",
 		"name": "product-track",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "25561777"
+		"_exporter_id": "4009003"
 	},
 	"item": [
 		{
@@ -87,6 +87,24 @@
 					],
 					"path": [
 						"execute-request"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{host}}/mock/amazon_available.html",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/mock/amazon_available.html",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"mock",
+						"amazon_available.html"
 					]
 				}
 			},
