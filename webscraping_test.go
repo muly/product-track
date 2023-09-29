@@ -31,6 +31,10 @@ func (s *scenarioData) theProductUrl(url string) error {
 	return nil
 }
 
+func (s *scenarioData) theResponseShouldBe(responseBody string) error {
+	return godog.ErrPending
+}
+
 func (s *scenarioData) theResponseCodeShouldBe(expectedResponseCode int) error {
 	if s.statusCode != expectedResponseCode {
 		return fmt.Errorf("%d is not equal to %d", s.statusCode, expectedResponseCode)
@@ -42,5 +46,6 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	var s scenarioData
 	ctx.Step(`^i send "([^"]*)" request to "([^"]*)" with above product url in body$`, s.iSendRequestToWithAboveProductUrlInBody)
 	ctx.Step(`^the product url "([^"]*)"$`, s.theProductUrl)
+	ctx.Step(`^the response should be "([^"]*)"$`, s.theResponseShouldBe)
 	ctx.Step(`^the response code should be (\d+)$`, s.theResponseCodeShouldBe)
 }
