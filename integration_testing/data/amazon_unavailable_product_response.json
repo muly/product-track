@@ -1,0 +1,5 @@
+{
+    "url": "http://localhost:8006/mock/amazon_unavailable.html",
+    "price": 0,
+    "availability": false 
+}

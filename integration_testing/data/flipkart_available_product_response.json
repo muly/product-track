@@ -1,0 +1,5 @@
+{
+    "url": "http://localhost:8006/mock/flipkart_available.html",
+    "price": 123,
+    "availability": true 
+}
