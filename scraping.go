@@ -54,64 +54,28 @@ func integrationTestingMock(rawURL string) (product, error) {
 	}
 }
 
-// scraping function for collecting  scrapeme data
-func scrapeme(url string) (product, error) {
-	var p product
-	var err error
-	c := colly.NewCollector()
-	c.OnHTML("p.stock.in-stock", func(h *colly.HTMLElement) {
-		p.Availability = checkAvailability(h.Text)
-	})
-	c.OnHTML("p.price", func(h *colly.HTMLElement) {
-		p.Price, err = priceConvertor(h.Text)
-	})
-	c.OnRequest(func(r *colly.Request) {
-		log.Printf("visiting %s\n", r.URL)
-	})
-	c.OnError(func(r *colly.Response, scrapeErr error) {
-		err = scrapeErr
-	})
-	c.Visit(url)
-	p.Url = url
-
-	return p, err
+type scrapeTags struct {
+	availability string
+	price        string
+	priceChild   string
 }
 
-// scraping function for collecting  flipkart data
-func flipkart(url string) (product, error) {
-	var p product
-	var err error
-	c := colly.NewCollector()
-	c.OnHTML("div._3XINqE", func(h *colly.HTMLElement) {
-		p.Availability = checkAvailability(h.Text)
-	})
-	c.OnHTML("div._30jeq3._16Jk6d", func(h *colly.HTMLElement) {
-		p.Price, err = priceConvertor(h.Text)
-	})
-	c.OnRequest(func(r *colly.Request) {
-		log.Printf("visiting %s\n", r.URL)
-	})
-	c.OnError(func(r *colly.Response, scrapeErr error) {
-		err = scrapeErr
-	})
-	c.Visit(url)
-	p.Url = url
-
-	return p, err
-}
-
-// scraping function for collecting  amazon data
-func amazon(url string) (product, error) {
+// generic scrape
+func scrape(url string, t scrapeTags) (product, error) {
 	var p product
 	var err error
 	c := colly.NewCollector()
 	//availability
-	c.OnHTML("#availability", func(h *colly.HTMLElement) {
+	c.OnHTML(t.availability, func(h *colly.HTMLElement) {
 		p.Availability = checkAvailability(h.Text)
 	})
 	//a-section.a-spacing-none.aok-align-center
-	c.OnHTML("div.a-section.a-spacing-none.aok-align-center", func(h *colly.HTMLElement) {
-		p.Price, err = priceConvertor(h.ChildText("span.a-price-whole"))
+	c.OnHTML(t.price, func(h *colly.HTMLElement) {
+		price := h.Text
+		if t.priceChild != "" {
+			price = h.ChildText(t.priceChild)
+		}
+		p.Price, err = priceConvertor(price)
 	})
 	c.OnRequest(func(r *colly.Request) {
 		log.Printf("visiting %s\n", r.URL)
@@ -123,4 +87,36 @@ func amazon(url string) (product, error) {
 	p.Url = url
 
 	return p, err
+}
+
+
+// scraping function for collecting  scrapeme data
+func scrapeme(url string) (product, error) {
+	scrapemeTags := scrapeTags{
+		availability: "p.stock.in-stock",
+		price:        "p.price",
+		priceChild:   "",
+	}
+	return scrape(url, scrapemeTags)
+}
+
+// scraping function for collecting  flipkart data
+func flipkart(url string) (product, error) {
+	flipkartTags := scrapeTags{
+		availability: "div._3XINqE",
+		price:        "div._30jeq3._16Jk6d",
+		priceChild:   "",
+	}
+
+	return scrape(url, flipkartTags)
+}
+
+// scraping function for collecting  amazon data
+func amazon(url string) (product, error) {
+	amazonTags := scrapeTags{
+		availability: "#availability",
+		price:        "div.a-section.a-spacing-none.aok-align-center",
+		priceChild:   "span.a-price-whole",
+	}
+	return scrape(url, amazonTags)
 }

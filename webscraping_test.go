@@ -42,7 +42,6 @@ func (s *scenarioData) iSendRequestToWithAboveProductUrlInBody(method, endpoint 
 	if err = json.NewDecoder(response.Body).Decode(&s.actual); err != nil {
 		return err
 	}
-	log.Println("actual response:", s.actual)
 	s.statusCode = response.StatusCode
 	return nil
 }
@@ -72,7 +71,6 @@ func (s *scenarioData) theResponseShouldBe(responseBodyFile string) error {
 	if err = json.Unmarshal([]byte(expectedResponse), &expectedBody); err != nil {
 		return err
 	}
-	log.Println("expected response:", expectedBody)
 	//bring  the data in the file in json format
 	//close the file
 	// compare the expected body and response body
