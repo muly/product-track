@@ -19,11 +19,12 @@ type trackInputList []trackInput
 
 // patchList struct defines the patch payload for multiple patches together
 type patch struct {
-	typeOfRequest string
-	emailid       string
-	url           string
-	disableTracking bool
-	patchData map[string]interface{}
+	// key fileds
+	typeOfRequest   string
+	emailid         string
+	url             string
+	// data fields in map
+	patchData       map[string]interface{}
 }
 
 type patchList []patch
@@ -115,9 +116,9 @@ func (l *trackInputList) get(ctx context.Context, filters []filter) error {
 func (pl patchList) patch(ctx context.Context) {
 	for _, p := range pl {
 		t := trackInput{
-			Url:           p.url,
-			EmailId:       p.emailid,
-			TypeOfRequest: p.typeOfRequest,
+			Url:             p.url,
+			EmailId:         p.emailid,
+			TypeOfRequest:   p.typeOfRequest,
 		}
 		if err := t.patch(ctx, p.patchData); err != nil {
 			log.Printf("Failed to update process fields for id %s: %v", t.id(), err)

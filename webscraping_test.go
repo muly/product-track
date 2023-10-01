@@ -44,8 +44,10 @@ func (s *scenarioData) iSendRequestToWithAboveProductUrlInBody(method, endpoint 
 	if err != nil {
 		return err
 	}
-	if err = json.NewDecoder(response.Body).Decode(&s.actual); err != nil {
-		return err
+	if response.StatusCode==200 {
+		if err = json.NewDecoder(response.Body).Decode(&s.actual); err != nil {
+			return err
+		}
 	}
 	s.statusCode = response.StatusCode
 	return nil
@@ -61,7 +63,9 @@ func (s *scenarioData) theProductUrl(mockProductURL string) error {
 }
 
 func (s *scenarioData) theResponseShouldBe(responseBodyFile string) error {
-
+	if responseBodyFile == "" {
+		return nil
+	}
 	//open the file
 	data, err := os.ReadFile("integration_testing/data/" + responseBodyFile)
 	if err != nil {

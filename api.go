@@ -18,14 +18,14 @@ type trackInput struct {
 	ProcessedDate   time.Time
 	ProcessStatus   string
 	EmailId         string `json:"emailid"`
-	DisableTracking bool   
+	DisableTracking bool
 }
 
 const (
 	fieldProcessStatus = "ProcessStatus"
 	fieldProcessedDate = "ProcessedDate"
 	fieldProcessNotes  = "ProcessNotes"
-
+	filedDisableTracking="DisableTracking"
 	processStatusSuccess = "SUCCESS"
 	processStatusError   = "ERROR"
 )
@@ -107,9 +107,9 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 			log.Printf("error processing %s request for %s: %v", t.TypeOfRequest, t.Url, err)
 			processNotes = "scrape error: " + err.Error()
 			updatesTodo = append(updatesTodo, patch{
-				typeOfRequest:    t.TypeOfRequest,
-				emailid:          t.EmailId,
-				url:              t.Url,
+				typeOfRequest: t.TypeOfRequest,
+				emailid:       t.EmailId,
+				url:           t.Url,
 				//disable_tracking: true,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
@@ -134,21 +134,22 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 				continue
 			}
 			updatesTodo = append(updatesTodo, patch{
-				typeOfRequest: t.TypeOfRequest,
-				emailid:       t.EmailId,
-				url:           t.Url,
-				disableTracking: true,
+				typeOfRequest:   t.TypeOfRequest,
+				emailid:         t.EmailId,
+				url:             t.Url,
+				//disableTracking: true,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
+					filedDisableTracking:true,
 					fieldProcessStatus: processStatusSuccess,
 					fieldProcessNotes:  "processed & notification sent",
 				}})
 		} else {
 			updatesTodo = append(updatesTodo, patch{
-				typeOfRequest: t.TypeOfRequest,
-				emailid:       t.EmailId,
-				url:           t.Url,
-				disableTracking:true,
+				typeOfRequest:   t.TypeOfRequest,
+				emailid:         t.EmailId,
+				url:             t.Url,
+				//disableTracking: true,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
 					fieldProcessStatus: processStatusSuccess,

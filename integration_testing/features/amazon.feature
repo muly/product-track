@@ -13,3 +13,4 @@ Feature:web scraping
     | test amazon product unavailability  | /mock/amazon_unavailable.html   | post        | /product  | amazon_unavailable_product_response.json  | 200                           |
     | test flipkart product availability  | /mock/flipkart_available.html   | post        | /product  | flipkart_available_product_response.json  | 200                           |
     | test flipkart product unavailability| /mock/flipkart_unavailable.html | post        | /product  | flipkart_unavailable_product_response.json| 200                           |    
+    | test unsupport website              | /mock/unsupported_file.html     | post        | /product  |                                           | 500                           |
