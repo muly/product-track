@@ -19,6 +19,11 @@ type scenarioData struct {
 	apiHost    string
 }
 
+func (s *scenarioData) test(name string) error {
+	fmt.Printf("running test %s\n", name)
+	return nil
+}
+
 func (s *scenarioData) theDeployedApiHost(url string) error {
 	s.apiHost = url
 	return nil
@@ -89,6 +94,7 @@ func (s *scenarioData) theResponseCodeShouldBe(expectedResponseCode int) error {
 
 func InitializeScenario(ctx *godog.ScenarioContext) {
 	var s scenarioData
+	ctx.Step(`^test "([^"]*)"$`, s.test)
 	ctx.Step(`^the deployed api host "([^"]*)"$`, s.theDeployedApiHost)
 	ctx.Step(`^the product url "([^"]*)"$`, s.theProductUrl)
 	ctx.Step(`^i send "([^"]*)" request to "([^"]*)" with above product url in body$`, s.iSendRequestToWithAboveProductUrlInBody)
