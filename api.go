@@ -12,18 +12,20 @@ import (
 )
 
 type trackInput struct {
-	Url           string  `json:"url"`
-	MinThreshold  float64 `json:"min_threshold"`
-	TypeOfRequest string  `json:"type_of_request"`
-	ProcessedDate time.Time
-	ProcessStatus string
-	EmailId       string `json:"emailid"`
+	URL             string  `json:"url"`
+	MinThreshold    float64 `json:"min_threshold"`
+	TypeOfRequest   string  `json:"type_of_request"`
+	EmailID         string  `json:"emailid"`
+	ProcessedDate   time.Time
+	ProcessStatus   string
+	DisableTracking bool
 }
 
 const (
-	fieldProcessStatus = "ProcessStatus"
-	fieldProcessedDate = "ProcessedDate"
-	fieldProcessNotes  = "ProcessNotes"
+	fieldProcessStatus   = "ProcessStatus"
+	fieldProcessedDate   = "ProcessedDate"
+	fieldProcessNotes    = "ProcessNotes"
+	filedDisableTracking = "DisableTracking"
 
 	processStatusSuccess = "SUCCESS"
 	processStatusError   = "ERROR"
@@ -51,7 +53,6 @@ func storeEmailHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 
 // api function for  execute_request  end point
 func executeRequestHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-
 	todayDate := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 0, 0, 0, 0, time.UTC)
 
 	// get records
@@ -82,7 +83,6 @@ func executeRequestHandler(w http.ResponseWriter, r *http.Request, _ httprouter.
 	batch = append(batch, l) // TODO: need to split data into batches. for now only 1 batch
 
 	ctx := r.Context()
-
 	var pl patchList
 	// go routine: process the batch.
 	for _, b := range batch {
@@ -98,13 +98,17 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 	processNotes := ""
 	var updatesTodo patchList
 	for _, t := range l {
-		p, err := callScraping(t.Url)
+		if t.DisableTracking {
+			continue
+		}
+		p, err := callScraping(t.URL)
 		if err != nil {
-			log.Printf("error processing %s request for %s: %v", t.TypeOfRequest, t.Url, err)
+			log.Printf("error processing %s request for %s: %v", t.TypeOfRequest, t.URL, err)
 			processNotes = "scrape error: " + err.Error()
 			updatesTodo = append(updatesTodo, patch{
 				typeOfRequest: t.TypeOfRequest,
-				url:           t.Url,
+				emailID:       t.EmailID,
+				url:           t.URL,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
 					fieldProcessStatus: processStatusError,
@@ -115,10 +119,11 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 
 		if shouldNotify(t, p) {
 			if err := sendTrackNotificationEmail(t); err != nil {
-				log.Printf("error sending notification: %s request for %s", t.TypeOfRequest, t.Url)
+				log.Printf("error sending notification: %s request for %s", t.TypeOfRequest, t.URL)
 				updatesTodo = append(updatesTodo, patch{
 					typeOfRequest: t.TypeOfRequest,
-					url:           t.Url,
+					emailID:       t.EmailID,
+					url:           t.URL,
 					patchData: map[string]interface{}{
 						fieldProcessedDate: time.Now(),
 						fieldProcessStatus: processStatusError,
@@ -126,26 +131,27 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 					}})
 				continue
 			}
-
 			updatesTodo = append(updatesTodo, patch{
 				typeOfRequest: t.TypeOfRequest,
-				url:           t.Url,
+				emailID:       t.EmailID,
+				url:           t.URL,
 				patchData: map[string]interface{}{
-					fieldProcessedDate: time.Now(),
-					fieldProcessStatus: processStatusSuccess,
-					fieldProcessNotes:  "processed & notification sent",
+					fieldProcessedDate:   time.Now(),
+					filedDisableTracking: true,
+					fieldProcessStatus:   processStatusSuccess,
+					fieldProcessNotes:    "processed & notification sent",
 				}})
 		} else {
 			updatesTodo = append(updatesTodo, patch{
 				typeOfRequest: t.TypeOfRequest,
-				url:           t.Url,
+				emailID:       t.EmailID,
+				url:           t.URL,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
 					fieldProcessStatus: processStatusSuccess,
 					fieldProcessNotes:  "processed",
 				}})
 		}
-
 	}
 	return updatesTodo
 }
@@ -159,7 +165,7 @@ func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	pr, err := callScraping(t.Url)
+	pr, err := callScraping(t.URL)
 	if err != nil {
 		log.Println("error in processing url", err)
 		w.WriteHeader(http.StatusInternalServerError)

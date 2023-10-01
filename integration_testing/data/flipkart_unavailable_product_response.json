@@ -1,0 +1,5 @@
+{
+    "url": "{{API_HOST}}/mock/flipkart_unavailable.html",
+    "price": 0,
+    "availability": false 
+}

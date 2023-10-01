@@ -15,19 +15,23 @@ const (
 	tableUsers         = "user"
 )
 
-type trackInputList []trackInput
-
-// patchList struct defines the patch payload for multiple patches together
 type patch struct {
+	// key fields
 	typeOfRequest string
+	emailID       string
 	url           string
-	patchData     map[string]interface{}
+
+	// data fields in map
+	patchData map[string]interface{}
 }
 
+// patchList struct defines the patch payload for multiple patches together
 type patchList []patch
 
+type trackInputList []trackInput
+
 func (t *trackInput) id() string {
-	return fmt.Sprintf("[%s][%s][%s]", t.TypeOfRequest, t.EmailId, url.QueryEscape(t.Url))
+	return fmt.Sprintf("[%s][%s][%s]", t.TypeOfRequest, t.EmailID, url.QueryEscape(t.URL))
 }
 
 // get operation using id
@@ -113,7 +117,8 @@ func (l *trackInputList) get(ctx context.Context, filters []filter) error {
 func (pl patchList) patch(ctx context.Context) {
 	for _, p := range pl {
 		t := trackInput{
-			Url:           p.url,
+			URL:           p.url,
+			EmailID:       p.emailID,
 			TypeOfRequest: p.typeOfRequest,
 		}
 		if err := t.patch(ctx, p.patchData); err != nil {

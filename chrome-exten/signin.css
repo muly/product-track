@@ -1,0 +1,40 @@
+.pic1{
+  align-items: center;
+  padding-top: 2px;
+}
+
+#box {
+  height: 27px;
+  width: 27px;
+  background-color: whitesmoke;
+  border-radius: 20px;
+  padding: 1.5px;
+  margin-left: -5px;
+}
+
+.xy{
+  padding: 5px;
+}
+body {
+  min-width: 250px;
+  padding: 20px;
+  background-color: #2d71ac;
+}
+
+.flex-container{
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+}
+.btn{
+  padding: 12px;
+  border-radius: 17px;
+  background-color: azure;
+  border: solid 2px grey;
+  margin-left: 3px;
+  margin-top: -1px;
+  color: darkslategray;
+  font-weight: bolder;
+  font-family: Helvetica;
+  font-size: x-small;
+}
