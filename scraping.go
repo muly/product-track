@@ -89,7 +89,6 @@ func scrape(url string, t scrapeTags) (product, error) {
 	return p, err
 }
 
-
 // scraping function for collecting  scrapeme data
 func scrapeme(url string) (product, error) {
 	scrapemeTags := scrapeTags{

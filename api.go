@@ -12,12 +12,13 @@ import (
 )
 
 type trackInput struct {
-	Url           string  `json:"url"`
-	MinThreshold  float64 `json:"min_threshold"`
-	TypeOfRequest string  `json:"type_of_request"`
-	ProcessedDate time.Time
-	ProcessStatus string
-	EmailId       string `json:"emailid"`
+	Url             string  `json:"url"`
+	MinThreshold    float64 `json:"min_threshold"`
+	TypeOfRequest   string  `json:"type_of_request"`
+	ProcessedDate   time.Time
+	ProcessStatus   string
+	EmailId         string `json:"emailid"`
+	DisableTracking bool   `json:"disable_tracking"`
 }
 
 const (
@@ -98,14 +99,18 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 	processNotes := ""
 	var updatesTodo patchList
 	for _, t := range l {
+		if t.DisableTracking {
+			continue
+		}
 		p, err := callScraping(t.Url)
 		if err != nil {
 			log.Printf("error processing %s request for %s: %v", t.TypeOfRequest, t.Url, err)
 			processNotes = "scrape error: " + err.Error()
 			updatesTodo = append(updatesTodo, patch{
-				typeOfRequest: t.TypeOfRequest,
-				emailid:       t.EmailId,
-				url:           t.Url,
+				typeOfRequest:    t.TypeOfRequest,
+				emailid:          t.EmailId,
+				url:              t.Url,
+				//disable_tracking: true,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
 					fieldProcessStatus: processStatusError,
@@ -119,6 +124,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 				log.Printf("error sending notification: %s request for %s", t.TypeOfRequest, t.Url)
 				updatesTodo = append(updatesTodo, patch{
 					typeOfRequest: t.TypeOfRequest,
+					emailid:       t.EmailId,
 					url:           t.Url,
 					patchData: map[string]interface{}{
 						fieldProcessedDate: time.Now(),
@@ -127,21 +133,25 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 					}})
 				continue
 			}
+			t.DisableTracking = true
 
 			updatesTodo = append(updatesTodo, patch{
 				typeOfRequest: t.TypeOfRequest,
 				emailid:       t.EmailId,
 				url:           t.Url,
+				disable_tracking: t.DisableTracking,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
 					fieldProcessStatus: processStatusSuccess,
 					fieldProcessNotes:  "processed & notification sent",
 				}})
 		} else {
+			t.DisableTracking = true
 			updatesTodo = append(updatesTodo, patch{
 				typeOfRequest: t.TypeOfRequest,
 				emailid:       t.EmailId,
 				url:           t.Url,
+				disable_tracking: t.DisableTracking,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
 					fieldProcessStatus: processStatusSuccess,

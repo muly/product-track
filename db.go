@@ -22,7 +22,8 @@ type patch struct {
 	typeOfRequest string
 	emailid       string
 	url           string
-	patchData     map[string]interface{}
+	disable_tracking bool
+	patchData map[string]interface{}
 }
 
 type patchList []patch
