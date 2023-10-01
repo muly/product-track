@@ -18,7 +18,7 @@ type trackInput struct {
 	ProcessedDate   time.Time
 	ProcessStatus   string
 	EmailId         string `json:"emailid"`
-	DisableTracking bool   `json:"disable_tracking"`
+	DisableTracking bool   
 }
 
 const (
@@ -133,25 +133,22 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 					}})
 				continue
 			}
-			t.DisableTracking = true
-
 			updatesTodo = append(updatesTodo, patch{
 				typeOfRequest: t.TypeOfRequest,
 				emailid:       t.EmailId,
 				url:           t.Url,
-				disable_tracking: t.DisableTracking,
+				disableTracking: true,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
 					fieldProcessStatus: processStatusSuccess,
 					fieldProcessNotes:  "processed & notification sent",
 				}})
 		} else {
-			t.DisableTracking = true
 			updatesTodo = append(updatesTodo, patch{
 				typeOfRequest: t.TypeOfRequest,
 				emailid:       t.EmailId,
 				url:           t.Url,
-				disable_tracking: t.DisableTracking,
+				disableTracking:true,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
 					fieldProcessStatus: processStatusSuccess,

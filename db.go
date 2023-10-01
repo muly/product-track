@@ -22,7 +22,7 @@ type patch struct {
 	typeOfRequest string
 	emailid       string
 	url           string
-	disable_tracking bool
+	disableTracking bool
 	patchData map[string]interface{}
 }
 
