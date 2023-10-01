@@ -44,7 +44,7 @@ func (s *scenarioData) iSendRequestToWithAboveProductUrlInBody(method, endpoint 
 	if err != nil {
 		return err
 	}
-	if response.StatusCode==200 {
+	if response.StatusCode == 200 {
 		if err = json.NewDecoder(response.Body).Decode(&s.actual); err != nil {
 			return err
 		}
@@ -66,6 +66,7 @@ func (s *scenarioData) theResponseShouldBe(responseBodyFile string) error {
 	if responseBodyFile == "" {
 		return nil
 	}
+
 	//open the file
 	data, err := os.ReadFile("integration_testing/data/" + responseBodyFile)
 	if err != nil {
@@ -73,15 +74,15 @@ func (s *scenarioData) theResponseShouldBe(responseBodyFile string) error {
 		return err
 	}
 
-	// replace app hostname in the file
+	// replace app hostname in the expected
 	expectedResponse := strings.Replace(string(data), "{{API_HOST}}", s.apiHost, -1)
 
+	// read the expected body
 	var expectedBody product
 	if err = json.Unmarshal([]byte(expectedResponse), &expectedBody); err != nil {
 		return err
 	}
-	//bring  the data in the file in json format
-	//close the file
+
 	// compare the expected body and response body
 	if expectedBody != s.actual {
 		return fmt.Errorf("%+v is not equal to %+v ", expectedBody, s.actual)

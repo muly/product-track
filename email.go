@@ -13,6 +13,8 @@ import (
 
 var emailClient *mail.Dialer
 
+const systemEmailID = "rohith.knaidu0125@gmail.com"
+
 func initEmailClient() error {
 	projectNumber := os.Getenv("PROJECT_NUMBER")
 
@@ -38,7 +40,7 @@ func initEmailClient() error {
 		}
 		password = string(secretVersion.Payload.Data)
 	}
-	emailClient = mail.NewDialer("smtp.gmail.com", 587, "rohith.knaidu0125@gmail.com", password)
+	emailClient = mail.NewDialer("smtp.gmail.com", 587, systemEmailID, password)
 
 	return nil
 }
@@ -61,14 +63,14 @@ func sendTrackNotificationEmail(t trackInput) error {
 func prepareTrackNotificationEmail(t trackInput) (*mail.Message, error) {
 	log.Println("creating mail")
 	m := mail.NewMessage()
-	m.SetHeader("From", "rohith.knaidu0125@gmail.com")
-	m.SetHeader("To", t.EmailId)
+	m.SetHeader("From", systemEmailID)
+	m.SetHeader("To", t.EmailID)
 	if t.TypeOfRequest == requestTypeAvailability {
 		m.SetHeader("Subject", "Availability update Notification")
-		m.SetBody("text/plain", "product is available: "+t.Url)
+		m.SetBody("text/plain", "product is available: "+t.URL)
 	} else if t.TypeOfRequest == requestTypePrice {
 		m.SetHeader("Subject", "price update Notification")
-		m.SetBody("text/plain", "product is available with the minimum cost you needed: "+t.Url)
+		m.SetBody("text/plain", "product is available with the minimum cost you needed: "+t.URL)
 	} else {
 		return nil, fmt.Errorf("invalid request type %s", t.TypeOfRequest)
 	}

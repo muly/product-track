@@ -60,7 +60,7 @@ func Test_shouldNotify(t *testing.T) {
 	}
 }
 
-func Test_checkPrice(t *testing.T) {
+func Test_priceConvertor(t *testing.T) {
 	type args struct {
 		price string
 	}

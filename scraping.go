@@ -21,7 +21,7 @@ func callScraping(rawURL string) (product, error) {
 	case "www.flipkart.com":
 		return flipkart(rawURL)
 	case "www.amazon.in":
-		return amazon(rawURL)
+		return amazonIn(rawURL)
 	case "localhost", "smuly-test-ground.ue.r.appspot.com":
 		log.Println("scraping localhost")
 		return integrationTestingMock(rawURL)
@@ -37,19 +37,17 @@ func integrationTestingMock(rawURL string) (product, error) {
 		return product{}, err
 	}
 
-	path := u.Path
-
-	switch path {
+	switch u.Path {
 	case "/mock/amazon_available.html":
-		return amazon(rawURL)
+		return amazonIn(rawURL)
 	case "/mock/amazon_unavailable.html":
-		return amazon(rawURL)
+		return amazonIn(rawURL)
 	case "/mock/flipkart_available.html":
 		return flipkart(rawURL)
 	case "/mock/flipkart_unavailable.html":
 		return flipkart((rawURL))
 	default:
-		log.Printf("%s is not supported\n", path)
+		log.Printf("%s is not supported\n", u.Path)
 		return product{}, errors.New("unsupported URL path")
 	}
 }
@@ -65,11 +63,10 @@ func scrape(url string, t scrapeTags) (product, error) {
 	var p product
 	var err error
 	c := colly.NewCollector()
-	//availability
+
 	c.OnHTML(t.availability, func(h *colly.HTMLElement) {
 		p.Availability = checkAvailability(h.Text)
 	})
-	//a-section.a-spacing-none.aok-align-center
 	c.OnHTML(t.price, func(h *colly.HTMLElement) {
 		price := h.Text
 		if t.priceChild != "" {
@@ -84,12 +81,13 @@ func scrape(url string, t scrapeTags) (product, error) {
 		err = scrapeErr
 	})
 	c.Visit(url)
+
 	p.Url = url
 
 	return p, err
 }
 
-// scraping function for collecting  scrapeme data
+// scrapeme is scraping function for collecting  scrapeme data
 func scrapeme(url string) (product, error) {
 	scrapemeTags := scrapeTags{
 		availability: "p.stock.in-stock",
@@ -99,7 +97,7 @@ func scrapeme(url string) (product, error) {
 	return scrape(url, scrapemeTags)
 }
 
-// scraping function for collecting  flipkart data
+// flipkart is scraping function for collecting  flipkart data
 func flipkart(url string) (product, error) {
 	flipkartTags := scrapeTags{
 		availability: "div._3XINqE",
@@ -110,8 +108,8 @@ func flipkart(url string) (product, error) {
 	return scrape(url, flipkartTags)
 }
 
-// scraping function for collecting  amazon data
-func amazon(url string) (product, error) {
+// amazonIn scraping function for collecting  amazonIn data
+func amazonIn(url string) (product, error) {
 	amazonTags := scrapeTags{
 		availability: "#availability",
 		price:        "div.a-section.a-spacing-none.aok-align-center",

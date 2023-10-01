@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -42,8 +42,7 @@ func priceConvertor(price string) (float64, error) {
 	}
 	s, err := strconv.ParseFloat(price, 64)
 	if err != nil {
-		log.Println("error occurred while parsing price", err)
-		return 0, err
+		return 0, fmt.Errorf("error occurred while parsing price %w", err)
 	}
 	return s, nil
 }

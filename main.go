@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -11,7 +10,6 @@ import (
 )
 
 func main() {
-
 	if err := initFirestore(context.Background()); err != nil {
 		log.Printf("failed to create firestore client: %v", err)
 		os.Exit(1)
@@ -39,8 +37,6 @@ func main() {
 	})
 
 	// Start the server
-	fmt.Printf("Server is running on port %s\n", port)
-
 	log.Fatal(http.ListenAndServe(":"+port, router))
 
 }

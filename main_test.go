@@ -8,8 +8,7 @@ import (
 	"github.com/cucumber/godog"
 )
 
-func Test_process(t *testing.T) {
-	//t.Skip() // TODO:need to uncomment this func
+func Test_callScraping(t *testing.T) {
 	tests := []struct {
 		name    string
 		rawURL  string
