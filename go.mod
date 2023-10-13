@@ -6,8 +6,8 @@ require (
 	cloud.google.com/go/firestore v1.10.0
 	cloud.google.com/go/secretmanager v1.11.1
 	github.com/cucumber/godog v0.13.0
-	github.com/gocolly/colly v1.2.0
 	github.com/julienschmidt/httprouter v1.3.0
+	github.com/muly/product-scrape v1.0.1
 	google.golang.org/api v0.126.0
 	gopkg.in/mail.v2 v2.3.1
 )
@@ -26,6 +26,7 @@ require (
 	github.com/cucumber/gherkin/go/v26 v26.2.0 // indirect
 	github.com/cucumber/messages/go/v21 v21.0.1 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
+	github.com/gocolly/colly v1.2.0 // indirect
 	github.com/gofrs/uuid v4.3.1+incompatible // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
@@ -37,7 +38,6 @@ require (
 	github.com/hashicorp/go-memdb v1.3.4 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/kennygrant/sanitize v1.2.4 // indirect
-	github.com/muly/product-scrape v1.0.1 // indirect
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/testify v1.8.3 // indirect
