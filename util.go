@@ -1,55 +1,13 @@
 package main
 
-import (
-	"fmt"
-	"regexp"
-	"strconv"
-	"strings"
-)
-
-type product struct {
-	Url          string  `json:"url"`
-	Price        float64 `json:"price"`
-	Availability bool    `json:"availability"`
-}
+import scrape "github.com/muly/product-scrape"
 
 const requestTypeAvailability = "AVAILABILITY"
 const requestTypePrice = "PRICE"
 
-// function for checking availability using regular expressions
-func checkAvailability(s string) bool {
-	if strings.Contains(s, "In stock") {
-		return true
-	}
-	hurryRegexList := []string{
-		`^Delivery by`,
-	}
-	for _, hurryRegex := range hurryRegexList {
-		hurryRegex := regexp.MustCompile(hurryRegex)
-		if hurryRegex.MatchString(s) {
-			return true
-		}
-	}
-	return false
-}
-
-// function for converting price from converting string type to float64  //price conversion
-func priceConvertor(price string) (float64, error) {
-	currencyList := []string{"₹", "$", "£"}
-	price = strings.Replace(price, ",", "", -1)
-	for _, c := range currencyList {
-		price = strings.Replace(price, c, "", -1)
-	}
-	s, err := strconv.ParseFloat(price, 64)
-	if err != nil {
-		return 0, fmt.Errorf("error occurred while parsing price %w", err)
-	}
-	return s, nil
-}
-
 // function for conditions to satisfy for sending email   //notify condition
-func shouldNotify(i trackInput, p product) bool {
-	if (p == product{}) {
+func shouldNotify(i trackInput, p scrape.Product) bool {
+	if (p == scrape.Product{}) {
 		return false
 	}
 	if i.TypeOfRequest == requestTypePrice && p.Price < i.MinThreshold {

@@ -10,12 +10,13 @@ import (
 	"strings"
 
 	"github.com/cucumber/godog"
+	scrape "github.com/muly/product-scrape"
 )
 
 type scenarioData struct {
 	productUrl string
 	statusCode int
-	actual     product
+	actual     scrape.Product
 	apiHost    string
 }
 
@@ -78,7 +79,7 @@ func (s *scenarioData) theResponseShouldBe(responseBodyFile string) error {
 	expectedResponse := strings.Replace(string(data), "{{API_HOST}}", s.apiHost, -1)
 
 	// read the expected body
-	var expectedBody product
+	var expectedBody scrape.Product
 	if err = json.Unmarshal([]byte(expectedResponse), &expectedBody); err != nil {
 		return err
 	}
