@@ -9,9 +9,11 @@ lint:
 	go mod verify
 
 deploy_local_windows:
+	go mod vendor
 	./scripts/local_windows.sh
 
 deploy_local_mac:
+	go mod vendor
 	./scripts/local_mac.sh
 
 deploy_dev:
