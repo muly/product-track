@@ -5,7 +5,7 @@ emulatorPort="8090"
 
  go get ./...
 
- go fmt ./...
+#  go fmt ./... # TODO: need to find why this line on windows is resulting in file changes even if they are already formatted on mac.
 
  rm -f product-track 
  go build -o product-track
