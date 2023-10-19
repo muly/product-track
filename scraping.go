@@ -22,6 +22,8 @@ func callScraping(rawURL string) (scrape.Product, error) {
 		return scrape.GetScraper(u.Hostname())(rawURL)
 	case "www.amazon.in":
 		return scrape.GetScraper(u.Hostname())(rawURL)
+	case "mkp.gem.gov.in":
+		return scrape.GetScraper(u.Hostname())(rawURL)
 	case "localhost", "smuly-test-ground.ue.r.appspot.com":
 		log.Println("scraping localhost")
 		return integrationTestingMock(rawURL)
