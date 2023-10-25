@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
 	"cloud.google.com/go/secretmanager/apiv1/secretmanagerpb"
@@ -67,10 +68,29 @@ func prepareTrackNotificationEmail(t trackInput) (*mail.Message, error) {
 	m.SetHeader("To", t.EmailID)
 	if t.TypeOfRequest == requestTypeAvailability {
 		m.SetHeader("Subject", "Availability update Notification")
-		m.SetBody("text/plain", "product is available: "+t.URL)
+		htmlBody := `<html>
+		<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; text-align: center; padding: 20px;">
+			<div style="background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); max-width: 400px; margin: 0 auto;">
+				<p style="font-weight: bold; color: #2d71ac;">Product is available:</p>
+				<p style="color: #2d71ac;">Check out the product here <a href="PRODUCT_URL" style="color: #007bff; text-decoration: none; font-weight: bold;">Product's url</a></p>
+			</div>
+		</body>
+		</html>`
+		htmlBody = strings.Replace(htmlBody, "PRODUCT_URL", t.URL, -1)
+
+		m.SetBody("text/html", htmlBody)
 	} else if t.TypeOfRequest == requestTypePrice {
 		m.SetHeader("Subject", "price update Notification")
-		m.SetBody("text/plain", "product is available with the minimum cost you needed: "+t.URL)
+		htmlBody := `<html>
+		<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; text-align: center; padding: 20px;">
+			<div style="background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); max-width: 400px; margin: 0 auto;">
+				<p style="font-weight: bold; color: #2d71ac;">Product is available:</p>
+				<p style="color: #2d71ac;">Check out the product here <a href="PRODUCT_URL" style="color: #007bff; text-decoration: none; font-weight: bold;">Product's url</a></p>
+			</div>
+		</body>
+		</html>`
+		htmlBody = strings.Replace(htmlBody, "PRODUCT_URL", t.URL, -1)
+		m.SetBody("text/html", htmlBody)
 	} else {
 		return nil, fmt.Errorf("invalid request type %s", t.TypeOfRequest)
 	}
