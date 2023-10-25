@@ -60,6 +60,5 @@ require (
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 )
 
+// replace github.com/muly/product-scrape => /Users/s/go/src/github.com/muly/product-scrape
 replace github.com/muly/product-scrape => C:\Users\user\go\src\github.com\product-scrape
-
-//replace github.com/muly/product-scrape => /Users/s/go/src/github.com/muly/product-scrape
