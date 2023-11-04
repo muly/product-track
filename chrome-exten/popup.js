@@ -43,10 +43,14 @@ document.addEventListener('DOMContentLoaded', function() {
               emailid:emailid
             })
         })
-            .then((req) => {
-                alert("succesfull") ;
-                window.close();
-            })
+        .then((response) => {
+          if (response.ok) {
+              alert("Successful"+ response.status);
+          } else {
+              alert("Error - Status Code: " + response.status);
+          }
+          window.close();
+      })
             .catch((err) => {
                 console.log(err. Message)
             })
@@ -62,10 +66,14 @@ document.addEventListener('DOMContentLoaded', function() {
                   emailid:emailid
               })
           })
-              .then((req) => {
-                  alert('Successful') ;
-                  window.close();
-              })
+          .then((response) => {
+            if (response.ok) {
+                alert("Successful- Status Code:"+ response.status);
+            } else {
+                alert("Error - Status Code: " + response.status);
+            }
+            window.close();
+        })
               .catch((err) => {
                 console.log(err. Message)
               })
