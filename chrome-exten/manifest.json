@@ -1,26 +1,25 @@
 {
-    "manifest_version": 3,
-    "name": "product-track",
-    "description": "track your product price and availability",
-    "version": "1.0",
-    "action": {
-      "default_popup": "signin.html",
-      "default_icon":"logo.png"
-    },
-    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxk66E7tDSLL2ZqxhrAHpJOXRxmwSxCSSyRSzYjgx6B150ZdyGe1lAQWOkMfN4h1aK679mJaNTXRWllvxRNaZ+qNagZoy+96/57H7Au+RnX7U7NPv79jVxNq1fDI/hFp5tVZ1cGS31gNeZewR5cPvsTkekHSNFZv8isUtyDomwsRJrxrvIj1a1sL2O9w70aWcfZ/m8eu2gOWWtzfpOuB6K79DAUHw0xBOJ4pykgfYOfrDeZqrZbEzT0Y5d1kACTdg/h7WrE1KPWe0lUJfs7yvf7wMdjOEORR5Dl9i2DCq4ugHsYWMeQ8KmMSBqrlCLnAWFJ9hxhYCa9UJC6i7PaYncQIDAQAB",
-    "icons":{
-        "128":"logo.png"
-    },
-    "permissions":["activeTab","identity"],
-    "host_permissions": [
-      "https://www.googleapis.com/auth/userinfo.email"
-    ],
-    "oauth2": {
-      "client_id": "149500152182-1lut4hda6mj9e7g4uj78gjcv99udgpkb.apps.googleusercontent.com",
-      "scopes": ["email"]
-    },
-    "options_page":"./signin.html"
+  "manifest_version": 3,
+  "name": "product-track",
+  "description": "track your product price and availability",
+  "version": "1.0",
+  "action": {
+    "default_popup": "signin.html",
+    "default_icon":"logo.png"
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxk66E7tDSLL2ZqxhrAHpJOXRxmwSxCSSyRSzYjgx6B150ZdyGe1lAQWOkMfN4h1aK679mJaNTXRWllvxRNaZ+qNagZoy+96/57H7Au+RnX7U7NPv79jVxNq1fDI/hFp5tVZ1cGS31gNeZewR5cPvsTkekHSNFZv8isUtyDomwsRJrxrvIj1a1sL2O9w70aWcfZ/m8eu2gOWWtzfpOuB6K79DAUHw0xBOJ4pykgfYOfrDeZqrZbEzT0Y5d1kACTdg/h7WrE1KPWe0lUJfs7yvf7wMdjOEORR5Dl9i2DCq4ugHsYWMeQ8KmMSBqrlCLnAWFJ9hxhYCa9UJC6i7PaYncQIDAQAB",
+  "icons":{
+      "128":"logo.png"
+  },
+  "permissions":["activeTab","identity"],
+  "host_permissions": [
+    "https://www.googleapis.com/auth/userinfo.email"
+  ],
+  "oauth2": {
+    "client_id": "149500152182-1nlfm111isrv0c8828mg3u16q22l434q.apps.googleusercontent.com",
+    "scopes": ["email"]
+  },
+  "options_page":"./signin.html"
 
 
 }
-  
