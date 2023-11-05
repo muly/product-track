@@ -1,4 +1,5 @@
-var apiurl=`https://smuly-test-ground.ue.r.appspot.com`
+// var apiurl=`https://smuly-test-ground.ue.r.appspot.com`
+var apiurl=`http://localhost:8006`
 let emailid 
 chrome.identity.getAuthToken({ interactive: true, scopes: ['email'] }, function(token) {
   if (chrome.runtime.lastError) {

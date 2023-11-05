@@ -2,7 +2,7 @@ Feature:web scraping
     Scenario:test product availability
     Given test "<name>"
     #And the deployed api host "https://smuly-test-ground.ue.r.appspot.com"
-    And the deployed local host "https://localhost:8006"
+    And the deployed local host "http://localhost:8006"
     And the product url "<mock_product_url>" 
     When i send "<http_method>" request to "<end_point>" with above product url in body 
     Then the response should be "<expected_response_body>"
