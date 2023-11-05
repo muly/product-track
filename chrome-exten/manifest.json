@@ -16,7 +16,7 @@
       "https://www.googleapis.com/auth/userinfo.email"
     ],
     "oauth2": {
-      "client_id": "149500152182-1lut4hda6mj9e7g4uj78gjcv99udgpkb.apps.googleusercontent.com",
+      "client_id": "149500152182-1nlfm111isrv0c8828mg3u16q22l434q.apps.googleusercontent.com",
       "scopes": ["email"]
     },
     "options_page":"./signin.html"
