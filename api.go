@@ -17,6 +17,7 @@ type trackInput struct {
 	MinThreshold    float64 `json:"min_threshold"`
 	TypeOfRequest   string  `json:"type_of_request"`
 	EmailID         string  `json:"emailid"`
+	ZipCode         int     `json:"zipCode"`
 	ProcessedDate   time.Time
 	ProcessStatus   string
 	DisableTracking bool
@@ -110,6 +111,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 				typeOfRequest: t.TypeOfRequest,
 				emailID:       t.EmailID,
 				url:           t.URL,
+				zipCode:       t.ZipCode,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
 					fieldProcessStatus: processStatusError,
@@ -125,6 +127,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 					typeOfRequest: t.TypeOfRequest,
 					emailID:       t.EmailID,
 					url:           t.URL,
+					zipCode:       t.ZipCode,
 					patchData: map[string]interface{}{
 						fieldProcessedDate: time.Now(),
 						fieldProcessStatus: processStatusError,
@@ -136,6 +139,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 				typeOfRequest: t.TypeOfRequest,
 				emailID:       t.EmailID,
 				url:           t.URL,
+				zipCode:       t.ZipCode,
 				patchData: map[string]interface{}{
 					fieldProcessedDate:   time.Now(),
 					filedDisableTracking: true,
@@ -147,6 +151,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 				typeOfRequest: t.TypeOfRequest,
 				emailID:       t.EmailID,
 				url:           t.URL,
+				zipCode:       t.ZipCode,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
 					fieldProcessStatus: processStatusSuccess,

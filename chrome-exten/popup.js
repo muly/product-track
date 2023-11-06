@@ -1,5 +1,5 @@
-//var apiurl=`https://smuly-test-ground.ue.r.appspot.com`
-var apiurl=`http:localhost:8006`
+var apiurl=`https://smuly-test-ground.ue.r.appspot.com`
+//var apiurl=`http:localhost:8006`
 let emailid 
 chrome.identity.getAuthToken({ interactive: true, scopes: ['email'] }, function(token) {
   if (chrome.runtime.lastError) {
@@ -16,7 +16,7 @@ chrome.identity.getAuthToken({ interactive: true, scopes: ['email'] }, function(
   .then(function(data) {
       emailid=data.email
   })
-  })
+ 
   document.addEventListener('DOMContentLoaded', function() {
     // Function to fetch active tab URL
     function fetchActiveTabURL(callback) {
@@ -97,6 +97,7 @@ chrome.identity.getAuthToken({ interactive: true, scopes: ['email'] }, function(
                 console.log(err.message);
             });
         }
+      });
     });
 });
 

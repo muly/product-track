@@ -20,7 +20,7 @@ type patch struct {
 	typeOfRequest string
 	emailID       string
 	url           string
-
+	zipCode       int
 	// data fields in map
 	patchData map[string]interface{}
 }
@@ -120,6 +120,7 @@ func (pl patchList) patch(ctx context.Context) {
 			URL:           p.url,
 			EmailID:       p.emailID,
 			TypeOfRequest: p.typeOfRequest,
+			ZipCode:       p.zipCode,
 		}
 		if err := t.patch(ctx, p.patchData); err != nil {
 			log.Printf("Failed to update process fields for id %s: %v", t.id(), err)
