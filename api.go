@@ -199,8 +199,6 @@ func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 // function for availability request with /track/availability end point
 func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var t trackInput
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET,POST")
 	defer r.Body.Close()
 	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		log.Println("error during handling the url", err)
@@ -229,8 +227,6 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 // function for price request with /track/price end point
 func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var t trackInput
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET,POST")
 	defer r.Body.Close()
 	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		log.Println("error during price  handling ", err)
