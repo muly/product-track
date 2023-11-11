@@ -14,7 +14,8 @@
     "permissions":["activeTab","identity","tabs"],
     "host_permissions": [
       "https://www.googleapis.com/auth/userinfo.email",
-      "https://smuly-test-ground.ue.r.appspot.com/*"
+      "https://smuly-test-ground.ue.r.appspot.com/*",
+      "http://localhost:8006/*"
     ],
     "oauth2": {
       "client_id": "149500152182-1nlfm111isrv0c8828mg3u16q22l434q.apps.googleusercontent.com",
