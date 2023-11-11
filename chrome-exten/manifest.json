@@ -11,7 +11,7 @@
     "icons":{
         "128":"logo.png"
     },
-    "permissions":["activeTab","identity"],
+    "permissions":["activeTab","identity","tabs"],
     "host_permissions": [
       "https://www.googleapis.com/auth/userinfo.email"
     ],
