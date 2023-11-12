@@ -65,19 +65,16 @@ document.addEventListener('DOMContentLoaded', function() {
       fetch(apiurl + '/track/' + selectedOption, {
           method: "POST",
           //mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
+          //headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
       })
-      
-      .then((response) => {
-        console.log(response.status)
-        if (response.ok) {
-          alert("Successful");
+      .then(function(response) {
+        if (!response.ok) {
+          alert("our extension doesnot support the given url")
+        }else{
+          alert("successful");
           window.close();
-        } else {
-            throw new Error('Network response was not ok.');
         }
-        
       })
       .catch((err) => {
          console.error('There has been a problem with your fetch operation:', err);
