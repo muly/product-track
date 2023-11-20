@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       if (tabs && tabs.length > 0) {
         activeUrl= tabs[0].url;
-        console.log(tabs[0].url)
         callback(activeUrl);
       }
     });
@@ -64,13 +63,12 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       fetch(apiurl + '/track/' + selectedOption, {
           method: "POST",
-          //mode: "no-cors",
-          //headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
       })
       .then(function(response) {
         if (!response.ok) {
           alert("our extension doesnot support the given url")
+          window.close();
         }else{
           alert("successful");
           window.close();
