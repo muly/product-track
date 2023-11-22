@@ -61,4 +61,4 @@ require (
 )
 
 //replace github.com/muly/product-scrape => /Users/s/go/src/github.com/muly/product-scrape
-//replace github.com/muly/product-scrape => C:\Users\user\go\src\github.com\product-scrape
+replace github.com/muly/product-scrape => C:\Users\user\go\src\github.com\product-scrape
