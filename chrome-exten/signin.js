@@ -13,7 +13,6 @@ document.getElementById('signInBtn').addEventListener('click', function() {
           return response.json();
         })
         .then(function(data) {
-          console.log('User Info:', data);
           fetch(apiurl + `/store-email`, {                            
             method: 'POST',
             mode: 'no-cors',

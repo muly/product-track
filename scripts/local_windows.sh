@@ -5,7 +5,7 @@ emulatorPort="8090"
 
  go get ./...
 
- go fmt ./...
+ go fmt ./...  #git config --global core.autocrlf true 
 
  rm -f product-track 
  go build -o product-track

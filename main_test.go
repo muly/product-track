@@ -16,7 +16,7 @@ func Test_callScraping(t *testing.T) {
 	}{
 		{
 			name:    "flipkart",
-			rawURL:  "https://www.flipkart.com/hp-deskjet-1112-single-function-color-inkjet-printer/p/itme9wgtatxfzggg?pid=PRNE9WGTZCQGJ6PZ&lid=LSTPRNE9WGTZCQGJ6PZND3GV1&marketplace=FLIPKART&store=6bo%2Ftia%2Fffn%2Ft64&srno=b_3_98&otracker=hp_omu_Best%2Bof%2BElectronics_2_3.dealCard.OMU_D54DFY00C5JD_3&otracker1=hp_rich_navigation_PINNED_neo%2Fmerchandising_NA_NAV_EXPANDABLE_navigationCard_cc_2_L2_view-all%2Chp_omu_PINNED_neo%2Fmerchandising_Best%2Bof%2BElectronics_NA_dealCard_cc_2_NA_view-all_3&fm=neo%2Fmerchandising",
+			rawURL:  "https://www.flipkart.com/vivo-t2-pro-5g-new-moon-black-256-gb/p/itm1230688cdef18?pid=MOBGT4RZMZFEWDY7&lid=LSTMOBGT4RZMZFEWDY7EEVQUQ&marketplace=FLIPKART&store=tyy%2F4io&srno=b_1_1&otracker=browse&fm=organic&iid=d4fd9eb7-9cb7-48a6-82db-134e1077255b.MOBGT4RZMZFEWDY7.SEARCH&ppt=hp&ppn=homepage&ssid=oj2jvrt9ls0000001699124880241",
 			wantErr: false,
 		},
 		{

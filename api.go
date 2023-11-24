@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -16,6 +17,7 @@ type trackInput struct {
 	MinThreshold    float64 `json:"min_threshold"`
 	TypeOfRequest   string  `json:"type_of_request"`
 	EmailID         string  `json:"emailid"`
+	ZipCode         int     `json:"zipCode"`
 	ProcessedDate   time.Time
 	ProcessStatus   string
 	DisableTracking bool
@@ -109,6 +111,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 				typeOfRequest: t.TypeOfRequest,
 				emailID:       t.EmailID,
 				url:           t.URL,
+				zipCode:       t.ZipCode,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
 					fieldProcessStatus: processStatusError,
@@ -124,6 +127,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 					typeOfRequest: t.TypeOfRequest,
 					emailID:       t.EmailID,
 					url:           t.URL,
+					zipCode:       t.ZipCode,
 					patchData: map[string]interface{}{
 						fieldProcessedDate: time.Now(),
 						fieldProcessStatus: processStatusError,
@@ -135,6 +139,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 				typeOfRequest: t.TypeOfRequest,
 				emailID:       t.EmailID,
 				url:           t.URL,
+				zipCode:       t.ZipCode,
 				patchData: map[string]interface{}{
 					fieldProcessedDate:   time.Now(),
 					filedDisableTracking: true,
@@ -146,6 +151,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 				typeOfRequest: t.TypeOfRequest,
 				emailID:       t.EmailID,
 				url:           t.URL,
+				zipCode:       t.ZipCode,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
 					fieldProcessStatus: processStatusSuccess,
@@ -165,6 +171,17 @@ func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	if err := validate(t); err != nil {
+		if errors.Is(err, websiteNotSupported) {
+			w.WriteHeader(http.StatusNotAcceptable)
+		} else {
+			w.WriteHeader(http.StatusBadRequest)
+		}
+		log.Println("validation error", err)
+		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
+	}
+
 	pr, err := callScraping(t.URL)
 	if err != nil {
 		log.Println("error in processing url", err)
@@ -189,6 +206,16 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		return
 	}
 	t.TypeOfRequest = requestTypeAvailability
+
+	if err := validate(t); err != nil {
+		if errors.Is(err, websiteNotSupported) {
+			w.WriteHeader(http.StatusNotAcceptable)
+		} else {
+			w.WriteHeader(http.StatusBadRequest)
+		}
+		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
+	}
+
 	if err := t.upsert(r.Context()); err != nil {
 		log.Println("error during firestore upsert in availability handler", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -207,6 +234,16 @@ func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		return
 	}
 	t.TypeOfRequest = requestTypePrice
+
+	if err := validate(t); err != nil {
+		if errors.Is(err, websiteNotSupported) {
+			w.WriteHeader(http.StatusNotAcceptable)
+		} else {
+			w.WriteHeader(http.StatusBadRequest)
+		}
+		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
+	}
+
 	if err := t.upsert(r.Context()); err != nil {
 		log.Println("error during firestore upsert in availability handler", err)
 		w.WriteHeader(http.StatusInternalServerError)

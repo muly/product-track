@@ -1,6 +1,7 @@
 package main
 
 import (
+	"reflect"
 	"testing"
 
 	scrape "github.com/muly/product-scrape"
@@ -57,6 +58,37 @@ func Test_shouldNotify(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := shouldNotify(tt.args.i, tt.args.p); got != tt.want {
 				t.Errorf("shouldNotify() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_readSupportedWebsites(t *testing.T) {
+	tests := []struct {
+		name    string
+		want    map[string]bool
+		wantErr bool
+	}{
+		{
+			name: "happy case",
+			want: map[string]bool{
+				"scrapeme.live":    true,
+				"www.flipkart.com": true,
+				"www.amazon.in":    true,
+				"mkp.gem.gov.in":   true,
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := readSupportedWebsites()
+			if (err != nil) != tt.wantErr {
+				t.Errorf("readSupportedWebsites() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("readSupportedWebsites() = %v, want %v", got, tt.want)
 			}
 		})
 	}

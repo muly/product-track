@@ -7,6 +7,12 @@ go get ./...
 
 go fmt ./...
 
+source ./secrets/gmail_pwd.sh
+if [[ -z "$GMAIL_PASSWORD" ]]; then
+    echo "Must provide GMAIL_PASSWORD in environment" 1>&2
+    exit 1
+fi
+
 rm -f product-track 
 go build -o product-track
 
