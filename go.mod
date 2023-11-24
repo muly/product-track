@@ -7,7 +7,7 @@ require (
 	cloud.google.com/go/secretmanager v1.11.1
 	github.com/cucumber/godog v0.13.0
 	github.com/julienschmidt/httprouter v1.3.0
-	github.com/muly/product-scrape v1.0.2
+	github.com/muly/product-scrape v1.0.3
 	google.golang.org/api v0.126.0
 	gopkg.in/mail.v2 v2.3.1
 )
@@ -61,4 +61,4 @@ require (
 )
 
 //replace github.com/muly/product-scrape => /Users/s/go/src/github.com/muly/product-scrape
-replace github.com/muly/product-scrape => C:\Users\user\go\src\github.com\product-scrape
+//replace github.com/muly/product-scrape => C:\Users\user\go\src\github.com\product-scrape
