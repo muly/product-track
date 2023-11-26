@@ -121,7 +121,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 		}
 
 		if shouldNotify(t, p) {
-			if err := sendTrackNotificationEmail(t); err != nil {
+			if err := sendTrackNotificationEmail(t, p); err != nil {
 				log.Printf("error sending notification: %s request for %s", t.TypeOfRequest, t.URL)
 				updatesTodo = append(updatesTodo, patch{
 					typeOfRequest: t.TypeOfRequest,

@@ -24,7 +24,7 @@ const notificationEmailBody = `<html>
 <body style="font-family: Arial, Helvetica, sans-serif; text-align: center;">
   <div style="background-color: #ffffff; padding: 10px 20px; border-radius: 10px; max-width: 400px; margin: 0 auto;">
 	<p style="font-weight: bolder; color: #2d71ac; font-size: 20px;">Product is available</p>
-	<img style="max-width: 100%; margin: 3px 0; border-radius: 8px;" src="product-image.jpg" alt="Product Image">
+	<img style="max-width: 100%; margin: 3px 0; border-radius: 8px;" src="product-image" alt="Product Image">
 	<p class="product-name">Product Name</p>
 	<p style="color: #292627; font-weight: bolder ; font-size:15px"> HURRAY! The product you are looking for is available at price(₹value)</p>
 	<a style="background-color: #000; color: #fff; padding: 10px 20px; text-decoration: none; font-weight: bold; display: inline-block; margin-top: 10px; border-radius: 4px;" href="PRODUCT_URL">Place Order</a>
@@ -70,8 +70,8 @@ func initEmailClient() error {
 	return nil
 }
 
-func sendTrackNotificationEmail(t trackInput) error {
-	m, err := prepareTrackNotificationEmail(t)
+func sendTrackNotificationEmail(t trackInput, p scrape.Product) error {
+	m, err := prepareTrackNotificationEmail(t, p)
 	if err != nil {
 		log.Println("Error preparing email:", err)
 		return err
@@ -85,8 +85,7 @@ func sendTrackNotificationEmail(t trackInput) error {
 	return nil
 }
 
-func prepareTrackNotificationEmail(t trackInput) (*mail.Message, error) {
-	var p scrape.Product
+func prepareTrackNotificationEmail(t trackInput, p scrape.Product) (*mail.Message, error) {
 	var emailBody string
 	priceString := strconv.FormatFloat(p.Price, 'f', -1, 64)
 	log.Println("creating mail")
