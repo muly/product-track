@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/julienschmidt/httprouter"
@@ -181,6 +182,12 @@ func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 		log.Println("validation error", err)
 		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
 	}
+	parsedURL, err := url.Parse(t.URL)
+	if err != nil {
+		log.Println("Error parsing URL:", err)
+		return
+	}
+	t.URL = parsedURL.Scheme + "://" + parsedURL.Host + parsedURL.Path
 
 	pr, err := callScraping(t.URL)
 	if err != nil {
@@ -206,6 +213,12 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		return
 	}
 	t.TypeOfRequest = requestTypeAvailability
+	parsedURL, err := url.Parse(t.URL)
+	if err != nil {
+		log.Println("Error parsing URL:", err)
+		return
+	}
+	t.URL = parsedURL.Scheme + "://" + parsedURL.Host + parsedURL.Path
 
 	if err := validate(t); err != nil {
 		if errors.Is(err, websiteNotSupported) {
@@ -234,6 +247,12 @@ func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		return
 	}
 	t.TypeOfRequest = requestTypePrice
+	parsedURL, err := url.Parse(t.URL)
+	if err != nil {
+		log.Println("Error parsing URL:", err)
+		return
+	}
+	t.URL = parsedURL.Scheme + "://" + parsedURL.Host + parsedURL.Path
 
 	if err := validate(t); err != nil {
 		if errors.Is(err, websiteNotSupported) {

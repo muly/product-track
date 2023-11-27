@@ -88,6 +88,7 @@ func sendTrackNotificationEmail(t trackInput, p scrape.Product) error {
 func prepareTrackNotificationEmail(t trackInput, p scrape.Product) (*mail.Message, error) {
 	var emailBody string
 	priceString := strconv.FormatFloat(p.Price, 'f', -1, 64)
+	log.Println(p.Name)
 	log.Println("creating mail")
 	m := mail.NewMessage()
 	m.SetHeader("From", systemEmailID)
