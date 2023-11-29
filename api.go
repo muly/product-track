@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"net/url"
 	"time"
 
 	"github.com/julienschmidt/httprouter"
@@ -172,23 +171,16 @@ func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
-	if err := validate(t); err != nil {
+	modifiedURL,err:= validateAndCleanup(t)
+	if  err != nil {
 		if errors.Is(err, websiteNotSupported) {
 			w.WriteHeader(http.StatusNotAcceptable)
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
 		}
-		log.Println("validation error", err)
 		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
 	}
-	parsedURL, err := url.Parse(t.URL)
-	if err != nil {
-		log.Println("Error parsing URL:", err)
-		return
-	}
-	t.URL = parsedURL.Scheme + "://" + parsedURL.Host + parsedURL.Path
-
+	t.URL=modifiedURL
 	pr, err := callScraping(t.URL)
 	if err != nil {
 		log.Println("error in processing url", err)
@@ -212,13 +204,8 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	var err error
-	t.URL,err= ParseAndModifyURL(t.URL)
-	if err!=nil{
-		log.Println("error during parsing url",err)
-	}
-
-	if err := validate(t); err != nil {
+	modifiedURL,err:= validateAndCleanup(t)
+	if  err != nil {
 		if errors.Is(err, websiteNotSupported) {
 			w.WriteHeader(http.StatusNotAcceptable)
 		} else {
@@ -226,7 +213,7 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		}
 		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
 	}
-
+	t.URL=modifiedURL
 	if err := t.upsert(r.Context()); err != nil {
 		log.Println("error during firestore upsert in availability handler", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -245,13 +232,8 @@ func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		return
 	}
 	t.TypeOfRequest = requestTypePrice
-	var err error
-	t.URL,err= ParseAndModifyURL(t.URL)
-	if err!=nil{
-		log.Println("error during parsing url",err)
-	}
-
-	if err := validate(t); err != nil {
+	modifiedURL,err:= validateAndCleanup(t)
+	if  err != nil {
 		if errors.Is(err, websiteNotSupported) {
 			w.WriteHeader(http.StatusNotAcceptable)
 		} else {
@@ -259,7 +241,7 @@ func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		}
 		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
 	}
-
+	t.URL=modifiedURL
 	if err := t.upsert(r.Context()); err != nil {
 		log.Println("error during firestore upsert in availability handler", err)
 		w.WriteHeader(http.StatusInternalServerError)
