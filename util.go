@@ -63,3 +63,15 @@ func validate(t trackInput) error {
 
 	return nil
 }
+
+
+func ParseAndModifyURL(inputURL string) (string, error) {
+	parsedURL, err := url.Parse(inputURL)
+	if err != nil {
+		return "", fmt.Errorf("error parsing URL: %v", err)
+	}
+
+	modifiedUrl:= parsedURL.Scheme + "://" + parsedURL.Host + parsedURL.Path
+
+	return modifiedUrl, nil
+}

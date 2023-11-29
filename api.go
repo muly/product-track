@@ -212,13 +212,11 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	t.TypeOfRequest = requestTypeAvailability
-	parsedURL, err := url.Parse(t.URL)
-	if err != nil {
-		log.Println("Error parsing URL:", err)
-		return
+	var err error
+	t.URL,err= ParseAndModifyURL(t.URL)
+	if err!=nil{
+		log.Println("error during parsing url",err)
 	}
-	t.URL = parsedURL.Scheme + "://" + parsedURL.Host + parsedURL.Path
 
 	if err := validate(t); err != nil {
 		if errors.Is(err, websiteNotSupported) {
@@ -247,12 +245,11 @@ func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		return
 	}
 	t.TypeOfRequest = requestTypePrice
-	parsedURL, err := url.Parse(t.URL)
-	if err != nil {
-		log.Println("Error parsing URL:", err)
-		return
+	var err error
+	t.URL,err= ParseAndModifyURL(t.URL)
+	if err!=nil{
+		log.Println("error during parsing url",err)
 	}
-	t.URL = parsedURL.Scheme + "://" + parsedURL.Host + parsedURL.Path
 
 	if err := validate(t); err != nil {
 		if errors.Is(err, websiteNotSupported) {
