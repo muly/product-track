@@ -171,22 +171,24 @@ func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	modifiedURL,err:= validateAndCleanup(t)
-	if  err != nil {
+
+	if err := validateAndCleanup(&t); err != nil {
 		if errors.Is(err, websiteNotSupported) {
 			w.WriteHeader(http.StatusNotAcceptable)
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
 		}
 		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
+		return
 	}
-	t.URL=modifiedURL
+
 	pr, err := callScraping(t.URL)
 	if err != nil {
 		log.Println("error in processing url", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
 	err = json.NewEncoder(w).Encode(pr)
 	if err != nil {
 		log.Println("error in encoding product", err)
@@ -204,16 +206,17 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	modifiedURL,err:= validateAndCleanup(t)
-	if  err != nil {
+
+	if err := validateAndCleanup(&t); err != nil {
 		if errors.Is(err, websiteNotSupported) {
 			w.WriteHeader(http.StatusNotAcceptable)
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
 		}
 		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
+		return
 	}
-	t.URL=modifiedURL
+
 	if err := t.upsert(r.Context()); err != nil {
 		log.Println("error during firestore upsert in availability handler", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -231,17 +234,18 @@ func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	t.TypeOfRequest = requestTypePrice
-	modifiedURL,err:= validateAndCleanup(t)
-	if  err != nil {
+	if err := validateAndCleanup(&t); err != nil {
 		if errors.Is(err, websiteNotSupported) {
 			w.WriteHeader(http.StatusNotAcceptable)
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
 		}
 		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
+		return
 	}
-	t.URL=modifiedURL
+
 	if err := t.upsert(r.Context()); err != nil {
 		log.Println("error during firestore upsert in availability handler", err)
 		w.WriteHeader(http.StatusInternalServerError)

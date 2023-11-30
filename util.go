@@ -47,21 +47,35 @@ func readSupportedWebsites() (map[string]bool, error) {
 	return output, nil
 }
 
-func validateAndCleanup(t trackInput) (string, error) {
+func validateAndCleanup(t *trackInput) error {
 	if t.URL == "" || t.EmailID == "" {
-		return "", fmt.Errorf("some of the mandatory fields are missing")
+		return fmt.Errorf("some of the mandatory fields are missing")
 	}
 
 	u, err := url.Parse(t.URL)
 	if err != nil {
-		return "", fmt.Errorf("error parsing url %s: %v: %w", t.URL, err, websiteNotSupported)
+		return fmt.Errorf("error parsing url %s: %v: %w", t.URL, err, websiteNotSupported)
 	}
 
 	if _, ok := supportedWebsites[u.Hostname()]; !ok {
-		return "", fmt.Errorf("url %s not supported: %w", t.URL, websiteNotSupported)
+		return fmt.Errorf("url %s not supported: %w", t.URL, websiteNotSupported)
 	}
 
-	modifiedURL := u.Scheme + "://" + u.Host + u.Path
+	uClean, err := cleanupURL(u)
+	if err != nil {
+		fmt.Printf("error parsing the cleaned url: %v\n", err)
+		uClean = u
+	}
 
-	return modifiedURL, nil
+	t.URL = uClean.String()
+
+	return nil
+}
+
+func cleanupURL(u *url.URL) (*url.URL, error) {
+	u, err := url.Parse(u.Scheme + "://" + u.Host + u.Path)
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
 }
