@@ -1,0 +1,42 @@
+openapi: 3.0.3
+info:
+  title: product track
+  version: 0.0.1
+tags:
+  - name: product track
+paths:
+  /track/availability:
+    post:
+      tags:
+        - product track
+      summary: accepts the a product availability track request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrackAvailabilityRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid input 
+        '406':
+          description: website not supported
+        '500':
+          description: Server error
+
+components:
+  schemas:
+    TrackAvailabilityRequest:
+      required:
+        - url
+        - emailid
+      type: object
+      properties:
+        url:
+          type: string
+          example: "https://www.amazon.in/dp/B096FYLB46"
+        emailid: 
+          type: string
+          example: "abc@example.com"
