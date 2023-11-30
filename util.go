@@ -61,21 +61,7 @@ func validateAndCleanup(t *trackInput) error {
 		return fmt.Errorf("url %s not supported: %w", t.URL, websiteNotSupported)
 	}
 
-	uClean, err := cleanupURL(u)
-	if err != nil {
-		fmt.Printf("error parsing the cleaned url: %v\n", err)
-		uClean = u
-	}
-
-	t.URL = uClean.String()
+	t.URL = scrape.CleanupURL(u).String()
 
 	return nil
-}
-
-func cleanupURL(u *url.URL) (*url.URL, error) {
-	u, err := url.Parse(u.Scheme + "://" + u.Host + u.Path)
-	if err != nil {
-		return nil, err
-	}
-	return u, nil
 }
