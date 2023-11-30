@@ -206,7 +206,7 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
+	t.TypeOfRequest=requestTypeAvailability
 	if err := validateAndCleanup(&t); err != nil {
 		if errors.Is(err, websiteNotSupported) {
 			w.WriteHeader(http.StatusNotAcceptable)
