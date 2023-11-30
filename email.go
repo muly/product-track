@@ -23,7 +23,8 @@ const (
 const notificationEmailBody = `<html>
 <body style="font-family: Arial, Helvetica, sans-serif; text-align: center;">
   <div style="background-color: #ffffff; padding: 10px 20px; border-radius: 10px; max-width: 400px; margin: 0 auto;">
-	<p style="font-weight: bolder; color: #2d71ac; font-size: 20px;">Product is available</p>
+  <img style="max-width: 100%; margin: 3px 0 0; border-radius: 8px; width: 85px; height: 85px;" src="cid:logo.png" alt="Logo">
+	<h2 style="font-weight: bolder; color: #2d71ac; font-size: 20px;">Product is available</h2>
 	<img style="max-width: 100%; margin: 3px 0; border-radius: 8px;" src="product-image" alt="Product Image">
 	<p class="product-name">Product Name</p>
 	<p style="color: #292627; font-weight: bolder ; font-size:15px"> HURRAY! The product you are looking for is available at price(₹value)</p>
@@ -100,6 +101,8 @@ func prepareTrackNotificationEmail(t trackInput, p scrape.Product) (*mail.Messag
 	} else {
 		return nil, fmt.Errorf("invalid request type %s", t.TypeOfRequest)
 	}
+	m.Embed("/chrome-exten/logo.png")
+	log.Println("error due to path in email.go")
 	emailBody = strings.Replace(notificationEmailBody, "PRODUCT_URL", t.URL, -1)
 	emailBody = strings.Replace(emailBody, "Product Name", p.Name, -1)
 	emailBody = strings.Replace(emailBody, "product-image", p.Image, -1)
