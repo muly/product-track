@@ -4,5 +4,6 @@ product-track
 secrets
 
 .vscode
+.DS_Store
 vendor/*
 
