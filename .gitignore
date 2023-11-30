@@ -1,8 +1,10 @@
 
-
-product-track
-secrets
-
 .vscode
-vendor/*
+.DS_Store
 
+secrets
+product-track
+product-track.exe
+*.zip
+
+vendor/*
