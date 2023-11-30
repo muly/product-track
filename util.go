@@ -47,7 +47,7 @@ func readSupportedWebsites() (map[string]bool, error) {
 	return output, nil
 }
 
-func validate(t trackInput) error {
+func validateAndCleanup(t *trackInput) error {
 	if t.URL == "" || t.EmailID == "" {
 		return fmt.Errorf("some of the mandatory fields are missing")
 	}
@@ -60,6 +60,8 @@ func validate(t trackInput) error {
 	if _, ok := supportedWebsites[u.Hostname()]; !ok {
 		return fmt.Errorf("url %s not supported: %w", t.URL, websiteNotSupported)
 	}
+
+	t.URL = scrape.CleanupURL(u).String()
 
 	return nil
 }

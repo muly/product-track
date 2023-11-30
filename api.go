@@ -121,7 +121,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 		}
 
 		if shouldNotify(t, p) {
-			if err := sendTrackNotificationEmail(t); err != nil {
+			if err := sendTrackNotificationEmail(t, p); err != nil {
 				log.Printf("error sending notification: %s request for %s", t.TypeOfRequest, t.URL)
 				updatesTodo = append(updatesTodo, patch{
 					typeOfRequest: t.TypeOfRequest,
@@ -172,14 +172,14 @@ func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 		return
 	}
 
-	if err := validate(t); err != nil {
+	if err := validateAndCleanup(&t); err != nil {
 		if errors.Is(err, websiteNotSupported) {
 			w.WriteHeader(http.StatusNotAcceptable)
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
 		}
-		log.Println("validation error", err)
 		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
+		return
 	}
 
 	pr, err := callScraping(t.URL)
@@ -188,6 +188,7 @@ func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
 	err = json.NewEncoder(w).Encode(pr)
 	if err != nil {
 		log.Println("error in encoding product", err)
@@ -205,15 +206,15 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	t.TypeOfRequest = requestTypeAvailability
 
-	if err := validate(t); err != nil {
+	if err := validateAndCleanup(&t); err != nil {
 		if errors.Is(err, websiteNotSupported) {
 			w.WriteHeader(http.StatusNotAcceptable)
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
 		}
 		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
+		return
 	}
 
 	if err := t.upsert(r.Context()); err != nil {
@@ -233,15 +234,16 @@ func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	t.TypeOfRequest = requestTypePrice
 
-	if err := validate(t); err != nil {
+	t.TypeOfRequest = requestTypePrice
+	if err := validateAndCleanup(&t); err != nil {
 		if errors.Is(err, websiteNotSupported) {
 			w.WriteHeader(http.StatusNotAcceptable)
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
 		}
 		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
+		return
 	}
 
 	if err := t.upsert(r.Context()); err != nil {
