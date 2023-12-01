@@ -18,7 +18,7 @@ deploy_local_mac:
 deploy_dev:
 	go mod vendor
 
-	# generate app.yaml from app.yaml.tmpl
+	# generate app.yaml from template
 	COMMIT_HASH=$(git rev-parse HEAD) envsubst < app.yaml.tmpl > app.yaml
 
 	gcloud config set project smuly-test-ground
