@@ -3,12 +3,14 @@ set -x
 set -e
 emulatorPort="8090"
 
- go get ./...
+go mod vendor
 
- go fmt ./...  #git config --global core.autocrlf true 
+go get ./...
 
- rm -f product-track 
- go build -o product-track
+go fmt ./...  #git config --global core.autocrlf true 
+
+rm -f product-track 
+go build -o product-track
  
 if [[ $(netstat -ano -p tcp |grep  $emulatorPort) ]]  
 then

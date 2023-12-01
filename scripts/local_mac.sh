@@ -3,6 +3,8 @@ set -x
 set -e
 emulatorPort="8090"
 
+go mod vendor
+
 go get ./...
 
 go fmt ./...
