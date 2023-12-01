@@ -1,7 +1,8 @@
 Feature:web scraping
     Scenario:test product availability
     Given test "<name>"
-    And the deployed api host "https://smuly-test-ground.ue.r.appspot.com"
+    #And the deployed api host "https://smuly-test-ground.ue.r.appspot.com"
+    And the deployed local host "http://localhost:8006"
     And the product url "<mock_product_url>" 
     When i send "<http_method>" request to "<end_point>" with above product url in body 
     Then the response should be "<expected_response_body>"
@@ -13,4 +14,4 @@ Feature:web scraping
     | test amazon product unavailability  | /mock/amazon_unavailable.html   | post        | /product  | amazon_unavailable_product_response.json  | 200                           |
     | test flipkart product availability  | /mock/flipkart_available.html   | post        | /product  | flipkart_available_product_response.json  | 200                           |
     | test flipkart product unavailability| /mock/flipkart_unavailable.html | post        | /product  | flipkart_unavailable_product_response.json| 200                           |    
-    | test unsupport website              | /mock/unsupported_file.html     | post        | /product  |                                           | 500                           |
+    | test unsupport website              | /mock/unsupported_file.html     | post        | /product  |                                           | 406                           |

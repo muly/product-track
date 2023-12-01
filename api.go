@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -16,6 +17,7 @@ type trackInput struct {
 	MinThreshold    float64 `json:"min_threshold"`
 	TypeOfRequest   string  `json:"type_of_request"`
 	EmailID         string  `json:"emailid"`
+	ZipCode         int     `json:"zipCode"`
 	ProcessedDate   time.Time
 	ProcessStatus   string
 	DisableTracking bool
@@ -109,6 +111,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 				typeOfRequest: t.TypeOfRequest,
 				emailID:       t.EmailID,
 				url:           t.URL,
+				zipCode:       t.ZipCode,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
 					fieldProcessStatus: processStatusError,
@@ -118,12 +121,13 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 		}
 
 		if shouldNotify(t, p) {
-			if err := sendTrackNotificationEmail(t); err != nil {
+			if err := sendTrackNotificationEmail(t, p); err != nil {
 				log.Printf("error sending notification: %s request for %s", t.TypeOfRequest, t.URL)
 				updatesTodo = append(updatesTodo, patch{
 					typeOfRequest: t.TypeOfRequest,
 					emailID:       t.EmailID,
 					url:           t.URL,
+					zipCode:       t.ZipCode,
 					patchData: map[string]interface{}{
 						fieldProcessedDate: time.Now(),
 						fieldProcessStatus: processStatusError,
@@ -135,6 +139,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 				typeOfRequest: t.TypeOfRequest,
 				emailID:       t.EmailID,
 				url:           t.URL,
+				zipCode:       t.ZipCode,
 				patchData: map[string]interface{}{
 					fieldProcessedDate:   time.Now(),
 					filedDisableTracking: true,
@@ -146,6 +151,7 @@ func processRequestBatch(ctx context.Context, l trackInputList) patchList {
 				typeOfRequest: t.TypeOfRequest,
 				emailID:       t.EmailID,
 				url:           t.URL,
+				zipCode:       t.ZipCode,
 				patchData: map[string]interface{}{
 					fieldProcessedDate: time.Now(),
 					fieldProcessStatus: processStatusSuccess,
@@ -165,12 +171,24 @@ func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	if err := validateAndCleanup(&t); err != nil {
+		if errors.Is(err, websiteNotSupported) {
+			w.WriteHeader(http.StatusNotAcceptable)
+		} else {
+			w.WriteHeader(http.StatusBadRequest)
+		}
+		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
+		return
+	}
+
 	pr, err := callScraping(t.URL)
 	if err != nil {
 		log.Println("error in processing url", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
 	err = json.NewEncoder(w).Encode(pr)
 	if err != nil {
 		log.Println("error in encoding product", err)
@@ -188,7 +206,17 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	t.TypeOfRequest = requestTypeAvailability
+
+	if err := validateAndCleanup(&t); err != nil {
+		if errors.Is(err, websiteNotSupported) {
+			w.WriteHeader(http.StatusNotAcceptable)
+		} else {
+			w.WriteHeader(http.StatusBadRequest)
+		}
+		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
+		return
+	}
+
 	if err := t.upsert(r.Context()); err != nil {
 		log.Println("error during firestore upsert in availability handler", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -206,7 +234,18 @@ func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	t.TypeOfRequest = requestTypePrice
+	if err := validateAndCleanup(&t); err != nil {
+		if errors.Is(err, websiteNotSupported) {
+			w.WriteHeader(http.StatusNotAcceptable)
+		} else {
+			w.WriteHeader(http.StatusBadRequest)
+		}
+		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
+		return
+	}
+
 	if err := t.upsert(r.Context()); err != nil {
 		log.Println("error during firestore upsert in availability handler", err)
 		w.WriteHeader(http.StatusInternalServerError)

@@ -9,15 +9,24 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+var supportedWebsites = make(map[string]bool)
+
 func main() {
 	if err := initFirestore(context.Background()); err != nil {
 		log.Printf("failed to create firestore client: %v", err)
-		os.Exit(1)
+		os.Exit(2)
 	}
 
 	if err := initEmailClient(); err != nil {
 		log.Printf("failed to create email client: %v", err)
-		os.Exit(1)
+		os.Exit(3)
+	}
+
+	var err error
+	supportedWebsites, err = readSupportedWebsites()
+	if err != nil {
+		log.Printf("failed to read supported websites list: %v", err)
+		os.Exit(4)
 	}
 
 	port := os.Getenv("PORT")
