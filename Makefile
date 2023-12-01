@@ -8,19 +8,10 @@ lint:
 	go mod verify
 
 deploy_local_windows:
-	go mod vendor
 	./scripts/local_windows.sh
 
 deploy_local_mac:
-	go mod vendor
 	./scripts/local_mac.sh
 
 deploy_dev:
-	go mod vendor
-
-	# generate app.yaml from template
-	COMMIT_HASH=$(git rev-parse HEAD) envsubst < app.yaml.tmpl > app.yaml
-
-	gcloud config set project smuly-test-ground
-	gcloud app deploy app.yaml --quiet --stop-previous-version
-	gcloud app deploy cron.yaml --quiet 
+	./scripts/dev.sh
