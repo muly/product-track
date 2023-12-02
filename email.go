@@ -101,8 +101,7 @@ func prepareTrackNotificationEmail(t trackInput, p scrape.Product) (*mail.Messag
 	} else {
 		return nil, fmt.Errorf("invalid request type %s", t.TypeOfRequest)
 	}
-	m.Embed("/chrome-exten/logo.png")
-	log.Println("error due to path in email.go")
+	m.Embed("./chrome-exten/logo.png")
 	emailBody = strings.Replace(notificationEmailBody, "PRODUCT_URL", t.URL, -1)
 	emailBody = strings.Replace(emailBody, "Product Name", p.Name, -1)
 	emailBody = strings.Replace(emailBody, "product-image", p.Image, -1)
