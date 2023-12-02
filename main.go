@@ -45,8 +45,8 @@ func main() {
 		http.ServeFile(w, r, "./integration_testing/mock_websites/"+path)
 	})
 
-	router.GET("/privacypolicy.html", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		http.ServeFile(w, r, "./chrome-exten/privacyPolicy.html")
+	router.GET("/privacy-policy.html", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		http.ServeFile(w, r, "./chrome-exten/privacy-policy.html")
 	})
 	// Start the server
 	log.Fatal(http.ListenAndServe(":"+port, router))
