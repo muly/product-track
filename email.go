@@ -27,7 +27,7 @@ const notificationEmailBody = `<html>
 	<h2 style="font-weight: bolder; color: #2d71ac; font-size: 20px;">Product is available</h2>
 	<img style="max-width: 100%; margin: 3px 0; border-radius: 8px;" src="product-image" alt="Product Image">
 	<p class="product-name">Product Name</p>
-	<p style="color: #292627; font-weight: bolder ; font-size:15px"> HURRAY! The product you are looking for is available at price(₹value)</p>
+	<p style="color: #292627; font-weight: bolder ; font-size:15px"> HURRAY! The product you are looking for is  PRICE
 	<a style="background-color: #000; color: #fff; padding: 10px 20px; text-decoration: none; font-weight: bold; display: inline-block; margin-top: 10px; border-radius: 4px;" href="PRODUCT_URL">Place Order</a>
   </div>
 </body>
@@ -88,8 +88,7 @@ func sendTrackNotificationEmail(t trackInput, p scrape.Product) error {
 
 func prepareTrackNotificationEmail(t trackInput, p scrape.Product) (*mail.Message, error) {
 	var emailBody string
-	priceString := strconv.FormatFloat(p.Price, 'f', -1, 64)
-	log.Println(p.Name)
+	var priceString string
 	log.Println("creating mail")
 	m := mail.NewMessage()
 	m.SetHeader("From", systemEmailID)
@@ -105,8 +104,13 @@ func prepareTrackNotificationEmail(t trackInput, p scrape.Product) (*mail.Messag
 	emailBody = strings.Replace(notificationEmailBody, "PRODUCT_URL", t.URL, -1)
 	emailBody = strings.Replace(emailBody, "Product Name", p.Name, -1)
 	emailBody = strings.Replace(emailBody, "product-image", p.Image, -1)
-	emailBody = strings.Replace(emailBody, "value", priceString, -1)
-
+	if p.Price != 0 {
+		priceString = strconv.FormatFloat(p.Price, 'f', -1, 64)
+		emailBody = strings.Replace(emailBody, "PRICE", "available at ₹"+priceString+"</p>", -1)
+	} else {
+		emailBody = strings.Replace(emailBody, "PRICE", "available now</p>", -1)
+	}
+	
 	m.SetBody("text/html", emailBody)
 	return m, nil
 }
