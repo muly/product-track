@@ -7,4 +7,6 @@ product-track
 product-track.exe
 *.zip
 
+chrome-exten/manifest.json
+
 vendor/*

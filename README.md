@@ -13,21 +13,33 @@ TODO: need to add the detailed steps associated with the chrome webstore review 
 
 ### re-deploying chrome extension to chrome store
 step 1. generate the zip file:
-    make prepare_chrome_ext_for_dev_deployment (this command might change, see makefile)
+
+`make prepare_chrome_ext_for_dev_deployment` (this command might change, see makefile)
+
 step 2: use the generated chrome-exten.zip file to update to chrome webstore:
-    -> https://chrome.google.com/webstore/devconsole/
-    -> product-track 
-    -> build 
-    -> package 
-    -> upload new package 
-    -> browse and pick the zip file
+1. -> https://chrome.google.com/webstore/devconsole/
+1. -> product-track 
+1. -> build 
+1. -> package 
+1. -> upload new package 
+1. -> browse and pick the zip file
 
 
 ### deploying chrome extension to local chrome store
 temp notes required to update the script to deploy local chromestore
     - for local chrome deployment: 
-step 1: gcp console -> APIs & Services -> credentials -> OAuth 2.0 Client IDs -> Chrome client (for chrome store deployment) -> copy client id
-step 2: update oauth2->client_id value in chrome-exten/manifest.json file.
+
+step 1: gcp console 
+1. -> APIs & Services 
+1. -> credentials 
+1. -> OAuth 2.0 Client IDs 
+1. -> Chrome client (for chrome store deployment) 
+1. -> copy client id
+
+step 2: 
+
+1. update oauth2
+1. -> client_id value in chrome-exten/manifest.json file.
 
 
 ## known errors:
