@@ -109,6 +109,23 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "{{host}}/privacy-policy.html",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/privacy-policy.html",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"privacy-policy.html"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
