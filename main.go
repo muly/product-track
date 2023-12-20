@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -12,6 +13,8 @@ import (
 var supportedWebsites = make(map[string]bool)
 
 func main() {
+	fmt.Printf("Git Commit Hash: %s\n", os.Getenv("COMMIT_HASH"))
+
 	if err := initFirestore(context.Background()); err != nil {
 		log.Printf("failed to create firestore client: %v", err)
 		os.Exit(2)
