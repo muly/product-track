@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"url\":\"https://www.flipkart.com/samsung-galaxy-f13-nightsky-green-64-gb/p/itmeadfda1bd23fa?pid=MOBGENJWF4KJTPEN&lid=LSTMOBGENJWF4KJTPENS2XJXA&marketplace=FLIPKART&store=tyy%2F4io&srno=b_1_1&otracker=clp_banner_1_14.bannerX3.BANNER_mobile-phones-store_ARV72AV1ALWY&fm=neo%2Fmerchandising&iid=d2edff5a-41be-41c5-825a-89fbf189399b.MOBGENJWF4KJTPEN.SEARCH&ppt=clp&ppn=mobile-phones-store&ssid=m55kbf5z280000001686801244020\"\n}"
+					"raw": "{\n    \"url\":\"https://www.flipkart.com/samsung-galaxy-f13-nightsky-green-64-gb/p/itmeadfda1bd23fa?pid=MOBGENJWF4KJTPEN&lid=LSTMOBGENJWF4KJTPENS2XJXA&marketplace=FLIPKART&store=tyy%2F4io&srno=b_1_1&otracker=clp_banner_1_14.bannerX3.BANNER_mobile-phones-store_ARV72AV1ALWY&fm=neo%2Fmerchandising&iid=d2edff5a-41be-41c5-825a-89fbf189399b.MOBGENJWF4KJTPEN.SEARCH&ppt=clp&ppn=mobile-phones-store&ssid=m55kbf5z280000001686801244020\",\n    \"emailid\":\"msrinivasareddy@gmail.com\"\n}"
 				},
 				"url": {
 					"raw": "{{host}}/track/availability",
@@ -56,7 +56,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"url\":\"https://www.flipkart.com/samsung-galaxy-f13-nightsky-green-64-gb/p/itmeadfda1bd23fa?pid=MOBGENJWF4KJTPEN&lid=LSTMOBGENJWF4KJTPENS2XJXA&marketplace=FLIPKART&store=tyy%2F4io&srno=b_1_1&otracker=clp_banner_1_14.bannerX3.BANNER_mobile-phones-store_ARV72AV1ALWY&fm=neo%2Fmerchandising&iid=d2edff5a-41be-41c5-825a-89fbf189399b.MOBGENJWF4KJTPEN.SEARCH&ppt=clp&ppn=mobile-phones-store&ssid=m55kbf5z280000001686801244020\",\n\"min_threshold\": 122\n}"
+					"raw": "{\"url\":\"https://www.flipkart.com/samsung-galaxy-f13-nightsky-green-64-gb/p/itmeadfda1bd23fa?pid=MOBGENJWF4KJTPEN&lid=LSTMOBGENJWF4KJTPENS2XJXA&marketplace=FLIPKART&store=tyy%2F4io&srno=b_1_1&otracker=clp_banner_1_14.bannerX3.BANNER_mobile-phones-store_ARV72AV1ALWY&fm=neo%2Fmerchandising&iid=d2edff5a-41be-41c5-825a-89fbf189399b.MOBGENJWF4KJTPEN.SEARCH&ppt=clp&ppn=mobile-phones-store&ssid=m55kbf5z280000001686801244020\",\n    \"min_threshold\": 122,\n    \"emailid\":\"msrinivasareddy@gmail.com\"\n}"
 				},
 				"url": {
 					"raw": "{{host}}/track/price",
@@ -105,6 +105,23 @@
 					"path": [
 						"mock",
 						"amazon_available.html"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{host}}/privacy-policy.html",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/privacy-policy.html",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"privacy-policy.html"
 					]
 				}
 			},

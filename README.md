@@ -43,3 +43,6 @@ root cause: unknown.
 
 workaround: generate new client id in gcp console and use the new client id in manifest.json file
 
+## privacy policy
+
+dev url: https://smuly-test-ground.ue.r.appspot.com/privacy-policy.html
