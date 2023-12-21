@@ -14,7 +14,7 @@ func (t *unsupportedWebsiteVisits) id() string {
 }
 
 func (t *unsupportedWebsiteVisits) getByID(ctx context.Context) error {
-	d, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Get(ctx)
+	d, err := firestoreClient.Collection(tableUnsupportedWebsiteVisits).Doc(t.id()).Get(ctx)
 	if err != nil {
 		log.Println("(t *unsupportedWebsiteVisits) getByID() error", err)
 		return err
@@ -23,7 +23,7 @@ func (t *unsupportedWebsiteVisits) getByID(ctx context.Context) error {
 }
 
 func (t *unsupportedWebsiteVisits) upsert(ctx context.Context) error {
-	if _, err := firestoreClient.Collection(tableTrackRequests).Doc(t.id()).Set(ctx, t); err != nil {
+	if _, err := firestoreClient.Collection(tableUnsupportedWebsiteVisits).Doc(t.id()).Set(ctx, t); err != nil {
 		return err
 	}
 	return nil

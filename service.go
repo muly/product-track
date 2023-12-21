@@ -28,6 +28,6 @@ func recordUnsupportedWebsiteVisits(ctx context.Context, urlString string) error
 		return err
 	}
 
-	log.Printf("successfully recorded the unsupported website")
+	log.Printf("successfully recorded the unsupported website: %s", u.Hostname())
 	return nil
 }
