@@ -24,8 +24,8 @@ type trackInput struct {
 }
 
 type unsupportedWebsiteVisits struct {
-	host       string
-	visitCount int
+	Host       string
+	VisitCount int
 }
 
 const (

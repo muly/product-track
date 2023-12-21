@@ -15,14 +15,14 @@ func recordUnsupportedWebsiteVisits(ctx context.Context, urlString string) error
 		return err
 	}
 
-	t := &unsupportedWebsiteVisits{host: u.Hostname()}
+	t := &unsupportedWebsiteVisits{Host: u.Hostname()}
 
 	if err := t.getByID(ctx); err != nil {
 		if status.Code(err) != codes.NotFound {
 			return err
 		}
 	}
-	t.visitCount = t.visitCount + 1
+	t.VisitCount = t.VisitCount + 1
 
 	if err := t.upsert(ctx); err != nil {
 		return err

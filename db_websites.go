@@ -10,7 +10,7 @@ import (
 const tableUnsupportedWebsiteVisits = "unsupported_website"
 
 func (t *unsupportedWebsiteVisits) id() string {
-	return t.host
+	return t.Host
 }
 
 func (t *unsupportedWebsiteVisits) getByID(ctx context.Context) error {
