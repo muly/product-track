@@ -54,7 +54,7 @@ func validateAndCleanup(t *trackInput) error {
 
 	u, err := url.Parse(t.URL)
 	if err != nil {
-		return fmt.Errorf("error parsing url %s: %v: %w", t.URL, err, websiteNotSupported)
+		return fmt.Errorf("error parsing url %s: %v", t.URL, err)
 	}
 
 	if _, ok := supportedWebsites[u.Hostname()]; !ok {

@@ -23,6 +23,11 @@ type trackInput struct {
 	DisableTracking bool
 }
 
+type unsupportedWebsiteVisits struct {
+	host       string
+	visitCount int
+}
+
 const (
 	fieldProcessStatus   = "ProcessStatus"
 	fieldProcessedDate   = "ProcessedDate"
@@ -206,9 +211,13 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	t.TypeOfRequest=requestTypeAvailability
+	t.TypeOfRequest = requestTypeAvailability
 	if err := validateAndCleanup(&t); err != nil {
 		if errors.Is(err, websiteNotSupported) {
+			if err := recordUnsupportedWebsiteVisits(r.Context(), t.URL); err != nil {
+				log.Printf("error recording the unsupported website %s: %v", t.URL, err)
+				// continue execution
+			}
 			w.WriteHeader(http.StatusNotAcceptable)
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
@@ -238,6 +247,10 @@ func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	t.TypeOfRequest = requestTypePrice
 	if err := validateAndCleanup(&t); err != nil {
 		if errors.Is(err, websiteNotSupported) {
+			if err := recordUnsupportedWebsiteVisits(r.Context(), t.URL); err != nil {
+				log.Printf("error recording the unsupported website %s: %v", t.URL, err)
+				// continue execution
+			}
 			w.WriteHeader(http.StatusNotAcceptable)
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
