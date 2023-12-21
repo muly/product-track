@@ -99,7 +99,7 @@ func prepareTrackNotificationEmail(t trackInput, p scrape.Product) (*mail.Messag
 	} else {
 		return nil, fmt.Errorf("invalid request type %s", t.TypeOfRequest)
 	}
-	m.Embed("./chrome-exten/logo.png")   //previously i got this error because of wrong path gomail: could not send email 1: open /chrome-exten/logo.png: no such file or directory
+	m.Embed("./chrome-exten/logo.png")
 	emailBody = strings.Replace(notificationEmailBody, "PRODUCT_URL", t.URL, -1)
 	emailBody = strings.Replace(emailBody, "Product Name", p.Name, -1)
 	emailBody = strings.Replace(emailBody, "product-image", p.Image, -1)
@@ -109,7 +109,7 @@ func prepareTrackNotificationEmail(t trackInput, p scrape.Product) (*mail.Messag
 	} else {
 		emailBody = strings.Replace(emailBody, "PRICE", "available now</p>", -1)
 	}
-	
+
 	m.SetBody("text/html", emailBody)
 	return m, nil
 }

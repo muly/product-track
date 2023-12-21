@@ -51,6 +51,11 @@ step 2:
 1. -> client_id value in chrome-exten/manifest.json file.
 
 
+### webstore link
+
+https://chromewebstore.google.com/detail/ichhakcbialminoadfkhalilmdhkmifn
+
+
 ## known errors:
 
 
@@ -67,3 +72,4 @@ workaround: generate new client id in gcp console and use the new client id in m
 ## privacy policy
 
 dev url: https://smuly-test-ground.ue.r.appspot.com/privacy-policy.html
+
