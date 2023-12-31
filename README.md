@@ -69,6 +69,25 @@ root cause: unknown.
 
 workaround: generate new client id in gcp console and use the new client id in manifest.json file
 
+## chrome extension: manifest file
+
+**key:**
+- for deployment to gcp: 
+retrieve the correct key from Chrome Developer Dashboard (https://chrome.google.com) -> open the extension page -> Package tab -> click View public key.
+
+**client_id:**
+- for deployment to gcp: 
+    1. gcp console: https://console.cloud.google.com/
+    1. APIs & Services 
+    1. Credentials
+    1. OAuth 2.0 Client IDs
+    1. copy the `Client ID` under `Chrome client (for chrome store deployment)`
+
+- for deployment to local: 
+    1. same steps as above except the last step
+    1. copy the `Client ID` under `Chrome client (for local deployment)`
+
+
 ## privacy policy
 
 dev url: https://smuly-test-ground.ue.r.appspot.com/privacy-policy.html

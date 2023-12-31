@@ -9,7 +9,7 @@ go get ./...
 
 go fmt ./...
 
-source ./secrets/gmail_pwd.sh
+source ./secrets/local.sh
 if [[ -z "$GMAIL_PASSWORD" ]]; then
     echo "Must provide GMAIL_PASSWORD in environment" 1>&2
     exit 1
