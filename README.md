@@ -7,6 +7,27 @@ TODO: need to add notes here
 
 ## deploying chrome extension
 
+
+### chrome extension: manifest file
+
+Env variables: (saved in `secrets` folder)
+**key:**
+- for deployment to gcp: 
+retrieve the correct key from Chrome Developer Dashboard (https://chrome.google.com) -> open the extension page -> Package tab -> click View public key.
+
+**client_id:**
+- for deployment to gcp: 
+    1. gcp console: https://console.cloud.google.com/
+    1. APIs & Services 
+    1. Credentials
+    1. OAuth 2.0 Client IDs
+    1. copy the `Client ID` under `Chrome client (for chrome store deployment)`
+
+- for deployment to local: 
+    1. same steps as above except the last step
+    1. copy the `Client ID` under `Chrome client (for local deployment)`
+
+
 ### first time deploying chrome extension
 
 steps: (TODO: to be reviewed )
@@ -33,9 +54,18 @@ step 2: use the generated chrome-exten.zip file to update to chrome webstore:
 1. -> upload new package 
 1. -> browse and pick the zip file
 
+### verifying the draft/published code (before it is approved by google)
+1. go to chrome web store developer dashboard: https://chrome.google.com/webstore/devconsole/
+1. go to product-track: https://chrome.google.com/webstore/devconsole/92b09e82-ea96-4718-9dda-f14771a34b3c/ichhakcbialminoadfkhalilmdhkmifn/edit
+1. go to Package page
+1. under the Draft or the Published section, click the .crx file link under CRX file column
+1. this should download and attempt to install.
+1. Note: Draft might fail to download, so confirm by clicking Download suspicious file
+1. now you should see the actual error (if any) on the top of the page.
+1. if successful you will see a message Apps. extensions, and user scripts cannot be added from this website
 
 ### deploying chrome extension to local chrome store
-temp notes required to update the script to deploy local chromestore
+temp notes required to update the script to deploy local chrome store
     - for local chrome deployment: 
 
 step 1: gcp console 
@@ -69,23 +99,14 @@ root cause: unknown.
 
 workaround: generate new client id in gcp console and use the new client id in manifest.json file
 
-## chrome extension: manifest file
+### Download error: Invalid manifest
+scenario: after the chrome extension latest version submitted in chrome web store is approved by google, when trying to install (i.e. using `Add to Chrome` button) the extension, this error is seen.
 
-**key:**
-- for deployment to gcp: 
-retrieve the correct key from Chrome Developer Dashboard (https://chrome.google.com) -> open the extension page -> Package tab -> click View public key.
+error: 
+    Download error: Invalid manifest
 
-**client_id:**
-- for deployment to gcp: 
-    1. gcp console: https://console.cloud.google.com/
-    1. APIs & Services 
-    1. Credentials
-    1. OAuth 2.0 Client IDs
-    1. copy the `Client ID` under `Chrome client (for chrome store deployment)`
-
-- for deployment to local: 
-    1. same steps as above except the last step
-    1. copy the `Client ID` under `Chrome client (for local deployment)`
+root cause: 
+    this error message is very generic. the main error can be found using the steps indicated in section "verifying the draft/published code (before it is approved by google)" above.
 
 
 ## privacy policy
