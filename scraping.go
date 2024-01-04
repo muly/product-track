@@ -15,22 +15,27 @@ func callScraping(rawURL string) (scrape.Product, error) {
 	if err != nil {
 		return scrape.Product{}, err
 	}
-	switch u.Hostname() {
-	case "scrapeme.live":
-		return scrape.GetScraper(u.Hostname())(rawURL)
-	case "www.flipkart.com":
-		return scrape.GetScraper(u.Hostname())(rawURL)
-	case "www.amazon.in":
-		return scrape.GetScraper(u.Hostname())(rawURL)
-	case "mkp.gem.gov.in":
-		return scrape.GetScraper(u.Hostname())(rawURL)
-	case "localhost", "smuly-test-ground.ue.r.appspot.com":
-		log.Println("scraping localhost")
+	var scrapeFunctions []func(url string) (scrape.Product, error)
+	if _, ok := supportedWebsites[u.Hostname()]; ok {
+		scrapeFunctions = scrape.GetProductFunctions(u.Hostname())
+	} else if u.Hostname() == "localhost" || u.Hostname() == "smuly-test-ground.ue.r.appspot.com" {
+		log.Println("scraping for integration testing")
 		return integrationTestingMock(rawURL)
-	default:
+	} else {
 		log.Printf("%s is not supported\n", u.Hostname())
 		return scrape.Product{}, fmt.Errorf("%s is not supported", u.Hostname())
 	}
+
+	var p scrape.Product
+	for _, f := range scrapeFunctions {
+		p, err = f(rawURL)
+		if err != nil {
+			// TODO: log
+			continue
+		}
+		break
+	}
+	return p, err
 }
 
 func integrationTestingMock(rawURL string) (scrape.Product, error) {
@@ -41,13 +46,13 @@ func integrationTestingMock(rawURL string) (scrape.Product, error) {
 
 	switch u.Path {
 	case "/mock/amazon_available.html":
-		return scrape.GetScraper("www.amazon.in")(rawURL)
+		return scrape.GetProductFunctions("www.amazon.in")[0](rawURL)
 	case "/mock/amazon_unavailable.html":
-		return scrape.GetScraper("www.amazon.in")(rawURL)
+		return scrape.GetProductFunctions("www.amazon.in")[0](rawURL)
 	case "/mock/flipkart_available.html":
-		return scrape.GetScraper("www.flipkart.com")(rawURL)
+		return scrape.GetProductFunctions("www.flipkart.com")[0](rawURL)
 	case "/mock/flipkart_unavailable.html":
-		return scrape.GetScraper("www.flipkart.com")(rawURL)
+		return scrape.GetProductFunctions("www.flipkart.com")[0](rawURL)
 	default:
 		log.Printf("%s is not supported\n", u.Path)
 		return scrape.Product{}, errors.New("unsupported URL path")

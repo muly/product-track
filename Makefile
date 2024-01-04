@@ -1,7 +1,7 @@
 build:
 	go build -o product-track 
 
-test:
+test: # unit and functional tests
 	go test ./... --cover
 
 lint:

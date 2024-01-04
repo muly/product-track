@@ -26,6 +26,7 @@ func (s *scenarioData) test(name string) error {
 }
 
 func (s *scenarioData) theDeployedApiHost(url string) error {
+	// TODO: need to check if the server is up // TODO: need to add a health check handler first
 	s.apiHost = url
 	return nil
 }
