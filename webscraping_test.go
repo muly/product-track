@@ -14,10 +14,11 @@ import (
 )
 
 type scenarioData struct {
-	productUrl string
+	ProductUrl string `json:"url"`
 	statusCode int
 	actual     scrape.Product
 	apiHost    string
+	EmailId    string `json:"emailid"`
 }
 
 func (s *scenarioData) test(name string) error {
@@ -35,8 +36,21 @@ func (s *scenarioData) iSendRequestToWithAboveProductUrlInBody(method, endpoint 
 	if err != nil {
 		return err
 	}
+	reqfileds := struct {
+		ProductUrl string `json:"url"`
+		EmailId    string `json:"emailid"`
+	}{
+		ProductUrl: s.ProductUrl,
+		EmailId:    s.EmailId,
+	}
+	result, err := json.MarshalIndent(reqfileds, "", "    ")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return nil
+	}
+	log.Println(string(result))
 
-	req, err := http.NewRequest(strings.ToUpper(method), appURL, strings.NewReader(fmt.Sprintf(`{"url":"%s"}`, s.productUrl)))
+	req, err := http.NewRequest(strings.ToUpper(method), appURL, strings.NewReader(string(result)))
 	if err != nil {
 		return err
 	}
@@ -55,7 +69,7 @@ func (s *scenarioData) iSendRequestToWithAboveProductUrlInBody(method, endpoint 
 }
 func (s *scenarioData) theProductUrl(mockProductURL string) error {
 	var err error
-	s.productUrl, err = url.JoinPath(s.apiHost, mockProductURL)
+	s.ProductUrl, err = url.JoinPath(s.apiHost, mockProductURL)
 	if err != nil {
 		return err
 	}
