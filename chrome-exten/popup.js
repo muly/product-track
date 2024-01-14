@@ -67,10 +67,10 @@ document.addEventListener('DOMContentLoaded', function() {
       })
       .then(function(response) {
         if (!response.ok) {
-          alert("our extension doesnot support the given url")
+          alert("our extension currently does not support tracking products on the given website")
           window.close();
         }else{
-          alert("successful");
+          alert("The tracking has commenced with success, bringing a wave of joy!");
           window.close();
         }
       })
