@@ -72,10 +72,12 @@ func Test_readSupportedWebsites(t *testing.T) {
 		{
 			name: "happy case",
 			want: map[string]bool{
-				"scrapeme.live":    true,
-				"www.flipkart.com": true,
-				"www.amazon.in":    true,
-				"mkp.gem.gov.in":   true,
+				"scrapeme.live":                      true,
+				"www.flipkart.com":                   true,
+				"www.amazon.in":                      true,
+				"mkp.gem.gov.in":                     true,
+				"localhost":                          true,
+				"smuly-test-ground.ue.r.appspot.com": true,
 			},
 			wantErr: false,
 		},

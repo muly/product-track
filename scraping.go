@@ -48,6 +48,8 @@ func integrationTestingMock(rawURL string) (scrape.Product, error) {
 		return scrape.GetScraper("www.flipkart.com")(rawURL)
 	case "/mock/flipkart_unavailable.html":
 		return scrape.GetScraper("www.flipkart.com")(rawURL)
+	case "/mock/unsupported_file.html":
+		return scrape.Product{}, websiteNotSupported
 	default:
 		log.Printf("%s is not supported\n", u.Path)
 		return scrape.Product{}, errors.New("unsupported URL path")

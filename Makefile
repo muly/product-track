@@ -2,6 +2,7 @@ build:
 	go build -o product-track 
 
 test:
+	go clean --testcache  # clean cache as the integration test feature file changes (or any non go file changes) are not considered by the test cache
 	go test ./... --cover
 
 lint:

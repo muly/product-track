@@ -172,7 +172,7 @@ func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	var t trackInput
 	defer r.Body.Close()
 	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
-		log.Println("error during handling the url", err)
+		log.Println("error during handling the url in product handler", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -183,14 +183,18 @@ func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
 		}
-		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
+		w.Write([]byte(fmt.Sprintf("validation error in product handler: %v", err)))
 		return
 	}
 
 	pr, err := callScraping(t.URL)
 	if err != nil {
-		log.Println("error in processing url", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		if errors.Is(err, websiteNotSupported) {
+			w.WriteHeader(http.StatusNotAcceptable)
+		} else {
+			w.WriteHeader(http.StatusBadRequest)
+		}
+		w.Write([]byte(fmt.Sprintf("callScraping error in product handler: %v", err)))
 		return
 	}
 
@@ -207,7 +211,7 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 	var t trackInput
 	defer r.Body.Close()
 	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
-		log.Println("error during handling the url", err)
+		log.Println("error in availability handler during handling the url", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -222,7 +226,7 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
 		}
-		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
+		w.Write([]byte(fmt.Sprintf("validation error in availability handler: %v", err)))
 		return
 	}
 
@@ -255,7 +259,7 @@ func priceHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
 		}
-		w.Write([]byte(fmt.Sprintf("validation error: %v", err)))
+		w.Write([]byte(fmt.Sprintf("validation error in price handler: %v", err)))
 		return
 	}
 
