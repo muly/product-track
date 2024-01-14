@@ -41,7 +41,7 @@ func (s *scenarioData) iSendRequestToWithAboveProductUrlInBody(method, endpoint 
 		EmailId    string `json:"emailid"`
 	}{
 		ProductUrl: s.ProductUrl,
-		EmailId:    s.EmailId,
+		EmailId:    "some_email_id",
 	}
 	result, err := json.MarshalIndent(reqfileds, "", "    ")
 	if err != nil {

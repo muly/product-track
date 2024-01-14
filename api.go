@@ -189,8 +189,12 @@ func productHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 
 	pr, err := callScraping(t.URL)
 	if err != nil {
-		log.Println("error in processing url", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		if errors.Is(err, websiteNotSupported) {
+			w.WriteHeader(http.StatusNotAcceptable)
+		} else {
+			w.WriteHeader(http.StatusBadRequest)
+		}
+		w.Write([]byte(fmt.Sprintf("callScraping error in product handler: %v", err)))
 		return
 	}
 
