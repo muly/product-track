@@ -31,6 +31,16 @@ func (s *scenarioData) theDeployedApiHost(url string) error {
 	return nil
 }
 
+func (s *scenarioData) theProductUrl(mockProductURL string) error {
+	var err error
+	s.ProductUrl, err = url.JoinPath(s.apiHost, mockProductURL)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (s *scenarioData) iSendRequestToWithAboveProductUrlInBody(method, endpoint string) error {
 	appURL, err := url.JoinPath(s.apiHost, endpoint)
 	if err != nil {
@@ -65,15 +75,6 @@ func (s *scenarioData) iSendRequestToWithAboveProductUrlInBody(method, endpoint 
 		}
 	}
 	s.statusCode = response.StatusCode
-	return nil
-}
-func (s *scenarioData) theProductUrl(mockProductURL string) error {
-	var err error
-	s.ProductUrl, err = url.JoinPath(s.apiHost, mockProductURL)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
