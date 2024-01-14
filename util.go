@@ -48,8 +48,16 @@ func readSupportedWebsites() (map[string]bool, error) {
 }
 
 func validateAndCleanup(t *trackInput) error {
-	if t.URL == "" || t.EmailID == "" {
-		return fmt.Errorf("some of the mandatory fields are missing")
+
+	if t.URL == "" {
+		return fmt.Errorf("product url is mandatory field")
+	}
+
+	if t.TypeOfRequest == requestTypeAvailability ||
+		t.TypeOfRequest == requestTypePrice {
+		if t.EmailID == "" {
+			return fmt.Errorf("email id is mandatory field")
+		}
 	}
 
 	u, err := url.Parse(t.URL)
